@@ -6,25 +6,16 @@ import type { TextItem } from 'pdfjs-dist/types/src/display/api'
 async function doit(event: Event): Promise<void> {
   const target = event.target as HTMLInputElement
   const pdfFileList = target.files as FileList
-  const textFilesList = PDFtoTEXT(pdfFileList)
-  console.log(textFilesList)
+  const TEXTrows = PDFtoTEXT(pdfFileList)
+  const lol = getLatvijasProducts(await TEXTrows)
+  console.log(lol)
 }
 
 async function PDFtoTEXT(fileList: FileList) {
-  let products = []
-  let productSize = ''
-  let productFace = ''
-  let productGlue = ''
-  let productPacking = ''
-  let productPackCount = ''
-
+  let TEXTrows: string[] = []
   const skippedFiles: string[] = []
 
   for (const file of fileList) {
-    let invoiceNum = ''
-    let carriageBy = ''
-    let transportDoc = ''
-
     const isPdf = file.type === 'application/pdf'
     const hasValidName = file.name.includes('Invoice No.')
 
@@ -66,48 +57,61 @@ async function PDFtoTEXT(fileList: FileList) {
       for (const row of rows) {
         row.items.sort((a, b) => a.x - b.x)
         const textrow = row.items.map((item) => correctText(item.text)).join('')
-
-        /** Create products table */
-        if (file.name.includes('Invoice No.')) {
-          if (invoiceNum === '') invoiceNum = getInvoiceNum(textrow)
-          if (carriageBy === '') carriageBy = getCarriageBy(textrow)
-          if (transportDoc === '') transportDoc = getTransportDoc(textrow)
-          if (/441233[0-9]{2}/.test(textrow)) {
-            productGlue = textrow.match(/MR|WD|INT|EXT/i)?.[0] ?? ''
-            productFace = textrow.replace(/birch plywood riga |, edges sealed .*/gi, '').trim()
-          }
-
-          const product =
-            textrow.match(
-              /([0-9]{1,2}(?:,[0-9])?x[0-9]{3,4}x[0-9]{3,4}) mm ([0-9]{1,2})x([0-9]{1,4})/,
-            ) ?? []
-          if (product.length) {
-            const [, x, y, z] = product
-            productSize = x ?? ''
-            productPacking = z ?? ''
-            productPackCount = y ?? ''
-
-            products.push([
-              productSize,
-              productFace,
-              productGlue,
-              productPackCount,
-              productPacking,
-              invoiceNum,
-              carriageBy,
-              transportDoc,
-            ])
-          }
-        }
+        TEXTrows.push(textrow)
       } // END row
     } // END page
   } // END file
 
-  console.log(products)
-
   if (skippedFiles.length > 0) {
     alert(`Pominięte pliki (${skippedFiles.length}):\n\n` + skippedFiles.join('\n'))
   }
+
+  return TEXTrows
+}
+
+function getLatvijasProducts(TEXTrows: string[]) {
+  console.log(TEXTrows)
+  let products: string[] = []
+  let productSize = ''
+  let productFace = ''
+  let productGlue = ''
+  let productPacking = ''
+  let productPackCount = ''
+  let invoiceNum = ''
+  let carriageBy = ''
+  let transportDoc = ''
+
+  TEXTrows.forEach((textrow) => {
+    if (invoiceNum === '') invoiceNum = getInvoiceNum(textrow)
+    if (carriageBy === '') carriageBy = getCarriageBy(textrow)
+    if (transportDoc === '') transportDoc = getTransportDoc(textrow)
+    if (/441233[0-9]{2}/.test(textrow)) {
+      productGlue = textrow.match(/MR|WD|INT|EXT/i)?.[0] ?? ''
+      productFace = textrow.replace(/birch plywood riga |, edges sealed .*/gi, '').trim()
+    }
+
+    const product =
+      textrow.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{3,4}x[0-9]{3,4}) mm ([0-9]{1,2})x([0-9]{1,4})/) ??
+      []
+    if (product.length) {
+      const [, x, y, z] = product
+      productSize = x ?? ''
+      productPacking = z ?? ''
+      productPackCount = y ?? ''
+
+      products.push([
+        productSize,
+        productFace,
+        productGlue,
+        productPackCount,
+        productPacking,
+        invoiceNum,
+        carriageBy,
+        transportDoc,
+      ])
+    }
+  }) // END Create products table
+  return products
 }
 
 const charMap: { [key: string]: string } = {
