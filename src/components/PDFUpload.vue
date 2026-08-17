@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker.min.mjs'
-import type { TextItem } from 'pdfjs-dist/types/src/display/api'
+import { useProductStore } from '@/stores/products_store'
+import type { Product } from '@/types/shared_types'
+
+const productStore = useProductStore()
 
 async function doit(event: Event): Promise<void> {
   const target = event.target as HTMLInputElement
   const pdfFileList = target.files as FileList
   const TEXTrows = PDFtoTEXT(pdfFileList)
-  const lol = getLatvijasProducts(await TEXTrows)
-  console.log(lol)
+  getLatvijasProducts(await TEXTrows)
 }
 
 async function PDFtoTEXT(fileList: FileList) {
@@ -70,48 +72,56 @@ async function PDFtoTEXT(fileList: FileList) {
 }
 
 function getLatvijasProducts(TEXTrows: string[]) {
-  console.log(TEXTrows)
-  let products: string[] = []
-  let productSize = ''
-  let productFace = ''
-  let productGlue = ''
-  let productPacking = ''
-  let productPackCount = ''
+  const products: Product[] = []
+  let idNum = ''
+  let idCounter = 0
+  let itemSize = ''
+  let itemFace = ''
+  let itemGlue = ''
+  let itemPiecesCount = 0
+  let itemPacksCount = 1
   let invoiceNum = ''
   let carriageBy = ''
   let transportDoc = ''
 
   TEXTrows.forEach((textrow) => {
-    if (invoiceNum === '') invoiceNum = getInvoiceNum(textrow)
-    if (carriageBy === '') carriageBy = getCarriageBy(textrow)
-    if (transportDoc === '') transportDoc = getTransportDoc(textrow)
+    invoiceNum = getInvoiceNum(textrow) || invoiceNum
+    carriageBy = getCarriageBy(textrow) || carriageBy
+    transportDoc = getTransportDoc(textrow) || transportDoc
+
     if (/441233[0-9]{2}/.test(textrow)) {
-      productGlue = textrow.match(/MR|WD|INT|EXT/i)?.[0] ?? ''
-      productFace = textrow.replace(/birch plywood riga |, edges sealed .*/gi, '').trim()
+      itemGlue = textrow.match(/MR|WD|INT|EXT/i)?.[0] ?? ''
+      itemFace = textrow
+        .replace(/Birch plywood RIGA |PLY|TEX|FORM|MEL|/gi, '')
+        .replace(/, edges sealed .*|,[^,]*441233[0-9]{2}.*/gi, '')
+        .trim()
     }
 
     const product =
-      textrow.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{3,4}x[0-9]{3,4}) mm ([0-9]{1,2})x([0-9]{1,4})/) ??
+      textrow.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{2,4}x[0-9]{2,4}) mm ([0-9]{1,2})x([0-9]{1,4})/) ??
       []
     if (product.length) {
+      idNum = `${transportDoc || 'id'}_${(++idCounter).toString().padStart(3, '0')}`
       const [, x, y, z] = product
-      productSize = x ?? ''
-      productPacking = z ?? ''
-      productPackCount = y ?? ''
+      itemSize = x ?? ''
+      itemPacksCount = Number(y) ?? 0
+      itemPiecesCount = Number(z) ?? 0
 
-      products.push([
-        productSize,
-        productFace,
-        productGlue,
-        productPackCount,
-        productPacking,
-        invoiceNum,
-        carriageBy,
-        transportDoc,
-      ])
+      productStore.addProduct({
+        id: idNum,
+        size: itemSize,
+        face: itemFace,
+        glue: itemGlue,
+        packsCount: itemPacksCount,
+        piecesCount: itemPiecesCount,
+        invoiceNum: invoiceNum,
+        carriageBy: carriageBy,
+        transportDoc: transportDoc,
+      })
     }
-  }) // END Create products table
-  return products
+  })
+  // console.log(productStore.products)
+  // return products
 }
 
 const charMap: { [key: string]: string } = {
