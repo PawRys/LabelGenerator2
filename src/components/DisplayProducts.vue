@@ -13,6 +13,38 @@ const piecesCount = ref(0)
 
 let idCounter = 0
 const searchinput = ref<string>('')
+const selectedTruckNum = ref<string>('')
+const searchCmrNum = ref<string>('')
+
+const truckNumList = computed(() => {
+  return [
+    ...new Set(
+      productStore.products
+        .map((product) => product.truckNum)
+        .filter((truck): truck is string => truck !== undefined),
+    ),
+  ].sort((a, b) =>
+    a.localeCompare(b, undefined, {
+      numeric: true,
+      sensitivity: 'base',
+    }),
+  )
+})
+
+const cmrNumList = computed(() => {
+  return [
+    ...new Set(
+      productStore.products
+        .map((product) => product.cmrNum)
+        .filter((cmr): cmr is string => cmr !== undefined),
+    ),
+  ].sort((a, b) =>
+    a.localeCompare(b, undefined, {
+      numeric: true,
+      sensitivity: 'base',
+    }),
+  )
+})
 
 const filteredProducts = computed(() => {
   const searchTerms = searchinput.value.toLowerCase().trim().split(/\s+/).filter(Boolean)
@@ -63,11 +95,27 @@ function addProduct() {
 
 <template>
   <section>
-    <h3>Lista produktów {{ filteredProducts.length }}</h3>
+    <h3>Ilość paczek {{ filteredProducts.reduce((acc, item) => acc + item.packsCount, 0) }}</h3>
 
     <div>
       <input v-model="searchinput" type="search" name="" id="" />
     </div>
+
+    <select v-model="searchinput">
+      <option value="">Numer CMR</option>
+
+      <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">
+        {{ cmr }}
+      </option>
+    </select>
+
+    <select v-model="searchinput">
+      <option value="">Numer auta</option>
+
+      <option v-for="truck in truckNumList" :key="truck" :value="truck">
+        {{ truck }}
+      </option>
+    </select>
 
     <table>
       <thead>
