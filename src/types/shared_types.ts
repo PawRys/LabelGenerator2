@@ -6,6 +6,6 @@ export interface Product {
   packsCount: number
   piecesCount: number
   invoiceNum?: string
-  carriageBy?: string
-  transportDoc?: string
+  truckNum?: string
+  cmrNum?: string
 }

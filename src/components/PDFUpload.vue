@@ -64,9 +64,9 @@ async function PDFtoTEXT(fileList: FileList) {
     } // END page
   } // END file
 
-  if (skippedFiles.length > 0) {
-    alert(`Pominięte pliki (${skippedFiles.length}):\n\n` + skippedFiles.join('\n'))
-  }
+  // if (skippedFiles.length > 0) {
+  //   alert(`Pominięte pliki (${skippedFiles.length}):\n\n` + skippedFiles.join('\n'))
+  // }
 
   return TEXTrows
 }
@@ -115,8 +115,8 @@ function getLatvijasProducts(TEXTrows: string[]) {
         packsCount: itemPacksCount,
         piecesCount: itemPiecesCount,
         invoiceNum: invoiceNum,
-        carriageBy: carriageBy,
-        transportDoc: transportDoc,
+        truckNum: carriageBy,
+        cmrNum: transportDoc,
       })
     }
   })
