@@ -12,37 +12,31 @@ const packsCount = ref(1)
 const piecesCount = ref(0)
 
 let idCounter = 0
-const escapeRegex = (value: string) => value.replace(/[*+?^${}()|[\]\\]/g, '\\$&')
-
-const searchTruckNum = ref<string>('')
-const searchCmrNum = ref<string>('')
 const searchinput = ref<string>('')
 
-const truckNumList = computed(() => {
-  return [...new Set(productStore.products.map((product) => product.truckNum))]
-})
-
-const cmrNumList = computed(() => {
-  return [...new Set(productStore.products.map((product) => product.cmrNum))]
-})
-
 const filteredProducts = computed(() => {
-  return (
-    productStore.products
-      // .filter((product) => new RegExp(searchTruckNum.value, 'i').test(product.truckNum ?? ''))
-      // .filter((product) => new RegExp(searchCmrNum.value, 'i').test(product.cmrNum ?? ''))
-      .filter((product) =>
-        [
-          product.id,
-          product.size,
-          product.face,
-          product.glue,
-          product.invoiceNum,
-          product.truckNum,
-          product.cmrNum,
-        ].some((value) => new RegExp(escapeRegex(searchinput.value), 'i').test(value ?? '')),
-      )
-  )
+  const searchTerms = searchinput.value.toLowerCase().trim().split(/\s+/).filter(Boolean)
+
+  if (searchTerms.length === 0) {
+    return productStore.products
+  }
+
+  return productStore.products.filter((product) => {
+    const searchableText = [
+      product.id,
+      product.size,
+      product.face,
+      product.glue,
+      product.invoiceNum,
+      product.truckNum,
+      product.cmrNum,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+
+    return searchTerms.every((term) => searchableText.includes(term))
+  })
 })
 
 function addProduct() {
@@ -71,31 +65,9 @@ function addProduct() {
   <section>
     <h3>Lista produktów {{ filteredProducts.length }}</h3>
 
-    <!-- <select v-model="selectedTruckNum" multiple>
-      <option value="">Wszystkie</option>
-
-      <option v-for="truck in truckNumList" :key="truck" :value="truck">
-        {{ truck }}
-      </option>
-    </select> -->
-
-    <div><input v-model="searchinput" type="text" /></div>
-
-    <!-- <div>
-      <input v-model="searchTruckNum" list="truck-numbers" placeholder="Numer ciężarówki" />
-
-      <datalist id="truck-numbers">
-        <option v-for="truck in truckNumList" :key="truck" :value="truck" />
-      </datalist>
-    </div>
-
     <div>
-      <input v-model="searchCmrNum" list="cmr-numbers" placeholder="Numer CMRki" />
-
-      <datalist id="cmr-numbers">
-        <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr" />
-      </datalist>
-    </div> -->
+      <input v-model="searchinput" type="search" name="" id="" />
+    </div>
 
     <table>
       <thead>
