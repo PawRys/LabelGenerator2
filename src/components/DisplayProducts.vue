@@ -12,9 +12,9 @@ const packsCount = ref(1)
 const piecesCount = ref(0)
 
 let idCounter = 0
-const searchinput = ref<string>('')
-const selectedTruckNum = ref<string>('')
-const searchCmrNum = ref<string>('')
+// const searchinput = ref<string>('')
+// const selectedTruckNum = ref<string>('')
+// const searchCmrNum = ref<string>('')
 
 const truckNumList = computed(() => {
   return [
@@ -47,7 +47,7 @@ const cmrNumList = computed(() => {
 })
 
 const filteredProducts = computed(() => {
-  const searchTerms = searchinput.value.toLowerCase().trim().split(/\s+/).filter(Boolean)
+  const searchTerms = productStore.searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean)
 
   if (searchTerms.length === 0) {
     return productStore.products
@@ -80,7 +80,7 @@ function addProduct() {
     invoiceNum: note.value,
     packsCount: packsCount.value,
     piecesCount: piecesCount.value,
-    truckNum: 'ręcznie dodany',
+    truckNum: 'Ręcznie dodany',
   })
 
   // wyczyszczenie formularza
@@ -97,19 +97,9 @@ function addProduct() {
   <section>
     <h3>Ilość paczek {{ filteredProducts.reduce((acc, item) => acc + item.packsCount, 0) }}</h3>
 
-    <div>
-      <input v-model="searchinput" type="search" name="" id="" />
-    </div>
+    <input v-model="productStore.searchQuery" type="search" name="" id="" />
 
-    <select v-model="searchinput">
-      <option value="">Numer CMR</option>
-
-      <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">
-        {{ cmr }}
-      </option>
-    </select>
-
-    <select v-model="searchinput">
+    <select v-model="productStore.searchQuery">
       <option value="">Numer auta</option>
 
       <option v-for="truck in truckNumList" :key="truck" :value="truck">
@@ -117,44 +107,60 @@ function addProduct() {
       </option>
     </select>
 
+    <select v-model="productStore.searchQuery">
+      <option value="">Numer CMR</option>
+
+      <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">
+        {{ cmr }}
+      </option>
+    </select>
+
     <table>
       <thead>
         <tr>
-          <th>Nazwa</th>
+          <th>Tytuł</th>
           <th>Opis</th>
           <th>Notatka</th>
-          <th>Klej/Ilość paczek/Ilość sztuk</th>
-          <th>Numer auta</th>
-          <th>Numer CMR</th>
-          <th><button @click="productStore.removeAll()">Usuń wszystkie</button></th>
+          <th>Klej/Paczki/Sztuki</th>
+          <th>Dane dostawy</th>
+          <th>
+            <button @click="productStore.removeSelected(filteredProducts)">
+              Usuń {{ filteredProducts.length }}
+            </button>
+          </th>
         </tr>
       </thead>
 
       <tbody>
         <tr v-for="product in filteredProducts" :key="product.id" :id="product.id">
-          <td><input type="text" v-model="product.size" /></td>
-          <td><input type="text" v-model="product.face" /></td>
-          <td><input type="text" v-model="product.invoiceNum" /></td>
+          <td><input class="title" type="text" v-model="product.size" /></td>
           <td>
-            <input style="width: 3rem" type="text" v-model="product.glue" />
-            <input style="width: 3rem" type="text" v-model="product.packsCount" />
-            <input style="width: 3rem" type="text" v-model="product.piecesCount" />
+            <textarea class="desc" v-model="product.face" name="" id=""></textarea>
           </td>
-          <td><input type="text" v-model="product.truckNum" /></td>
-          <td><input type="text" v-model="product.cmrNum" /></td>
+          <td><input class="note" type="text" v-model="product.invoiceNum" /></td>
+          <td>
+            <input class="glue" type="text" v-model="product.glue" />
+            <input class="packs" type="number" v-model="product.packsCount" min="1" />
+            <input class="pcs" type="number" v-model="product.piecesCount" />
+          </td>
+          <td>
+            {{
+              `${product.truckNum || 'Brak danych'} / ${product.id || 'Brak danych'} / ${product.arrivalPlace || 'Brak danych'}`
+            }}
+          </td>
           <td><button @click="productStore.removeProduct(product.id)">Usuń</button></td>
         </tr>
       </tbody>
 
       <tfoot>
         <tr>
-          <td><input v-model="size" type="text" class="text" /></td>
-          <td><input v-model="face" type="text" class="text" /></td>
-          <td><input v-model="note" type="text" class="text" /></td>
+          <td><input placeholder="Tytuł" v-model="size" type="text" class="title" /></td>
+          <textarea class="desc" v-model="face" name="" id=""></textarea>
+          <td><input placeholder="Notatka" v-model="note" type="text" class="note" /></td>
           <td style="display: flex">
-            <input style="width: 3rem" v-model="glue" type="text" class="text" />
-            <input style="width: 3rem" v-model="packsCount" type="number" min="1" class="text" />
-            <input style="width: 3rem" v-model="piecesCount" type="number" class="text" />
+            <input placeholder="Klej" v-model="glue" type="text" class="glue" />
+            <input placeholder="Paczki" v-model="packsCount" type="number" class="packs" min="1" />
+            <input placeholder="Szt." v-model="piecesCount" type="number" class="pcs" />
           </td>
           <td><button @click="addProduct()">Dodaj</button></td>
         </tr>
@@ -163,4 +169,40 @@ function addProduct() {
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+textarea {
+  font-family: arial, sans-serif;
+  text-align: center;
+  width: 26ch;
+}
+
+.title {
+  text-align: center;
+  width: 18ch;
+}
+
+.desc {
+  text-align: center;
+  width: 26ch;
+}
+
+.note {
+  text-align: center;
+  width: 18ch;
+}
+
+.glue {
+  text-align: center;
+  width: 5ch;
+}
+
+.packs {
+  text-align: right;
+  width: 5ch;
+}
+
+.pcs {
+  text-align: right;
+  width: 5ch;
+}
+</style>

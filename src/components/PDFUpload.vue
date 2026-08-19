@@ -80,14 +80,18 @@ function getLatvijasProducts(TEXTrows: string[]) {
   let itemGlue = ''
   let itemPiecesCount = 0
   let itemPacksCount = 1
+  let arrivalPlace = ''
   let invoiceNum = ''
-  let carriageBy = ''
-  let transportDoc = ''
+  let truckNum = ''
+  let CMRNum = ''
+
+  // console.log(TEXTrows.join('\n'))
 
   TEXTrows.forEach((textrow) => {
+    arrivalPlace = getArrivalPlace(textrow) || arrivalPlace
     invoiceNum = getInvoiceNum(textrow) || invoiceNum
-    carriageBy = getCarriageBy(textrow) || carriageBy
-    transportDoc = getTransportDoc(textrow) || transportDoc
+    truckNum = getTruckNum(textrow) || truckNum
+    CMRNum = getCMRNum(textrow) || CMRNum
 
     if (/441233[0-9]{2}/.test(textrow)) {
       itemGlue = textrow.match(/MR|WD|INT|EXT/i)?.[0] ?? ''
@@ -101,7 +105,7 @@ function getLatvijasProducts(TEXTrows: string[]) {
       textrow.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{2,4}x[0-9]{2,4}) mm ([0-9]{1,2})x([0-9]{1,4})/) ??
       []
     if (product.length) {
-      idNum = `${transportDoc || 'id'}_${(++idCounter).toString().padStart(3, '0')}`
+      idNum = `${CMRNum || 'id'}_${(++idCounter).toString().padStart(3, '0')}`
       const [, x, y, z] = product
       itemSize = x ?? ''
       itemPacksCount = Number(y) ?? 0
@@ -114,9 +118,10 @@ function getLatvijasProducts(TEXTrows: string[]) {
         glue: itemGlue,
         packsCount: itemPacksCount,
         piecesCount: itemPiecesCount,
+        arrivalPlace: arrivalPlace,
         invoiceNum: invoiceNum,
-        truckNum: carriageBy,
-        cmrNum: transportDoc,
+        truckNum: truckNum,
+        cmrNum: CMRNum,
       })
     }
   })
@@ -152,15 +157,19 @@ const correctText = (input: string): string => {
     .join('')
 }
 
+function getArrivalPlace(text: string): string {
+  return text.includes('Terms of delivery:') ? text.replace('Terms of delivery:', '').trim() : ''
+}
+
 function getInvoiceNum(text: string): string {
   return text.match(/LF[0-9]{2} M[0-9]{6}/i)?.[0] ?? ''
 }
 
-function getCarriageBy(text: string): string {
+function getTruckNum(text: string): string {
   return text.includes('Carriage by:') ? text.replace('Carriage by:', '').trim() : ''
 }
 
-function getTransportDoc(text: string): string {
+function getCMRNum(text: string): string {
   return text.match(/CMR_[A-Z]{1}[0-9]{6}/i)?.[0] ?? ''
 }
 </script>

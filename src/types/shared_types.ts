@@ -5,6 +5,7 @@ export interface Product {
   glue: string
   packsCount: number
   piecesCount: number
+  arrivalPlace?: string
   invoiceNum?: string
   truckNum?: string
   cmrNum?: string

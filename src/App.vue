@@ -4,7 +4,18 @@ import ProductList from '@/components/DisplayProducts.vue'
 </script>
 
 <template>
-  <h1>You did it!</h1>
+  <header class="noprint">
+    <p>
+      <a href="https://pawrys.github.io/StockBrowser5/">Stany</a>
+      <span> / </span>
+      <a href="https://pawrys.github.io/LabelGenerator/">Etykiety</a>
+      <span> / </span>
+      <a href="https://pawrys.github.io/PurchaseComparator/">Tester</a>
+    </p>
+
+    <h1>Etykieter</h1>
+  </header>
+
   <ProductList />
   <PDFUpload />
 </template>
