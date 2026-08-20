@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useProductStore } from '@/stores/products_store'
-import type { Product } from '@/types/shared_types'
 
 const productStore = useProductStore()
 const size = ref('')
@@ -12,9 +11,21 @@ const packsCount = ref(1)
 const piecesCount = ref(0)
 
 let idCounter = 0
-// const searchinput = ref<string>('')
-// const selectedTruckNum = ref<string>('')
-// const searchCmrNum = ref<string>('')
+
+const arrivalPlaceList = computed(() => {
+  return [
+    ...new Set(
+      productStore.products
+        .map((product) => product.arrivalPlace)
+        .filter((arrival): arrival is string => arrival !== undefined),
+    ),
+  ].sort((a, b) =>
+    a.localeCompare(b, undefined, {
+      numeric: true,
+      sensitivity: 'base',
+    }),
+  )
+})
 
 const truckNumList = computed(() => {
   return [
@@ -46,31 +57,6 @@ const cmrNumList = computed(() => {
   )
 })
 
-const filteredProducts = computed(() => {
-  const searchTerms = productStore.searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean)
-
-  if (searchTerms.length === 0) {
-    return productStore.products
-  }
-
-  return productStore.products.filter((product) => {
-    const searchableText = [
-      product.id,
-      product.size,
-      product.face,
-      product.glue,
-      product.invoiceNum,
-      product.truckNum,
-      product.cmrNum,
-    ]
-      .filter(Boolean)
-      .join(' ')
-      .toLowerCase()
-
-    return searchTerms.every((term) => searchableText.includes(term))
-  })
-})
-
 function addProduct() {
   productStore.addProduct({
     id: `id_${(++idCounter).toString().padStart(3, '0')}`,
@@ -95,11 +81,32 @@ function addProduct() {
 
 <template>
   <section>
-    <h3>Ilość paczek {{ filteredProducts.reduce((acc, item) => acc + item.packsCount, 0) }}</h3>
+    <h3>
+      Ilość paczek
+      {{ productStore.filteredProducts.reduce((acc, item) => acc + item.packsCount, 0) }}
+    </h3>
 
-    <input v-model="productStore.searchQuery" type="search" name="" id="" />
+    <input
+      v-model="productStore.searchQuery"
+      type="search"
+      name=""
+      list="search-options"
+      placeholder="Szukaj..."
+    />
 
-    <select v-model="productStore.searchQuery">
+    <datalist id="search-options">
+      <option v-for="truck in truckNumList" :key="truck" :value="truck">
+        {{ truck }}
+      </option>
+      <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">
+        {{ cmr }}
+      </option>
+      <option v-for="arrival in arrivalPlaceList" :key="arrival" :value="arrival">
+        {{ arrival }}
+      </option>
+    </datalist>
+
+    <select v-model="productStore.searchQuery" size="7">
       <option value="">Numer auta</option>
 
       <option v-for="truck in truckNumList" :key="truck" :value="truck">
@@ -107,7 +114,7 @@ function addProduct() {
       </option>
     </select>
 
-    <select v-model="productStore.searchQuery">
+    <select v-model="productStore.searchQuery" size="7">
       <option value="">Numer CMR</option>
 
       <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">
@@ -115,51 +122,113 @@ function addProduct() {
       </option>
     </select>
 
+    <select v-model="productStore.searchQuery" size="7">
+      <option value="">Miejsce dostawy</option>
+
+      <option v-for="arrival in arrivalPlaceList" :key="arrival" :value="arrival">
+        {{ arrival }}
+      </option>
+    </select>
+
+    <button @click="productStore.sortFunction = 'default'">kolejność z faktury</button>
+    <button @click="productStore.sortFunction = 'bysize'">po grubości</button>
+    <button @click="productStore.sortFunction = 'byformat'">po formacie</button>
+
     <table>
       <thead>
         <tr>
           <th>Tytuł</th>
           <th>Opis</th>
           <th>Notatka</th>
-          <th>Klej/Paczki/Sztuki</th>
-          <th>Dane dostawy</th>
+          <th>Klej</th>
+          <th>Paczki x Sztuki</th>
+          <!-- <th>Dane dostawy</th> -->
           <th>
-            <button @click="productStore.removeSelected(filteredProducts)">
-              Usuń {{ filteredProducts.length }}
+            <button @click="productStore.removeSelected(productStore.filteredProducts)">
+              Usuń {{ productStore.filteredProducts.length }}
             </button>
           </th>
         </tr>
       </thead>
 
       <tbody>
-        <tr v-for="product in filteredProducts" :key="product.id" :id="product.id">
+        <tr v-for="product in productStore.filteredProducts" :key="product.id" :id="product.id">
           <td><input class="title" type="text" v-model="product.size" /></td>
-          <td>
-            <textarea class="desc" v-model="product.face" name="" id=""></textarea>
-          </td>
+          <td><textarea class="desc" v-model="product.face" name="" id=""></textarea></td>
           <td><input class="note" type="text" v-model="product.invoiceNum" /></td>
+          <td><input class="glue" type="text" v-model="product.glue" /></td>
           <td>
-            <input class="glue" type="text" v-model="product.glue" />
             <input class="packs" type="number" v-model="product.packsCount" min="1" />
+            <span>x</span>
             <input class="pcs" type="number" v-model="product.piecesCount" />
           </td>
-          <td>
+          <!-- <td>
             {{
-              `${product.truckNum || 'Brak danych'} / ${product.id || 'Brak danych'} / ${product.arrivalPlace || 'Brak danych'}`
+              `${product.id || 'Brak danych'} / ${product.arrivalPlace || 'Brak danych'} / ${product.truckNum || 'Brak danych'} `
             }}
-          </td>
+          </td> -->
           <td><button @click="productStore.removeProduct(product.id)">Usuń</button></td>
         </tr>
       </tbody>
 
       <tfoot>
+        <tr class="icons">
+          <th>
+            <div class="icon">
+              <span class="active"></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </th>
+          <th>
+            <div class="icon">
+              <span></span>
+              <span class="active"></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </th>
+          <th>
+            <div class="icon">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span class="active" span></span>
+              <span></span>
+            </div>
+          </th>
+          <th>
+            <div class="icon">
+              <span></span>
+              <span></span>
+              <span class="active"></span>
+              <span></span>
+              <span></span>
+            </div>
+          </th>
+          <th>
+            <div class="icon">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span class="active"></span>
+            </div>
+          </th>
+        </tr>
         <tr>
           <td><input placeholder="Tytuł" v-model="size" type="text" class="title" /></td>
-          <textarea class="desc" v-model="face" name="" id=""></textarea>
+          <td>
+            <textarea placeholder="Opis" v-model="face" class="desc"></textarea>
+          </td>
           <td><input placeholder="Notatka" v-model="note" type="text" class="note" /></td>
-          <td style="display: flex">
-            <input placeholder="Klej" v-model="glue" type="text" class="glue" />
+          <td><input placeholder="Klej" v-model="glue" type="text" class="glue" /></td>
+          <td>
             <input placeholder="Paczki" v-model="packsCount" type="number" class="packs" min="1" />
+            <span>x</span>
             <input placeholder="Szt." v-model="piecesCount" type="number" class="pcs" />
           </td>
           <td><button @click="addProduct()">Dodaj</button></td>
@@ -204,5 +273,43 @@ textarea {
 .pcs {
   text-align: right;
   width: 5ch;
+}
+
+.icon {
+  display: grid;
+  grid-template-columns: 3fr 5fr 3fr;
+  grid-template-rows: 3fr 5fr 3fr;
+  gap: 1px;
+  place-self: center;
+
+  width: 1.8rem;
+  aspect-ratio: 1.4;
+}
+
+.icon span {
+  height: 100%;
+  background-color: silver;
+}
+.icon span.active {
+  background-color: orange;
+}
+.icon span:nth-of-type(1) {
+  grid-column: 1/4;
+}
+.icon span:nth-of-type(2) {
+  grid-column: 1/4;
+  /* grid-row: 2/4; */
+}
+.icon span:nth-of-type(3) {
+  grid-column: 1/2;
+  /* grid-row: 4/5; */
+}
+.icon span:nth-of-type(4) {
+  grid-column: 2/3;
+  /* grid-row: 4/5; */
+}
+.icon span:nth-of-type(5) {
+  grid-column: 3/4;
+  /* grid-row: 4/5; */
 }
 </style>

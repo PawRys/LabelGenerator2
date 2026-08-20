@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200..800&family=Rajdhani:wght@300;400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+/* @import url('bootstrap-icons/font/bootstrap-icons.min.css'); */
+
+*,
+*::after,
+*::before {
+  position: relative;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  background-color: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  font-size: 112.5%; /* 18px */
+}
+
+body {
+  padding-inline: 1ch;
+  max-width: 105ch;
+  margin-inline: auto;
+  font-size: 1rem;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+p {
+  margin-block: 0.5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding-block: 0.5em;
+  margin-block: 0.75em 1em;
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 2.4rem;
+  border-bottom: solid 1px lightskyblue;
+}
+
+h2 {
+  font-size: 2.1rem;
+}
+
+:is(button, .button) {
+  display: inline-flex;
+  gap: 1ch;
+
+  /* margin: 0.3em; */
+  padding: 0.5em 0.8em;
+  color: midnightblue;
+  background-color: aliceblue;
+  border: none;
+  border-radius: 0.5em;
+
+  /* transition-property: all;
+	transition-duration: 300ms; */
+}
+
+:is(button, .button).cta {
+  background-color: lightsteelblue;
+  font-family: 'Roboto Flex', serif;
+  font-weight: 400;
+}
+
+:is(button, .button):hover {
+  cursor: pointer;
+  background-color: steelblue;
+  color: aliceblue;
+}

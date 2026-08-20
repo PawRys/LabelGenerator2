@@ -175,8 +175,8 @@ function getCMRNum(text: string): string {
 </script>
 
 <template>
-  <button>
-    <label for="PDFupload-button" class="button cta">Dodaj pliki</label>
+  <button class="button cta">
+    <label for="PDFupload-button">Dodaj z faktury</label>
     <input
       type="file"
       name="PDFupload-button"
