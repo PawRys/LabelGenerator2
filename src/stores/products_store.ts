@@ -127,6 +127,12 @@ export const useProductStore = defineStore('products', {
 
   actions: {
     addProduct(product: Product) {
+      const exists = this.products.some((p) => p.id === product.id)
+
+      if (exists) {
+        return
+      }
+
       this.products.push(product)
     },
 

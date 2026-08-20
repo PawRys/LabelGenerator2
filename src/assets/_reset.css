@@ -1,0 +1,21 @@
+*,
+*::after,
+*::before {
+  position: relative;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}

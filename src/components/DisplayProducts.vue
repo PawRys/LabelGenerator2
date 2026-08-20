@@ -81,18 +81,53 @@ function addProduct() {
 
 <template>
   <section>
+    <header>
+      <input
+        id="search-query"
+        v-model="productStore.searchQuery"
+        type="search"
+        list="search-options"
+        placeholder="Szukaj..."
+      />
+
+      <div id="delivery-filters">
+        <select v-model="productStore.searchQuery" :size="Math.min(truckNumList.length + 1, 5)">
+          <option value="">Numer auta</option>
+
+          <option v-for="truck in truckNumList" :key="truck" :value="truck">
+            {{ truck }}
+          </option>
+        </select>
+
+        <select v-model="productStore.searchQuery" :size="Math.min(cmrNumList.length + 1, 5)">
+          <option value="">Numer CMR</option>
+
+          <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">
+            {{ cmr }}
+          </option>
+        </select>
+
+        <select v-model="productStore.searchQuery" :size="Math.min(arrivalPlaceList.length + 1, 5)">
+          <option value="">Miejsce dostawy</option>
+
+          <option v-for="arrival in arrivalPlaceList" :key="arrival" :value="arrival">
+            {{ arrival }}
+          </option>
+        </select>
+      </div>
+
+      <!-- <h4>Kolejność</h4> -->
+      <div id="sorting-buttons">
+        <button @click="productStore.sortFunction = 'default'">kolejność z faktury</button>
+        <button @click="productStore.sortFunction = 'bysize'">po grubości</button>
+        <button @click="productStore.sortFunction = 'byformat'">po formacie</button>
+      </div>
+    </header>
+
     <h3>
       Ilość paczek
       {{ productStore.filteredProducts.reduce((acc, item) => acc + item.packsCount, 0) }}
     </h3>
-
-    <input
-      v-model="productStore.searchQuery"
-      type="search"
-      name=""
-      list="search-options"
-      placeholder="Szukaj..."
-    />
 
     <datalist id="search-options">
       <option v-for="truck in truckNumList" :key="truck" :value="truck">
@@ -106,34 +141,6 @@ function addProduct() {
       </option>
     </datalist>
 
-    <select v-model="productStore.searchQuery" size="7">
-      <option value="">Numer auta</option>
-
-      <option v-for="truck in truckNumList" :key="truck" :value="truck">
-        {{ truck }}
-      </option>
-    </select>
-
-    <select v-model="productStore.searchQuery" size="7">
-      <option value="">Numer CMR</option>
-
-      <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">
-        {{ cmr }}
-      </option>
-    </select>
-
-    <select v-model="productStore.searchQuery" size="7">
-      <option value="">Miejsce dostawy</option>
-
-      <option v-for="arrival in arrivalPlaceList" :key="arrival" :value="arrival">
-        {{ arrival }}
-      </option>
-    </select>
-
-    <button @click="productStore.sortFunction = 'default'">kolejność z faktury</button>
-    <button @click="productStore.sortFunction = 'bysize'">po grubości</button>
-    <button @click="productStore.sortFunction = 'byformat'">po formacie</button>
-
     <table>
       <thead>
         <tr>
@@ -144,7 +151,10 @@ function addProduct() {
           <th>Paczki x Sztuki</th>
           <!-- <th>Dane dostawy</th> -->
           <th>
-            <button @click="productStore.removeSelected(productStore.filteredProducts)">
+            <button
+              class="btn-danger"
+              @click="productStore.removeSelected(productStore.filteredProducts)"
+            >
               Usuń {{ productStore.filteredProducts.length }}
             </button>
           </th>
@@ -153,21 +163,27 @@ function addProduct() {
 
       <tbody>
         <tr v-for="product in productStore.filteredProducts" :key="product.id" :id="product.id">
-          <td><input class="title" type="text" v-model="product.size" /></td>
-          <td><textarea class="desc" v-model="product.face" name="" id=""></textarea></td>
-          <td><input class="note" type="text" v-model="product.invoiceNum" /></td>
-          <td><input class="glue" type="text" v-model="product.glue" /></td>
+          <td><input class="edit_title" type="text" v-model="product.size" autocomplete="on" /></td>
+          <td><textarea class="edit_desc" v-model="product.face" autocomplete="on"></textarea></td>
           <td>
-            <input class="packs" type="number" v-model="product.packsCount" min="1" />
+            <input class="edit_note" type="text" v-model="product.invoiceNum" autocomplete="on" />
+          </td>
+          <td><input class="edit_glue" type="text" v-model="product.glue" autocomplete="on" /></td>
+          <td>
+            <input class="edit_packs" type="number" v-model="product.packsCount" min="1" />
             <span>x</span>
-            <input class="pcs" type="number" v-model="product.piecesCount" />
+            <input class="edit_pieces" type="number" v-model="product.piecesCount" />
           </td>
           <!-- <td>
             {{
               `${product.id || 'Brak danych'} / ${product.arrivalPlace || 'Brak danych'} / ${product.truckNum || 'Brak danych'} `
             }}
           </td> -->
-          <td><button @click="productStore.removeProduct(product.id)">Usuń</button></td>
+          <td>
+            <button class="btn-secondary" @click="productStore.removeProduct(product.id)">
+              Usuń
+            </button>
+          </td>
         </tr>
       </tbody>
 
@@ -220,18 +236,48 @@ function addProduct() {
           </th>
         </tr>
         <tr>
-          <td><input placeholder="Tytuł" v-model="size" type="text" class="title" /></td>
           <td>
-            <textarea placeholder="Opis" v-model="face" class="desc"></textarea>
+            <input
+              class="new_title"
+              placeholder="Tytuł"
+              v-model="size"
+              type="text"
+              autocomplete="on"
+            />
           </td>
-          <td><input placeholder="Notatka" v-model="note" type="text" class="note" /></td>
-          <td><input placeholder="Klej" v-model="glue" type="text" class="glue" /></td>
           <td>
-            <input placeholder="Paczki" v-model="packsCount" type="number" class="packs" min="1" />
+            <textarea class="new_desc" placeholder="Opis" v-model="face"></textarea>
+          </td>
+          <td>
+            <input
+              class="new_note"
+              placeholder="Notatka"
+              v-model="note"
+              type="text"
+              autocomplete="on"
+            />
+          </td>
+          <td>
+            <input
+              class="new_glue"
+              placeholder="Klej"
+              v-model="glue"
+              type="text"
+              autocomplete="on"
+            />
+          </td>
+          <td>
+            <input
+              class="new_packs"
+              placeholder="Paczki"
+              v-model="packsCount"
+              type="number"
+              min="1"
+            />
             <span>x</span>
-            <input placeholder="Szt." v-model="piecesCount" type="number" class="pcs" />
+            <input class="new_pieces" placeholder="Szt." v-model="piecesCount" type="number" />
           </td>
-          <td><button @click="addProduct()">Dodaj</button></td>
+          <td><button class="btn-secondary" @click="addProduct()">Dodaj</button></td>
         </tr>
       </tfoot>
     </table>
@@ -239,38 +285,78 @@ function addProduct() {
 </template>
 
 <style scoped>
+header {
+  display: grid;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+
+  grid-template-areas:
+    'search-query'
+    'delivery-filters'
+    'sorting-buttons';
+}
+
+#search-query {
+  grid-area: search-query;
+  max-width: 100%;
+  text-align: center;
+}
+
+#search-query:not(:placeholder-shown) {
+  background-color: var(--color-danger, orange);
+}
+
+#delivery-filters {
+  grid-area: delivery-filters;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+#sorting-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
 textarea {
-  font-family: arial, sans-serif;
   text-align: center;
   width: 26ch;
 }
 
-.title {
+.new_title,
+.edit_title {
   text-align: center;
   width: 18ch;
 }
 
-.desc {
+.new_desc,
+.edit_desc {
   text-align: center;
   width: 26ch;
 }
 
-.note {
+.new_note,
+.edit_note {
   text-align: center;
   width: 18ch;
 }
 
-.glue {
+.new_glue,
+.edit_glue {
   text-align: center;
   width: 5ch;
 }
 
-.packs {
+.new_packs,
+.edit_packs {
   text-align: right;
   width: 5ch;
 }
 
-.pcs {
+.new_pieces,
+.edit_pieces {
   text-align: right;
   width: 5ch;
 }
