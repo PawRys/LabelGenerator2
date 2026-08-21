@@ -112,6 +112,19 @@ h3 {
   margin-bottom: 1rem;
 }
 
+/* Chrome, Safari, Edge */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 .new_title,
 .edit_title {
   text-align: center;
@@ -138,13 +151,13 @@ h3 {
 
 .new_packs,
 .edit_packs {
-  text-align: right;
+  text-align: center;
   width: 5ch;
 }
 
 .new_pieces,
 .edit_pieces {
-  text-align: right;
+  text-align: center;
   width: 5ch;
 }
 </style>
