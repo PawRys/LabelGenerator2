@@ -1,5 +1,6 @@
 export interface Product {
   id: string
+  timestamp: number
   size: string
   face: string
   glue: string

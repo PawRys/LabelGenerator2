@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import PDFUpload from '@/components/PDFUpload.vue'
-import ProductList from '@/components/DisplayProducts.vue'
+import TableDisplay from '@/components/TableDisplay.vue'
+import TableSettings from './components/TableSettings.vue'
 </script>
 
 <template>
@@ -16,8 +16,8 @@ import ProductList from '@/components/DisplayProducts.vue'
     <h1>Etykieter</h1>
   </header>
 
-  <ProductList />
-  <PDFUpload />
+  <TableSettings />
+  <TableDisplay />
 </template>
 
 <style scoped></style>

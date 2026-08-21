@@ -101,11 +101,9 @@ function getLatvijasProducts(TEXTrows: string[]) {
         .trim()
     }
 
-    const product =
-      textrow.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{2,4}x[0-9]{2,4}) mm ([0-9]{1,2})x([0-9]{1,4})/) ??
-      []
+    const product = textrow.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{2,4}x[0-9]{2,4}) mm ([0-9]{1,2})x([0-9]{1,4})/) ?? []
     if (product.length) {
-      idNum = `${CMRNum || 'id'}_${(++idCounter).toString().padStart(3, '0')}`
+      idNum = `${CMRNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
       const [, x, y, z] = product
       itemSize = x ?? ''
       itemPacksCount = Number(y) ?? 0
@@ -113,6 +111,7 @@ function getLatvijasProducts(TEXTrows: string[]) {
 
       productStore.addProduct({
         id: idNum,
+        timestamp: Date.now(),
         size: itemSize,
         face: itemFace,
         glue: itemGlue,
@@ -176,15 +175,8 @@ function getCMRNum(text: string): string {
 
 <template>
   <button class="btn-primary">
-    <label for="PDFupload-button">Dodaj z faktury</label>
-    <input
-      type="file"
-      name="PDFupload-button"
-      id="PDFupload-button"
-      multiple
-      hidden
-      @change="doit"
-    />
+    <label for="PDFupload-button"><slot>Dodaj z faktury</slot></label>
+    <input type="file" name="PDFupload-button" id="PDFupload-button" multiple hidden @change="doit" />
   </button>
 </template>
 

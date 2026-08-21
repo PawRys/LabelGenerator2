@@ -33,7 +33,12 @@ const parseFormat = (val: [number, number, number]) => {
 }
 
 const sortFunctions = {
-  /** sort by ID. In order of appearance in invoice. */
+  bytime(products: Product[]) {
+    return [...products].sort((a, b) => {
+      return compare(a.timestamp, b.timestamp)
+    })
+  },
+
   default(products: Product[]) {
     return [...products].sort((a, b) => {
       return compare(a.id, b.id)
