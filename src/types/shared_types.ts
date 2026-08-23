@@ -11,3 +11,5 @@ export interface Product {
   truckNum?: string
   cmrNum?: string
 }
+
+export type SortFunction = 'byformat' | 'bysize' | 'default' | 'bytime'

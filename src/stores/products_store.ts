@@ -90,6 +90,7 @@ export const useProductStore = defineStore('products', {
     products: [] as Product[],
     searchQuery: '',
     sortFunction: 'default' as keyof typeof sortFunctions,
+    printMode: 'double',
   }),
 
   getters: {

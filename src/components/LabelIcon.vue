@@ -22,7 +22,7 @@ defineProps({
   gap: 1px;
   place-self: center;
 
-  width: 1.8rem;
+  width: 2rem;
   aspect-ratio: 1.41421;
 }
 
