@@ -7,7 +7,15 @@ const productStore = useProductStore()
   <section>
     <template v-for="(item, index) in productStore.filteredProducts" :key="`${index}-${item.id})}`">
       <div class="page" v-for="i in item.packsCount" :key="`page-${index}-${i}`">
-        <div class="label">
+        <div :class="`label first_label`">
+          <div class="label_title">{{ item.size }}</div>
+          <div class="label_desc">{{ item.face }}</div>
+          <div class="label_glue">{{ item.glue }}</div>
+          <div class="label_note">{{ item.invoiceNum }}</div>
+          <div class="label_pieces">{{ item.piecesCount }}</div>
+        </div>
+
+        <div class="label second_label">
           <div class="label_title">{{ item.size }}</div>
           <div class="label_desc">{{ item.face }}</div>
           <div class="label_glue">{{ item.glue }}</div>
@@ -30,28 +38,35 @@ const productStore = useProductStore()
 }
 
 .label {
-  --size: 297mm;
+  --size: 210mm;
+  --fs-normal: 2.8cm;
+  --fs-small: calc(var(--fs-normal) * 0.75);
+  --fs-smaller: calc(var(--fs-normal) * 0.55);
+  --fs-smallest: calc(var(--fs-normal) * 0.35);
 
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: auto 1fr auto;
   grid-template-rows: 1fr auto auto;
-  grid-template-areas:
-    'titl titl titl'
-    'desc desc desc'
-    'glue note pcs ';
   align-items: end;
+  grid-template-areas:
+    'title title title'
+    'desc  desc  desc'
+    'glue  note  pcs';
+
   gap: 0.2em;
   padding: 0.2em;
-
-  font-size: calc(var(--size) / 10);
-  font-family: 'Roboto Flex', serif;
-  font-optical-sizing: auto;
-
   width: 100%;
-  height: 100%;
+  height: 50%;
 
+  font-family: 'Roboto Flex', serif;
+  font-size: var(--fs-normal); /* Master font size for all label childs */
+  font-weight: 500;
   text-align: center;
   line-height: 1.1;
+}
+
+.second_label {
+  border-top: 1px dashed silver;
 }
 
 .label > div {
@@ -60,21 +75,26 @@ const productStore = useProductStore()
 }
 
 .label_title {
-  grid-area: titl;
-  max-height: 3.4em;
+  grid-area: title;
+  /* max-height: 1.1em; */
+  font-size: var(--fs-normal);
   font-weight: 600;
 }
 
 .label_desc {
   grid-area: desc;
-  max-height: 3.4em;
-  font-size: 0.9em;
+  min-height: calc(var(--fs-normal) * 1);
+  max-height: calc(var(--fs-normal) * 2.3);
+  font-size: var(--fs-small);
+  white-space: pre-line;
+  text-wrap: balance;
 }
 
 .label_note {
   grid-area: note;
   max-height: 1.1em;
-  font-size: 0.7em;
+  font-size: var(--fs-smallest);
+  font-weight: 400;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -82,15 +102,19 @@ const productStore = useProductStore()
 .label_glue {
   grid-area: glue;
   max-height: 1.1em;
+  font-size: var(--fs-smaller);
 }
 
 .label_pieces {
   grid-area: pcs;
   max-height: 1.1em;
+  font-size: var(--fs-normal);
+  font-weight: 500;
 }
 
 .label_pieces:after {
   content: 'szt.';
-  font-size: 0.5em;
+  font-size: var(--fs-smallest);
+  font-weight: 400;
 }
 </style>

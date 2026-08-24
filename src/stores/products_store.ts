@@ -45,6 +45,21 @@ const sortFunctions = {
     })
   },
 
+  bytruckandsize(products: Product[]) {
+    return [...products].sort((a, b) => {
+      const aSize = parseSize(a.size)
+      const bSize = parseSize(b.size)
+
+      return (
+        compare(a.truckNum, b.truckNum) || // Truck number
+        compare(aSize[0], bSize[0]) || // Thickness
+        compare(aSize[1], bSize[1]) || // Size A
+        compare(aSize[2], bSize[2]) || // Size B
+        compare(a.piecesCount, b.piecesCount) // Pieces in pack
+      )
+    })
+  },
+
   bysize(products: Product[]) {
     return [...products].sort((a, b) => {
       const aSize = parseSize(a.size)

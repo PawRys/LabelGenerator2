@@ -98,7 +98,7 @@ function getLatvijasProducts(TEXTrows: string[]) {
       itemFace = textrow
         .replace(/Birch plywood RIGA |PLY|TEX|FORM|MEL|/gi, '')
         .replace(/, edges sealed .*|,[^,]*441233[0-9]{2}.*/gi, '')
-        .replace(/,/gi, '')
+        .replace(/,/i, '\n')
         .trim()
     }
 

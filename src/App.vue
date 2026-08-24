@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import TableDisplay from '@/components/TableDisplay.vue'
-import TableFilters from './components/TableFilters.vue'
-import PrintLayoutSingle from './components/PrintLayoutSingle.vue'
-import PrintLayoutDouble from './components/PrintLayoutDouble.vue'
-import PrintLayoutChecklist from './components/PrintLayoutChecklist.vue'
+import ButtonBar from '@/components/table_rows/ButtonBar.vue'
+import AddProduct from '@/components/table_rows/AddProduct.vue'
+import FilterProducts from '@/components/table_rows/FilterProducts.vue'
+import DisplayProducts from '@/components/table_rows/DisplayProducts.vue'
+import PrintLayoutSingle from '@/components/print_layouts/Single.vue'
+import PrintLayoutDouble from '@/components/print_layouts/Double.vue'
+import PrintLayoutChecklist from '@/components/print_layouts/Checklist.vue'
+
 import { computed } from 'vue'
 import { useProductStore } from '@/stores/products_store'
 
 const productStore = useProductStore()
+const pageCounter = () => productStore.filteredProducts.reduce((acc, item) => acc + item.packsCount, 0)
 
 const printLayout = computed(() => {
   if (productStore.printMode === 'single') return PrintLayoutSingle
@@ -31,8 +35,23 @@ const printLayout = computed(() => {
     <h1>Etykieter</h1>
   </header>
 
-  <TableFilters class="noprint" />
-  <TableDisplay class="noprint" />
+  <table class="noprint">
+    <thead>
+      <FilterProducts v-if="pageCounter() > 0" />
+      <AddProduct />
+
+      <tr>
+        <td colspan="6">
+          <h3 id="page-counter">Ilość stron do wydrukowania: {{ pageCounter() }}</h3>
+        </td>
+      </tr>
+
+      <ButtonBar />
+    </thead>
+    <tbody>
+      <DisplayProducts />
+    </tbody>
+  </table>
 
   <component id="printme" :is="printLayout"></component>
 
@@ -51,6 +70,18 @@ const printLayout = computed(() => {
 </template>
 
 <style>
+#app {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+@media (max-width: 768px) {
+  td {
+    display: block;
+  }
+}
+
 @media screen {
   #printme {
     display: none;
@@ -58,17 +89,21 @@ const printLayout = computed(() => {
 }
 
 @media print {
-  body > :not(#app),
-  .noprint {
+  .noprint,
+  body > :not(#app) {
     display: none !important;
   }
 
-  #printme {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+  body {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
   }
+}
+</style>
+
+<style scoped>
+#page-counter {
+  margin-top: 3rem;
 }
 </style>
