@@ -35,23 +35,22 @@ const printLayout = computed(() => {
     <h1>Etykieter</h1>
   </header>
 
-  <table class="noprint">
-    <thead>
-      <FilterProducts v-if="pageCounter() > 0" />
-      <AddProduct />
+  <ul id="products-list" class="noprint">
+    <FilterProducts v-if="pageCounter() > 0" />
+    <AddProduct />
+    <li>
+      <h3 id="page-counter">Ilość stron do wydrukowania: {{ pageCounter() }}</h3>
+    </li>
+    <ButtonBar />
+    <DisplayProducts />
+  </ul>
 
-      <tr>
-        <td colspan="6">
-          <h3 id="page-counter">Ilość stron do wydrukowania: {{ pageCounter() }}</h3>
-        </td>
-      </tr>
-
-      <ButtonBar />
-    </thead>
-    <tbody>
-      <DisplayProducts />
-    </tbody>
-  </table>
+  <datalist id="glue-datalist" class="noprint">
+    <option value="EXT" />
+    <option value="INT" />
+    <option value="WD" />
+    <option value="MR" />
+  </datalist>
 
   <component id="printme" :is="printLayout"></component>
 
@@ -76,9 +75,107 @@ const printLayout = computed(() => {
   grid-template-rows: auto 1fr auto;
 }
 
-@media (max-width: 768px) {
-  td {
-    display: block;
+#products-list {
+  padding: 0;
+}
+
+:where(#products-list) > li {
+  list-style: none;
+
+  margin-block: 1em;
+
+  display: grid;
+  align-items: center;
+  gap: 0.5em;
+  grid-template-columns: 3fr 3fr 2fr max-content max-content max-content;
+  grid-template-areas: 'title desc note glue  pack btn';
+}
+
+.grid-title {
+  grid-area: title;
+}
+.grid-desc {
+  grid-area: desc;
+}
+.grid-note {
+  grid-area: note;
+}
+.grid-glue {
+  grid-area: glue;
+}
+.grid-pack {
+  grid-area: pack;
+}
+.grid-btn {
+  grid-area: btn;
+}
+
+.full-width {
+  grid-template-columns: 1fr;
+}
+
+.add-title {
+  font-family: 'Roboto Flex', var(--font-family, sans-serif);
+  font-weight: 200;
+}
+
+.add-title,
+.edit-title {
+  text-align: center;
+  width: 100%;
+}
+
+.add-desc,
+.edit-desc {
+  text-align: center;
+  width: 100%;
+}
+
+.add-note,
+.edit-note {
+  text-align: center;
+  width: 100%;
+}
+
+.add-glue,
+.edit-glue {
+  text-align: center;
+  width: 5.5ch;
+}
+
+.add-glue {
+  width: 8ch;
+}
+
+.add-packs,
+.edit-packs {
+  text-align: center;
+  width: 5.5ch;
+}
+
+.add-pieces,
+.edit-pieces {
+  grid-area: packs;
+  text-align: center;
+  width: 5.5ch;
+}
+
+@media (max-width: 1000px) {
+  :where(#products-list) > li {
+    grid-template-columns: auto auto 1fr;
+    grid-template-areas:
+      'title title title'
+      'desc  desc  desc'
+      'note  note  note'
+      'glue  pack  btn';
+  }
+
+  :where(#products-list) > li:not(.full-width) {
+    padding-bottom: 2em;
+  }
+
+  .grid-btn {
+    place-self: end;
   }
 }
 
@@ -102,8 +199,4 @@ const printLayout = computed(() => {
 }
 </style>
 
-<style scoped>
-#page-counter {
-  margin-top: 3rem;
-}
-</style>
+<style scoped></style>

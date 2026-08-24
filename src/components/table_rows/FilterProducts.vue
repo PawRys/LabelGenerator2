@@ -47,57 +47,50 @@ const cmrNumList = computed(() => {
 </script>
 
 <template>
-  <tr class="sticky">
-    <td colspan="4">
-      <input
-        id="search-query"
+  <li class="sticky full-width">
+    <input
+      id="search-query"
+      v-model="productStore.searchQuery"
+      type="search"
+      list="search-options"
+      placeholder="Szukaj..."
+    />
+  </li>
+
+  <li v-if="pageCounter() > 0" class="full-width">
+    <h4>Wybór dostawy:</h4>
+    <div id="delivery-filters">
+      <select
         v-model="productStore.searchQuery"
-        type="search"
-        list="search-options"
-        placeholder="Szukaj..."
-      />
-    </td>
-  </tr>
+        @focus="truckSelectFocused = true"
+        @blur="truckSelectFocused = false"
+        :size="5"
+      >
+        <option value="">Numer auta</option>
+        <option v-for="truck in truckNumList" :key="truck" :value="truck">{{ truck }}</option>
+      </select>
 
-  <tr v-if="pageCounter() > 0">
-    <td colspan="4"><h4>Wybór dostawy:</h4></td>
-  </tr>
+      <select
+        v-model="productStore.searchQuery"
+        @focus="cmrSelectFocused = true"
+        @blur="cmrSelectFocused = false"
+        :size="5"
+      >
+        <option value="">Numer CMR</option>
+        <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">{{ cmr }}</option>
+      </select>
 
-  <tr v-if="pageCounter() > 0">
-    <td colspan="4">
-      <div id="delivery-filters">
-        <select
-          v-model="productStore.searchQuery"
-          @focus="truckSelectFocused = true"
-          @blur="truckSelectFocused = false"
-          :size="5"
-        >
-          <option value="">Numer auta</option>
-          <option v-for="truck in truckNumList" :key="truck" :value="truck">{{ truck }}</option>
-        </select>
-
-        <select
-          v-model="productStore.searchQuery"
-          @focus="cmrSelectFocused = true"
-          @blur="cmrSelectFocused = false"
-          :size="5"
-        >
-          <option value="">Numer CMR</option>
-          <option v-for="cmr in cmrNumList" :key="cmr" :value="cmr">{{ cmr }}</option>
-        </select>
-
-        <select
-          v-model="productStore.searchQuery"
-          @focus="arrivalSelectFocused = true"
-          @blur="arrivalSelectFocused = false"
-          :size="5"
-        >
-          <option value="">Miejsce dostawy</option>
-          <option v-for="arrival in arrivalPlaceList" :key="arrival" :value="arrival">{{ arrival }}</option>
-        </select>
-      </div>
-    </td>
-  </tr>
+      <select
+        v-model="productStore.searchQuery"
+        @focus="arrivalSelectFocused = true"
+        @blur="arrivalSelectFocused = false"
+        :size="5"
+      >
+        <option value="">Miejsce dostawy</option>
+        <option v-for="arrival in arrivalPlaceList" :key="arrival" :value="arrival">{{ arrival }}</option>
+      </select>
+    </div>
+  </li>
 </template>
 
 <style scoped>
@@ -108,6 +101,7 @@ const cmrNumList = computed(() => {
 }
 
 #search-query {
+  grid-column: 1 / -1;
   margin-bottom: 1rem;
   width: 100%;
   text-align: center;
@@ -126,6 +120,8 @@ const cmrNumList = computed(() => {
   justify-content: center;
   gap: 1rem;
   margin-bottom: 3rem;
+
+  grid-column: 1 / -1;
 }
 
 #delivery-filters > * {

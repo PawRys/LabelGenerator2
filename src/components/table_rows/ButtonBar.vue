@@ -58,48 +58,31 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 </script>
 
 <template>
-  <tr>
-    <td colspan="6" v-if="pageCounter() > 0">
-      <div class="print-buttons">
-        <button @click="printMe('single')"><PrinterIcon /> Jedna duża</button>
-        <button @click="printMe('double')"><PrinterIcon /> Dwie małe</button>
-        <button @click="printMe('checklist')"><PrinterIcon /> Lista kontrolna</button>
-        <Button_SortSettings><SettingsIcon size="32" /></Button_SortSettings>
-        <button id="btn-removeall" @click="removeSelectedItems()">
-          {{ `Usuń\n${productStore.searchQuery || 'wszystkie'}` }}
-        </button>
-      </div>
-    </td>
-  </tr>
+  <li v-if="pageCounter() > 0" class="print-buttons">
+    <button class="print-btn" @click="printMe('single')"><PrinterIcon /> Jedna duża</button>
+    <button class="print-btn" @click="printMe('double')"><PrinterIcon /> Dwie małe</button>
+    <button class="print-btn" @click="printMe('checklist')"><PrinterIcon /> Lista kontrolna</button>
+    <Button_SortSettings class="btn"><SettingsIcon /></Button_SortSettings>
+    <button class="btn" id="btn-removeall" @click="removeSelectedItems()">
+      {{ `Usuń ${productStore.searchQuery || 'wszystkie'}` }}
+    </button>
+  </li>
 </template>
 
 <style scoped>
 .print-buttons {
   display: flex;
-  gap: 1rem;
+  gap: 1ex;
 
-  margin-bottom: 3rem;
+  margin-bottom: 3ex;
+}
+
+.print-btn {
+  font-family: 'Roboto Flex';
 }
 
 #btn-removeall {
   margin-left: auto;
   white-space: pre-line;
-}
-
-button {
-  display: flex;
-  gap: 1ch;
-  align-items: center;
-}
-
-button .icon {
-  /* background-color: brown; */
-  border: 1px dashed black;
-}
-
-button > .double {
-  display: grid;
-  gap: 1px;
-  scale: 0.7;
 }
 </style>

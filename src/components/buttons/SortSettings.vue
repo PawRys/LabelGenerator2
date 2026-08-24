@@ -3,7 +3,9 @@ import type { SortFunction } from '@/types/shared_types'
 
 import { ref } from 'vue'
 import { useSettingsStore } from '@/stores/settings_store'
+import { useAttrs } from 'vue'
 
+const attrs = useAttrs()
 const settingsStore = useSettingsStore()
 const dialog = ref<HTMLDialogElement | null>(null)
 
@@ -54,30 +56,39 @@ function closeOnBackdrop(event: MouseEvent) {
 </script>
 
 <template>
-  <button @click="openModal"><slot>Ustawienia sortowania</slot></button>
+  <button v-bind="attrs" @click="openModal"><slot>Ustawienia sortowania</slot></button>
 
   <dialog ref="dialog" @click="closeOnBackdrop">
     <h3>Sortowanie dla:</h3>
-    <table>
-      <tr>
-        <td v-for="group in sortGroups" :key="group.key">
-          <h5>{{ group.title }}</h5>
+    <section>
+      <div class="group" v-for="group in sortGroups" :key="group.key">
+        <h5>{{ group.title }}</h5>
 
-          <label v-for="option in sortOptions" :key="`${group.key}-${option.value}`">
-            <input v-model="settingsStore[group.key]" :value="option.value" :name="group.name" type="radio" />
-            {{ option.label }}
-          </label>
-        </td>
-      </tr>
-    </table>
+        <label v-for="option in sortOptions" :key="`${group.key}-${option.value}`">
+          <input v-model="settingsStore[group.key]" :value="option.value" :name="group.name" type="radio" />
+          {{ option.label }}
+        </label>
+      </div>
 
-    <button @click="closeModal">Zamknij</button>
+      <button @click="closeModal">Zamknij</button>
+    </section>
   </dialog>
 </template>
 
 <style scoped>
 dialog::backdrop {
   background: rgb(0 0 0 / 50%);
+}
+
+section {
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+}
+
+.group {
+  flex-basis: 50%;
+  flex-grow: 1;
 }
 
 label {

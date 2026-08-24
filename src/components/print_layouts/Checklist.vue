@@ -5,7 +5,7 @@ import { useProductStore } from '@/stores/products_store'
 const productStore = useProductStore()
 
 function showTruckHeader(item: Product, index: number): boolean {
-  if (productStore.sortFunction !== 'bytruckandsize') {
+  if (!['bytruckandsize', 'default'].includes(productStore.sortFunction)) {
     return false
   }
 

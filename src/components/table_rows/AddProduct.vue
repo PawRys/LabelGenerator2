@@ -11,7 +11,7 @@ const face = ref('')
 const glue = ref('')
 const note = ref('')
 const packsCount = ref(1)
-const piecesCount = ref(0)
+const piecesCount = ref<number | null>(null)
 
 let idCounter = 0
 
@@ -24,7 +24,7 @@ function addProduct() {
     glue: glue.value,
     invoiceNum: note.value,
     packsCount: packsCount.value,
-    piecesCount: piecesCount.value,
+    piecesCount: piecesCount.value || 0,
     arrivalPlace: 'Ręcznie dodany',
     truckNum: 'Ręcznie dodany',
     cmrNum: 'Ręcznie dodany',
@@ -36,122 +36,87 @@ function addProduct() {
   glue.value = ''
   note.value = ''
   packsCount.value = 1
-  piecesCount.value = 0
+  piecesCount.value = null
 }
 </script>
 
 <template>
-  <tr>
-    <th colspan="4"><BTN_Upload id="upload">Dodaj z plików pdf</BTN_Upload></th>
-  </tr>
+  <li>
+    <div class="heading-item grid-title">
+      <LabelIcon class="title-icon" highlight="title" />
+      <input class="add-title" placeholder="Tytuł" v-model="size" autocomplete="on" @keypress.enter="addProduct()" />
+    </div>
 
-  <tr class="icons">
-    <th><LabelIcon highlight="title" /></th>
-    <th><LabelIcon highlight="desc" /></th>
-    <th><LabelIcon highlight="note" /></th>
-    <th><LabelIcon highlight="glue" /><LabelIcon highlight="pcs" /></th>
-  </tr>
+    <div class="heading-item grid-desc">
+      <LabelIcon class="desc-icon" highlight="desc" />
+      <textarea class="add-desc" placeholder="Opis" v-model="face" autocomplete="on"></textarea>
+    </div>
 
-  <tr>
-    <td>
-      <input class="new_title" placeholder="Tytuł" v-model="size" autocomplete="on" @keypress.enter="addProduct()" />
-    </td>
-    <td><textarea class="new_desc" placeholder="Opis" v-model="face" autocomplete="on"></textarea></td>
-    <td>
-      <input class="new_note" placeholder="Notatka" v-model="note" autocomplete="on" @keypress.enter="addProduct()" />
-    </td>
-    <td class="last-col">
-      <input class="new_glue" placeholder="Klej" v-model="glue" autocomplete="on" @keypress.enter="addProduct()" />
+    <div class="heading-item grid-note">
+      <LabelIcon class="note-icon" highlight="note" />
+      <input class="add-note" placeholder="Notatka" v-model="note" autocomplete="on" @keypress.enter="addProduct()" />
+    </div>
+
+    <div class="heading-item grid-glue">
+      <LabelIcon class="glue-icon" highlight="glue" />
       <input
-        class="new_packs"
-        placeholder="Paczki"
-        v-model="packsCount"
-        type="number"
+        class="add-glue"
+        placeholder="Klej"
+        v-model="glue"
+        autocomplete="on"
         @keypress.enter="addProduct()"
-        min="1"
+        list="glue-datalist"
       />
-      <span> x </span>
-      <input class="new_pieces" placeholder="Szt." v-model="piecesCount" type="number" @keypress.enter="addProduct()" />
-      <span>szt.</span>
+    </div>
+
+    <div class="heading-item grid-pack">
+      <LabelIcon class="pcs-icon" highlight="pcs" />
+      <span>
+        <input
+          class="add-packs"
+          placeholder="Paczki"
+          v-model="packsCount"
+          type="number"
+          @keypress.enter="addProduct()"
+          min="1"
+        />
+        <span> x </span>
+        <input
+          class="add-pieces"
+          placeholder="szt."
+          v-model="piecesCount"
+          type="number"
+          @keypress.enter="addProduct()"
+        />
+        <span>szt.</span>
+      </span>
+    </div>
+
+    <div class="heading-item grid-btn">
+      <BTN_Upload id="btn-upload">Dodaj pdf</BTN_Upload>
       <button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
-    </td>
-  </tr>
+    </div>
+  </li>
 </template>
 
 <style scoped>
-#upload {
-  margin-block: 1rem;
-  padding: 1rem;
-  width: min(100%, 35ch);
-  /* float: right; */
-}
-
-#btn-add {
-  width: 100%;
-  padding-block: 1em;
-}
-
-.last-col {
-  display: flex;
+.heading-item {
+  height: 100%;
+  /* gap: 0.5em; */
+  display: grid;
   align-items: center;
-  gap: 0.5ch;
+  grid-template-rows: 1fr 1fr;
 }
 
-/* Chrome, Safari, Edge */
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.heading-item :where(input, textarea, button):not(#btn-upload) {
+  border-color: orange;
 }
 
-/* Firefox */
-input[type='number'] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
-tr {
-  margin-bottom: 2rem;
-}
-
-.new_title {
-  font-family: 'Roboto Flex', var(--font-family, sans-serif);
-  font-weight: 200;
-}
-
-.new_title,
-.edit_title {
-  text-align: center;
-  width: 100%;
-}
-
-.new_desc,
-.edit_desc {
-  text-align: center;
-  width: 100%;
-}
-
-.new_note,
-.edit_note {
-  text-align: center;
-  width: 100%;
-}
-
-.new_glue,
-.edit_glue {
-  text-align: center;
-  width: 5ch;
-}
-
-.new_packs,
-.edit_packs {
-  text-align: center;
-  width: 5ch;
-}
-
-.new_pieces,
-.edit_pieces {
-  text-align: center;
-  width: 5ch;
+@media (max-width: 1000px) {
+  .heading-item {
+    grid-template-rows: 1fr;
+    grid-template-columns: auto 1fr;
+    gap: 0.5em;
+  }
 }
 </style>

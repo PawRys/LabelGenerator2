@@ -1,0 +1,6 @@
+input,
+textarea {
+  border: solid 1px grey;
+  border-radius: 3px;
+  padding: 0.5em;
+}

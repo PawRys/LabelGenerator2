@@ -1,14 +1,17 @@
-/* button, */
-/* .btn { */
-/* display: inline-flex; */
-/* align-items: center; */
-/* justify-content: center; */
-/* gap: var(--spacing-sm); */
+button,
+.button,
+.btn {
+  cursor: pointer;
 
-/* padding: var(--spacing-xs) var(--spacing-md); */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm, 1ch);
 
-/* border: 1px solid transparent; */
-/* border-radius: var(--radius-sm); */
+  border: solid 1px grey;
+  border-radius: 3px;
+  padding: 0.5em 1em;
+}
 
 /* font-family: 'Roboto Flex', var(--font-family, sans-serif); */
 /* font-size: 0.875rem; */

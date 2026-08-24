@@ -3,6 +3,7 @@
 @import url('./_variables.css');
 @import url('./_typography.css');
 @import url('./_buttons.css');
+@import url('./_forms.css');
 
 :root {
   font-size: 112.5%; /* 18px */
@@ -11,7 +12,7 @@
 
 body {
   padding-inline: 1ch;
-  max-width: 105ch;
+  max-width: 125ch;
   margin-inline: auto;
   font-size: 1rem;
 }
