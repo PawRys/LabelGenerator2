@@ -9,14 +9,14 @@ const productStore = useProductStore()
     <td><input class="edit_title" v-model="product.size" autocomplete="on" /></td>
     <td><textarea class="edit_desc" v-model="product.face" autocomplete="on"></textarea></td>
     <td><input class="edit_note" v-model="product.invoiceNum" autocomplete="on" /></td>
-    <td><input class="edit_glue" v-model="product.glue" autocomplete="on" /></td>
     <td>
+      <input class="edit_glue" v-model="product.glue" autocomplete="on" />
       <input class="edit_packs" type="number" v-model="product.packsCount" min="1" />
       <span> x </span>
       <input class="edit_pieces" type="number" v-model="product.piecesCount" />
       <span>szt.</span>
+      <button @click="productStore.removeProduct(product.id)">Usuń</button>
     </td>
-    <td><button @click="productStore.removeProduct(product.id)">Usuń</button></td>
   </tr>
 </template>
 

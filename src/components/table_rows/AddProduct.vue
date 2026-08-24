@@ -42,15 +42,14 @@ function addProduct() {
 
 <template>
   <tr>
-    <th colspan="6"><BTN_Upload id="upload">Dodaj z plików pdf</BTN_Upload></th>
+    <th colspan="4"><BTN_Upload id="upload">Dodaj z plików pdf</BTN_Upload></th>
   </tr>
 
   <tr class="icons">
     <th><LabelIcon highlight="title" /></th>
     <th><LabelIcon highlight="desc" /></th>
     <th><LabelIcon highlight="note" /></th>
-    <th><LabelIcon highlight="glue" /></th>
-    <th><LabelIcon highlight="pcs" /></th>
+    <th><LabelIcon highlight="glue" /><LabelIcon highlight="pcs" /></th>
   </tr>
 
   <tr>
@@ -61,11 +60,8 @@ function addProduct() {
     <td>
       <input class="new_note" placeholder="Notatka" v-model="note" autocomplete="on" @keypress.enter="addProduct()" />
     </td>
-    <td>
+    <td class="last-col">
       <input class="new_glue" placeholder="Klej" v-model="glue" autocomplete="on" @keypress.enter="addProduct()" />
-    </td>
-
-    <td>
       <input
         class="new_packs"
         placeholder="Paczki"
@@ -77,8 +73,8 @@ function addProduct() {
       <span> x </span>
       <input class="new_pieces" placeholder="Szt." v-model="piecesCount" type="number" @keypress.enter="addProduct()" />
       <span>szt.</span>
+      <button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
     </td>
-    <td><button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button></td>
   </tr>
 </template>
 
@@ -93,6 +89,12 @@ function addProduct() {
 #btn-add {
   width: 100%;
   padding-block: 1em;
+}
+
+.last-col {
+  display: flex;
+  align-items: center;
+  gap: 0.5ch;
 }
 
 /* Chrome, Safari, Edge */
@@ -126,7 +128,7 @@ tr {
 .new_desc,
 .edit_desc {
   text-align: center;
-  width: 26ch;
+  width: 100%;
 }
 
 .new_note,

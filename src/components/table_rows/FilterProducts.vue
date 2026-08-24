@@ -48,7 +48,7 @@ const cmrNumList = computed(() => {
 
 <template>
   <tr class="sticky">
-    <td colspan="6">
+    <td colspan="4">
       <input
         id="search-query"
         v-model="productStore.searchQuery"
@@ -60,11 +60,11 @@ const cmrNumList = computed(() => {
   </tr>
 
   <tr v-if="pageCounter() > 0">
-    <td colspan="6"><h4>Wybór dostawy:</h4></td>
+    <td colspan="4"><h4>Wybór dostawy:</h4></td>
   </tr>
 
   <tr v-if="pageCounter() > 0">
-    <td colspan="6">
+    <td colspan="4">
       <div id="delivery-filters">
         <select
           v-model="productStore.searchQuery"
