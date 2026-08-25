@@ -19,10 +19,10 @@ function resetIndex(item: Product, index: number): number {
     return 0
   }
 
-  const products = productStore.filteredProducts
+  const storedItems = productStore.filteredProducts
 
   for (let i = index; i >= 0; i--) {
-    if ((products[i]?.truckNum || '') !== (item.truckNum || '')) {
+    if ((storedItems[i]?.truckNum || '') !== (item.truckNum || '')) {
       return i + 1
     }
   }
@@ -38,7 +38,7 @@ function resetIndex(item: Product, index: number): number {
       <template v-for="(item, index) in productStore.filteredProducts" :key="`checklist-${index}`">
         <tr v-if="showTruckHeader(item, index)">
           <th colspan="5">
-            <h4 class="truck-number">{{ `${item.truckNum}` }}</h4>
+            <h4 class="truck-number">{{ `${item.truckNum} (ile paczek)` }}</h4>
           </th>
         </tr>
         <tr>

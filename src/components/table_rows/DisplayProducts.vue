@@ -19,7 +19,7 @@ function showTruckHeader(item: Product, index: number): boolean {
 <template>
   <template v-for="(product, index) in productStore.filteredProducts" :key="product.id">
     <li v-if="showTruckHeader(product, index)" class="full-width">
-      <h4 class="truck-number">{{ `${product.truckNum}` }}</h4>
+      <h4 class="truck-number">{{ `${product.truckNum} (ile paczek)` }}</h4>
     </li>
 
     <li :id="product.id">
