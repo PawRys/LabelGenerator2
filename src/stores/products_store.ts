@@ -23,11 +23,11 @@ export const useProductStore = defineStore('products', {
         products = products.filter((product) => {
           const searchableText = [
             product.id,
-            product.size,
-            product.face,
+            product.title,
+            product.desc,
             product.glue,
             product.arrivalPlace,
-            product.invoiceNum,
+            product.note,
             product.truckNum,
             product.cmrNum,
           ]
@@ -128,8 +128,8 @@ const sortFunctions = {
 
   bysize(products: Product[]) {
     return [...products].sort((a, b) => {
-      const aSize = parseSize(a.size)
-      const bSize = parseSize(b.size)
+      const aSize = parseSize(a.title)
+      const bSize = parseSize(b.title)
 
       return (
         compare(aSize[0], bSize[0]) || // Thickness
@@ -142,8 +142,8 @@ const sortFunctions = {
 
   byformat(products: Product[]) {
     return [...products].sort((a, b) => {
-      const aSize = parseSize(a.size)
-      const bSize = parseSize(b.size)
+      const aSize = parseSize(a.title)
+      const bSize = parseSize(b.title)
 
       const aFormat = parseFormat(aSize)
       const bFormat = parseFormat(bSize)
@@ -167,8 +167,8 @@ const sortFunctions = {
 
   bytruckandsize(products: Product[]) {
     return [...products].sort((a, b) => {
-      const aSize = parseSize(a.size)
-      const bSize = parseSize(b.size)
+      const aSize = parseSize(a.title)
+      const bSize = parseSize(b.title)
 
       return (
         compare(a.truckNum, b.truckNum) || // Truck number
@@ -182,8 +182,8 @@ const sortFunctions = {
 
   bytruckandformat(products: Product[]) {
     return [...products].sort((a, b) => {
-      const aSize = parseSize(a.size)
-      const bSize = parseSize(b.size)
+      const aSize = parseSize(a.title)
+      const bSize = parseSize(b.title)
 
       const aFormat = parseFormat(aSize)
       const bFormat = parseFormat(bSize)

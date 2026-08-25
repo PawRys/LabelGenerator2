@@ -8,18 +8,18 @@ const productStore = useProductStore()
     <template v-for="(item, index) in productStore.filteredProducts" :key="`${index}-${item.id})}`">
       <div class="page" v-for="i in item.packsCount" :key="`page-${index}-${i}`">
         <div :class="`label first_label`">
-          <div class="label_title">{{ item.size }}</div>
-          <div class="label_desc">{{ item.face }}</div>
+          <div class="label_title">{{ item.title }}</div>
+          <div class="label_desc">{{ item.desc }}</div>
           <div class="label_glue">{{ item.glue }}</div>
-          <div class="label_note">{{ item.invoiceNum }}</div>
+          <div class="label_note">{{ item.note }}</div>
           <div class="label_pieces">{{ item.piecesCount }}</div>
         </div>
 
         <div class="label second_label">
-          <div class="label_title">{{ item.size }}</div>
-          <div class="label_desc">{{ item.face }}</div>
+          <div class="label_title">{{ item.title }}</div>
+          <div class="label_desc">{{ item.desc }}</div>
           <div class="label_glue">{{ item.glue }}</div>
-          <div class="label_note">{{ item.invoiceNum }}</div>
+          <div class="label_note">{{ item.note }}</div>
           <div class="label_pieces">{{ item.piecesCount }}</div>
         </div>
       </div>

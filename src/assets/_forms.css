@@ -4,3 +4,7 @@ textarea {
   border-radius: 0.1em;
   padding: 0.5em;
 }
+
+select > option {
+  padding-block: 0.2em;
+}

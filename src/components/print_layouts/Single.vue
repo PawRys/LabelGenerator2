@@ -8,10 +8,10 @@ const productStore = useProductStore()
     <template v-for="(item, index) in productStore.filteredProducts" :key="`${index}-${item.id})}`">
       <div class="page" v-for="i in item.packsCount" :key="`page-${index}-${i}`">
         <div class="label">
-          <div class="label_title">{{ item.size }}</div>
-          <div class="label_desc">{{ item.face }}</div>
+          <div class="label_title">{{ item.title }}</div>
+          <div class="label_desc">{{ item.desc }}</div>
           <div class="label_glue">{{ item.glue }}</div>
-          <div class="label_note">{{ item.invoiceNum }}</div>
+          <div class="label_note">{{ item.note }}</div>
           <div class="label_pieces">{{ item.piecesCount }}</div>
         </div>
       </div>
@@ -72,7 +72,7 @@ const productStore = useProductStore()
 .label_desc {
   grid-area: desc;
   min-height: calc(var(--fs-normal) * 1);
-  max-height: calc(var(--fs-normal) * 2.3);
+  max-height: calc(var(--fs-normal) * 2);
   font-size: var(--fs-small);
   white-space: pre-line;
   text-wrap: balance;

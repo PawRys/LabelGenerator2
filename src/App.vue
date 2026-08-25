@@ -87,12 +87,15 @@ const printLayout = computed(() => {
 
 .grid-title {
   grid-area: title;
+  width: 100%;
 }
 .grid-desc {
   grid-area: desc;
+  width: 100%;
 }
 .grid-note {
   grid-area: note;
+  width: 100%;
 }
 .grid-glue {
   grid-area: glue;
@@ -154,14 +157,20 @@ const printLayout = computed(() => {
   width: 5.5ch;
 }
 
-@media (max-width: 1000px) {
-  :where(#products-list) > li {
+@media (max-width: 768px) {
+  /* :where(#products-list) > li {
     grid-template-columns: auto auto 1fr;
     grid-template-areas:
       'title title title'
       'desc  desc  desc'
       'note  note  note'
-      'glue  pack  btn';
+      'glue  pack  pack'
+      'btn   btn   btn';
+  } */
+
+  :where(#products-list) > li {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   :where(#products-list) > li:not(.full-width) {
@@ -169,7 +178,7 @@ const printLayout = computed(() => {
   }
 
   .grid-btn {
-    place-self: end;
+    margin-left: auto;
   }
 }
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PrinterIcon from '@/components/icons/PrinterIcon.vue'
 import SettingsIcon from '@/components/icons/SettingIcon.vue'
-import Button_SortSettings from '@/components/buttons/SortSettings.vue'
+import Btn_SortSettings from '@/components/buttons/BTN_SortSettings.vue'
 
 import { nextTick } from 'vue'
 import { useProductStore } from '@/stores/products_store'
@@ -59,7 +59,7 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
     <button class="print-btn" @click="printMe('single')"><PrinterIcon /> Jedna duża</button>
     <button class="print-btn" @click="printMe('double')"><PrinterIcon /> Dwie małe</button>
     <button class="print-btn" @click="printMe('checklist')"><PrinterIcon /> Lista kontrolna</button>
-    <Button_SortSettings class="btn"><SettingsIcon /></Button_SortSettings>
+    <Btn_SortSettings id="btn-settings" class="btn"><SettingsIcon /></Btn_SortSettings>
     <button class="btn" id="btn-removeall" @click="removeSelectedItems()">
       {{ `Usuń ${productStore.searchQuery || 'wszystkie'}` }}
     </button>
@@ -80,6 +80,14 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
   font-weight: 300;
   font-optical-sizing: auto;
   font-style: normal;
+  white-space: nowrap;
+
+  flex-grow: 1;
+  flex-basis: 20%;
+}
+
+#btn-settings {
+  /* flex-basis: 20%; */
 }
 
 #btn-removeall {

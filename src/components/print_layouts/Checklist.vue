@@ -29,6 +29,19 @@ function resetIndex(item: Product, index: number): number {
 
   return 0
 }
+
+function countPacks(item: Product): number {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfPrintChecklist)) {
+    return 0
+  }
+
+  const storedItems = productStore.filteredProducts
+
+  return storedItems.reduce((acc, storedItem) => {
+    if (storedItem.truckNum !== item.truckNum) return acc
+    return acc + storedItem.packsCount
+  }, 0)
+}
 </script>
 
 <template>
@@ -38,13 +51,14 @@ function resetIndex(item: Product, index: number): number {
       <template v-for="(item, index) in productStore.filteredProducts" :key="`checklist-${index}`">
         <tr v-if="showTruckHeader(item, index)">
           <th colspan="5">
-            <h4 class="truck-number">{{ `${item.truckNum} (ile paczek)` }}</h4>
+            <h4 class="truck-number">{{ `${item.truckNum} (ilość paczek: ${countPacks(item)})` }}</h4>
           </th>
         </tr>
         <tr>
           <td>{{ `${index + 1 - resetIndex(item, index)}.` }}</td>
-          <td class="item-size">{{ item.size }}</td>
-          <td>{{ `${item.face} ${item.glue}` }}</td>
+          <td>{{ `${item.glue}` }}</td>
+          <td class="item-size">{{ item.title }}</td>
+          <td>{{ `${item.desc}` }}</td>
           <td>{{ `${item.packsCount}x${item.piecesCount}` }}</td>
           <td class="item-check">
             <div class="grid"><i v-for="x in item.packsCount" :key="`checklist-${index}-${x}`" class="square"></i></div>
@@ -62,7 +76,7 @@ function resetIndex(item: Product, index: number): number {
   height: 100svh;
   margin: 0;
   padding: 0;
-  break-before: page;
+  /* break-before: page; */
 }
 
 table {
@@ -81,7 +95,7 @@ table {
 }
 
 td {
-  border-bottom: solid 1px silver;
+  border-top: solid 1px silver;
   height: 100%;
   padding: 1ch 0.5ch;
   line-height: 1;

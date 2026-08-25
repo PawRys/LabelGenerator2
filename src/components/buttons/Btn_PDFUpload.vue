@@ -104,7 +104,8 @@ function getLatvijasProducts(TEXTrows: string[]) {
       itemFace = textrow
         .replace(/Birch plywood RIGA |PLY|TEX|FORM|MEL|/gi, '')
         .replace(/, edges sealed .*|,[^,]*441233[0-9]{2}.*/gi, '')
-        .replace(/,/i, '\n')
+        .replace(/ \(without \*\)/gi, '')
+        .replace(/,/i, ' ')
         .trim()
     }
 
@@ -119,13 +120,13 @@ function getLatvijasProducts(TEXTrows: string[]) {
       productStore.addProduct({
         id: idNum,
         timestamp: Date.now(),
-        size: itemSize,
-        face: itemFace,
+        title: itemSize,
+        desc: itemFace,
+        note: invoiceNum,
         glue: itemGlue,
         packsCount: itemPacksCount,
         piecesCount: itemPiecesCount,
         arrivalPlace: arrivalPlace,
-        invoiceNum: invoiceNum,
         truckNum: truckNum,
         cmrNum: CMRNum,
       })

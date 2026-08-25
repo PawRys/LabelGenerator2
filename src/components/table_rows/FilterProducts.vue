@@ -100,6 +100,10 @@ const cmrNumList = computed(() => {
   top: 1rem;
 }
 
+h4 {
+  flex-basis: 100%;
+}
+
 #search-query {
   grid-column: 1 / -1;
   margin-bottom: 1rem;
@@ -116,12 +120,12 @@ const cmrNumList = computed(() => {
 }
 
 #delivery-filters {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 3rem;
-
   grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em;
+  margin-bottom: 3rem;
 }
 
 #delivery-filters > * {

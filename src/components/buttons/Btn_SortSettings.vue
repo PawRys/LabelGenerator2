@@ -16,8 +16,8 @@ const sortOptions: { value: SortFunction; label: string }[] = [
   // { value: 'bysize', label: 'W/g rozmiaru' },
   // { value: 'byformat', label: 'W/g grupy formatu' },
   // { value: 'bytime', label: 'W/g czasu' },
-  { value: 'bytruckandformat', label: 'W/g formatu' },
   { value: 'bytruckandsize', label: 'W/g rozmiaru' },
+  { value: 'bytruckandformat', label: 'W/g formatu' },
 ]
 
 const sortGroups = [
@@ -45,6 +45,7 @@ const sortGroups = [
 
 function openModal() {
   dialog.value?.showModal()
+  // dialog.value?.show()
 }
 
 function closeModal() {
@@ -63,7 +64,9 @@ watch([() => settingsStore.sortOrderOfScreen], () => {
 </script>
 
 <template>
-  <button v-bind="attrs" @click="openModal"><slot>Ustawienia sortowania</slot></button>
+  <button v-bind="attrs" @click="openModal">
+    <slot>Ustawienia sortowania</slot>
+  </button>
 
   <dialog ref="dialog" @click="closeOnBackdrop">
     <h3>Sortowanie dla:</h3>
@@ -83,6 +86,13 @@ watch([() => settingsStore.sortOrderOfScreen], () => {
 </template>
 
 <style scoped>
+dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  z-index: 111;
+}
+
 dialog::backdrop {
   background: rgb(0 0 0 / 50%);
 }

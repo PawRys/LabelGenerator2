@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BTN_Upload from '@/components/buttons/PDFUpload.vue'
+import BTN_Upload from '@/components/buttons/Btn_PDFUpload.vue'
 import LabelIcon from '@/components/icons/LabelIcon.vue'
 
 import { ref } from 'vue'
@@ -32,10 +32,10 @@ function addProduct() {
   productStore.addProduct({
     id: `_reczny_${(999 - idCounter++).toString().padStart(3, '0')}`,
     timestamp: Date.now(),
-    size: size.value,
-    face: face.value,
+    title: size.value,
+    desc: face.value,
+    note: note.value,
     glue: glue.value || `${weight(`${size.value} ${face.value}`, piecesCount.value || 0).toFixed(0)} kg`,
-    invoiceNum: note.value,
     packsCount: packsCount.value,
     piecesCount: piecesCount.value || 0,
     arrivalPlace: 'Ręcznie dodany',
@@ -43,7 +43,7 @@ function addProduct() {
     cmrNum: 'Ręcznie dodany',
   })
 
-  // wyczyszczenie formularza
+  /** wyczyszczenie formularza */
   // size.value = ''
   // face.value = ''
   // glue.value = ''
@@ -109,7 +109,7 @@ function addProduct() {
           type="number"
           @keypress.enter="addProduct()"
         />
-        <span>szt.</span>
+        <!-- <span>szt.</span> -->
       </span>
     </div>
 
@@ -133,15 +133,15 @@ function addProduct() {
   border-color: orange;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .heading-item {
     grid-template-rows: 1fr;
     grid-template-columns: auto 1fr;
     gap: 0.5em;
   }
 
-  .grid-btn :nth-child(1) {
+  /* .grid-btn :nth-child(1) {
     order: 2;
-  }
+  } */
 }
 </style>
