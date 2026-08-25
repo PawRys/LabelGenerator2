@@ -14,71 +14,96 @@ function openFile() {
 
 async function doit(event: Event): Promise<void> {
   const target = event.target as HTMLInputElement
-  const pdfFileList = target.files as FileList
-  const TEXTrows = PDFtoTEXT(pdfFileList)
-  getLatvijasProducts(await TEXTrows)
+  const pdfFilesList = target.files as FileList
+  const validFilesList = validateFiles(pdfFilesList)
+  const products = await processFiles(validFilesList)
+
+  products.forEach((item) => productStore.addProduct(item))
 }
 
-async function PDFtoTEXT(fileList: FileList) {
-  let TEXTrows: string[] = []
+function validateFiles(fileList: FileList): File[] {
   const skippedFiles: string[] = []
+  const validFiles: File[] = []
 
   for (const file of fileList) {
     const isPdf = file.type === 'application/pdf'
-    const hasValidName = file.name.includes('Invoice No.')
-
+    const validPatterns = [/Invoice No\./i, /Invoice DR_\d+_PO/i]
+    const hasValidName = validPatterns.some((pattern) => pattern.test(file.name))
     if (!isPdf || !hasValidName) {
       skippedFiles.push(file.name)
       continue
+    } else {
+      validFiles.push(file)
     }
-
-    const pdf = await pdfjsLib.getDocument({
-      data: await file.arrayBuffer(),
-    }).promise
-
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      const page = await pdf.getPage(pageNum)
-      const { items } = await page.getTextContent()
-
-      const rows: {
-        y: number
-        items: { text: string; x: number }[]
-      }[] = []
-
-      for (const item of items) {
-        if (!('str' in item)) continue
-
-        const [, , , , x, y] = item.transform
-
-        let row = rows.find((r) => Math.abs(r.y - y) <= 3)
-
-        if (!row) {
-          row = { y, items: [] }
-          rows.push(row)
-        }
-
-        row.items.push({ text: item.str, x })
-      }
-
-      rows.sort((a, b) => b.y - a.y)
-
-      for (const row of rows) {
-        row.items.sort((a, b) => a.x - b.x)
-        const textrow = row.items.map((item) => correctText(item.text)).join('')
-        TEXTrows.push(textrow)
-      } // END row
-    } // END page
-  } // END file
+  }
 
   if (skippedFiles.length > 0) {
     console.log(`Pominięte pliki (${skippedFiles.length}):\n\n` + skippedFiles.join('\n'))
   }
 
+  return validFiles
+}
+
+async function processFiles(fileList: File[]) {
+  let result: Product[] = []
+
+  for (const file of fileList) {
+    const TEXTrows = await PDFtoTEXT(file)
+
+    if (/Invoice No\./i.test(file.name)) result.push(...getLatvijasProducts(TEXTrows))
+    if (/Invoice DR_\d+_PO/i.test(file.name)) result.push(...getStigaProducts(TEXTrows))
+  }
+
+  return result
+}
+
+async function PDFtoTEXT(file: File): Promise<string[]> {
+  let TEXTrows: string[] = []
+
+  // for (const file of fileList) {
+  const pdf = await pdfjsLib.getDocument({
+    data: await file.arrayBuffer(),
+  }).promise
+
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum)
+    const { items } = await page.getTextContent()
+
+    const rows: {
+      y: number
+      items: { text: string; x: number }[]
+    }[] = []
+
+    for (const item of items) {
+      if (!('str' in item)) continue
+
+      const [, , , , x, y] = item.transform
+
+      let row = rows.find((r) => Math.abs(r.y - y) <= 3)
+
+      if (!row) {
+        row = { y, items: [] }
+        rows.push(row)
+      }
+
+      row.items.push({ text: item.str, x })
+    }
+
+    rows.sort((a, b) => b.y - a.y)
+
+    for (const row of rows) {
+      row.items.sort((a, b) => a.x - b.x)
+      const textrow = row.items.map((item) => correctText(item.text)).join('')
+      TEXTrows.push(textrow)
+    } // END row
+  } // END page
+  // } // END file
+
   return TEXTrows
 }
 
-function getLatvijasProducts(TEXTrows: string[]) {
-  const products: Product[] = []
+function getLatvijasProducts(TEXTrows: string[]): Product[] {
+  const results: Product[] = []
   let idNum = ''
   let idCounter = 0
   let itemSize = ''
@@ -117,7 +142,7 @@ function getLatvijasProducts(TEXTrows: string[]) {
       itemPacksCount = Number(y) ?? 0
       itemPiecesCount = Number(z) ?? 0
 
-      productStore.addProduct({
+      results.push({
         id: idNum,
         timestamp: Date.now(),
         title: itemSize,
@@ -132,8 +157,62 @@ function getLatvijasProducts(TEXTrows: string[]) {
       })
     }
   })
-  // console.log(productStore.products)
-  // return products
+  return results
+}
+
+function getStigaProducts(TEXTrows: string[]): Product[] {
+  const results: Product[] = []
+  let idNum = ''
+  let idCounter = 0
+  let itemSize = ''
+  let itemFace = ''
+  let itemGlue = ''
+  let itemPiecesCount = 0
+  let itemPacksCount = 1
+  let arrivalPlace = ''
+  let invoiceNum = ''
+  let truckNum = ''
+  let CMRNum = ''
+
+  console.log(TEXTrows.join('\n'))
+
+  TEXTrows.forEach((textrow) => {
+    arrivalPlace = getArrivalPlace(textrow) || arrivalPlace
+    invoiceNum = getInvoiceNum(textrow) || invoiceNum
+    truckNum = getTruckNum(textrow) || truckNum
+    CMRNum = getCMRNum(textrow) || CMRNum
+
+    //                              1250 2500 9 F1/W1 80 1
+    const product =
+      textrow.match(
+        /\d{1,2} (\d{3,4}) (\d{3,4}) (\d{1,2}(?:,\d)?) ((?:B|BB|C|CP)(?:(W|F) ?(?:1|2|I|II))\/(?:B|BB|C|CP)(?:(W|F) ?(?:1|2|I|II))) (\d{1,3}) (\d{1,2})/i,
+      ) ?? []
+    if (product.length) {
+      idNum = `${CMRNum || '_STG'}_${(++idCounter).toString().padStart(3, '0')}`
+      itemSize = `${product[3]}x${product[1]}x${product[2]}`
+      itemFace = product[4] ?? ''
+      itemGlue = 'WD'
+      itemPacksCount = Number(product[6]) ?? 0
+      itemPiecesCount = Number(product[5]) ?? 0
+
+      results.push({
+        id: idNum,
+        timestamp: Date.now(),
+        title: itemSize,
+        desc: itemFace,
+        note: invoiceNum,
+        glue: itemGlue,
+        packsCount: itemPacksCount,
+        piecesCount: itemPiecesCount,
+        arrivalPlace: arrivalPlace,
+        truckNum: truckNum,
+        cmrNum: CMRNum,
+      })
+    }
+  })
+
+  console.log(results)
+  return results
 }
 
 const charMap: { [key: string]: string } = {
@@ -169,7 +248,12 @@ function getArrivalPlace(text: string): string {
 }
 
 function getInvoiceNum(text: string): string {
-  return text.match(/LF[0-9]{2} M[0-9]{6}/i)?.[0] ?? ''
+  const LF = text.match(/(LF[0-9]{2} M[0-9]{6})/i)
+  const ST = text.match(/(DR[0-9]+)/i)
+
+  if (LF) return LF[1]!
+  if (ST) return ST[1]!
+  return ''
 }
 
 function getTruckNum(text: string): string {
