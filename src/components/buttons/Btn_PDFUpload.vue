@@ -174,18 +174,19 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
   let truckNum = ''
   let CMRNum = ''
 
-  console.log(TEXTrows.join('\n'))
-
   TEXTrows.forEach((textrow) => {
-    arrivalPlace = getArrivalPlace(textrow) || arrivalPlace
+    arrivalPlace = getInvoiceNum(textrow) || arrivalPlace
     invoiceNum = getInvoiceNum(textrow) || invoiceNum
-    truckNum = getTruckNum(textrow) || truckNum
-    CMRNum = getCMRNum(textrow) || CMRNum
+    truckNum = getInvoiceNum(textrow) || truckNum
+    CMRNum = getInvoiceNum(textrow) || CMRNum
 
-    //                              1250 2500 9 F1/W1 80 1
+    if (textrow.includes('Janki 05090')) {
+      console.log(textrow)
+    }
+
     const product =
       textrow.match(
-        /\d{1,2} (\d{3,4}) (\d{3,4}) (\d{1,2}(?:,\d)?) ((?:B|BB|C|CP)(?:(W|F) ?(?:1|2|I|II))\/(?:B|BB|C|CP)(?:(W|F) ?(?:1|2|I|II))) (\d{1,3}) (\d{1,2})/i,
+        /\d{1,2} (\d{3,4}) (\d{3,4}) (\d{1,2}(?:,\d)?) ((?:BB|B|CP|C|F|W) ?(?:1|2|II|I)?\/(?:BB|B|CP|C|F|W) ?(?:1|2|II|I)?) (\d{1,3}) (\d{1,2})/i,
       ) ?? []
     if (product.length) {
       idNum = `${CMRNum || '_STG'}_${(++idCounter).toString().padStart(3, '0')}`
