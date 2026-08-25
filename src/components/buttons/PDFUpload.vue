@@ -70,9 +70,9 @@ async function PDFtoTEXT(fileList: FileList) {
     } // END page
   } // END file
 
-  // if (skippedFiles.length > 0) {
-  //   alert(`Pominięte pliki (${skippedFiles.length}):\n\n` + skippedFiles.join('\n'))
-  // }
+  if (skippedFiles.length > 0) {
+    console.log(`Pominięte pliki (${skippedFiles.length}):\n\n` + skippedFiles.join('\n'))
+  }
 
   return TEXTrows
 }
