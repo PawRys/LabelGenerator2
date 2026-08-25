@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { SortFunction } from '@/types/shared_types'
 
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useProductStore } from '@/stores/products_store'
 import { useSettingsStore } from '@/stores/settings_store'
 import { useAttrs } from 'vue'
 
 const attrs = useAttrs()
 const settingsStore = useSettingsStore()
+const productStore = useProductStore()
 const dialog = ref<HTMLDialogElement | null>(null)
 
 const sortOptions: { value: SortFunction; label: string }[] = [
@@ -14,29 +16,30 @@ const sortOptions: { value: SortFunction; label: string }[] = [
   { value: 'bysize', label: 'W/g rozmiaru' },
   { value: 'byformat', label: 'W/g grupy formatu' },
   // { value: 'bytime', label: 'W/g czasu' },
+  { value: 'bytruckandformat', label: 'W/g rejestracji i formatu' },
   { value: 'bytruckandsize', label: 'W/g rejestracji i rozmiaru' },
 ]
 
 const sortGroups = [
   {
     title: 'Widok główny',
-    key: 'screenView',
-    name: 'screenView',
+    key: 'sortOrderOfScreen',
+    name: 'sortOrderOfScreen',
   },
   {
     title: 'Jedna duża (druk)',
-    key: 'printSingleSortOrder',
-    name: 'printSingleSortOrder',
+    key: 'sortOrderOfPrintSingle',
+    name: 'sortOrderOfPrintSingle',
   },
   {
     title: 'Dwie małe (druk)',
-    key: 'printDoubleSortOrder',
-    name: 'printDoubleSortOrder',
+    key: 'sortOrderOfPrintDouble',
+    name: 'sortOrderOfPrintDouble',
   },
   {
     title: 'Lista kontrolna (druk)',
-    key: 'printChecklistSortOrder',
-    name: 'printChecklistSortOrder',
+    key: 'sortOrderOfPrintChecklist',
+    name: 'sortOrderOfPrintChecklist',
   },
 ] as const
 
@@ -53,6 +56,10 @@ function closeOnBackdrop(event: MouseEvent) {
     dialog.value?.close()
   }
 }
+
+watch([() => settingsStore.sortOrderOfScreen], () => {
+  productStore.sortOrder = settingsStore.sortOrderOfScreen
+})
 </script>
 
 <template>

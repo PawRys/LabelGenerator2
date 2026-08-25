@@ -23,7 +23,6 @@ function removeSelectedItems() {
 
 async function printMe(mode: 'single' | 'double' | 'checklist') {
   const style = document.createElement('style')
-  settingsStore.previusPrintMode = productStore.sortFunction
   style.innerHTML = `
     @media screen {#printme {display: none;}}
     @media print {
@@ -33,27 +32,27 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 
   if (mode === 'single') {
     style.innerHTML += `@page {size: A4 landscape;}`
-    productStore.sortFunction = settingsStore.printSingleSortOrder as SortFunction
+    productStore.sortOrder = settingsStore.sortOrderOfPrintSingle
   }
 
   if (mode === 'double') {
     style.innerHTML += `@page {size: A4 portrait;}`
-    productStore.sortFunction = settingsStore.printDoubleSortOrder as SortFunction
+    productStore.sortOrder = settingsStore.sortOrderOfPrintDouble
   }
 
   if (mode === 'checklist') {
     style.innerHTML += `@page {size: A4 portrait;}`
-    productStore.sortFunction = settingsStore.printChecklistSortOrder as SortFunction
+    productStore.sortOrder = settingsStore.sortOrderOfPrintChecklist
   }
 
   document.head.appendChild(style)
   productStore.printMode = mode
 
   await nextTick()
-
   window.print()
+
   document.head.removeChild(style)
-  productStore.sortFunction = settingsStore.previusPrintMode as SortFunction
+  productStore.sortOrder = settingsStore.sortOrderOfScreen
 }
 </script>
 
@@ -78,7 +77,10 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 }
 
 .print-btn {
-  font-family: 'Roboto Flex';
+  font-family: 'Roboto Flex', serif;
+  font-weight: 300;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
 
 #btn-removeall {

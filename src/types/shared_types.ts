@@ -12,4 +12,4 @@ export interface Product {
   cmrNum?: string
 }
 
-export type SortFunction = 'byformat' | 'bysize' | 'default' | 'bytime' | 'bytruckandsize'
+export type SortFunction = 'default' | 'bytime' | 'bysize' | 'byformat' | 'bytruckandsize' | 'bytruckandformat'

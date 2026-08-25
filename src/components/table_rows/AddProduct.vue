@@ -93,7 +93,7 @@ function addProduct() {
     </div>
 
     <div class="heading-item grid-btn">
-      <BTN_Upload id="btn-upload">Dodaj pdf</BTN_Upload>
+      <BTN_Upload id="btn-pdf">Dodaj pdf</BTN_Upload>
       <button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
     </div>
   </li>
@@ -108,7 +108,7 @@ function addProduct() {
   grid-template-rows: 1fr 1fr;
 }
 
-.heading-item :where(input, textarea, button):not(#btn-upload) {
+.heading-item :where(input, textarea, button):not(#btn-pdf) {
   border-color: orange;
 }
 
@@ -117,6 +117,10 @@ function addProduct() {
     grid-template-rows: 1fr;
     grid-template-columns: auto 1fr;
     gap: 0.5em;
+  }
+
+  .grid-btn :nth-child(1) {
+    order: 2;
   }
 }
 </style>

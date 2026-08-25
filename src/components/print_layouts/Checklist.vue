@@ -2,10 +2,12 @@
 import type { Product } from '@/types/shared_types'
 
 import { useProductStore } from '@/stores/products_store'
+import { useSettingsStore } from '@/stores/settings_store'
 const productStore = useProductStore()
+const settingsStore = useSettingsStore()
 
 function showTruckHeader(item: Product, index: number): boolean {
-  if (!['bytruckandsize', 'default'].includes(productStore.sortFunction)) {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfPrintChecklist)) {
     return false
   }
 
@@ -20,7 +22,7 @@ function showTruckHeader(item: Product, index: number): boolean {
       <template v-for="(item, index) in productStore.filteredProducts" :key="`checklist-${index}`">
         <tr v-if="showTruckHeader(item, index)">
           <th colspan="5">
-            <h4 class="truck-number">{{ `${item.truckNum} - ${item.invoiceNum}` }}</h4>
+            <h4 class="truck-number">{{ `${item.truckNum}` }}</h4>
           </th>
         </tr>
         <tr>
