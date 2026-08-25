@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { SortFunction } from '@/types/shared_types'
-
 import PrinterIcon from '@/components/icons/PrinterIcon.vue'
 import SettingsIcon from '@/components/icons/SettingIcon.vue'
 import Button_SortSettings from '@/components/buttons/SortSettings.vue'
@@ -71,6 +69,7 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 <style scoped>
 .print-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 1ex;
 
   margin-bottom: 3ex;

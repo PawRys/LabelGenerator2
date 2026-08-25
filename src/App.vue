@@ -6,6 +6,7 @@ import DisplayProducts from '@/components/table_rows/DisplayProducts.vue'
 import PrintLayoutSingle from '@/components/print_layouts/Single.vue'
 import PrintLayoutDouble from '@/components/print_layouts/Double.vue'
 import PrintLayoutChecklist from '@/components/print_layouts/Checklist.vue'
+import MyApps from '@/components/MyApps.vue'
 
 import { computed } from 'vue'
 import { useProductStore } from '@/stores/products_store'
@@ -24,14 +25,7 @@ const printLayout = computed(() => {
 
 <template>
   <header class="noprint">
-    <p>
-      <a href="https://pawrys.github.io/StockBrowser5/">Stany</a>
-      <span> / </span>
-      <a href="https://pawrys.github.io/LabelGenerator/">Etykiety</a>
-      <span> / </span>
-      <a href="https://pawrys.github.io/PurchaseComparator/">Tester</a>
-    </p>
-
+    <p><MyApps /></p>
     <h1>Etykieter</h1>
   </header>
 

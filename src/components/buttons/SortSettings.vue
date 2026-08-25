@@ -13,11 +13,11 @@ const dialog = ref<HTMLDialogElement | null>(null)
 
 const sortOptions: { value: SortFunction; label: string }[] = [
   { value: 'default', label: 'Domyślne' },
-  { value: 'bysize', label: 'W/g rozmiaru' },
-  { value: 'byformat', label: 'W/g grupy formatu' },
+  // { value: 'bysize', label: 'W/g rozmiaru' },
+  // { value: 'byformat', label: 'W/g grupy formatu' },
   // { value: 'bytime', label: 'W/g czasu' },
-  { value: 'bytruckandformat', label: 'W/g rejestracji i formatu' },
-  { value: 'bytruckandsize', label: 'W/g rejestracji i rozmiaru' },
+  { value: 'bytruckandformat', label: 'W/g formatu' },
+  { value: 'bytruckandsize', label: 'W/g rozmiaru' },
 ]
 
 const sortGroups = [

@@ -12,6 +12,7 @@ const glue = ref('')
 const note = ref('')
 const packsCount = ref(1)
 const piecesCount = ref<number | null>(null)
+const sizeInput = ref<HTMLInputElement | null>(null)
 
 let idCounter = 0
 
@@ -37,6 +38,7 @@ function addProduct() {
   note.value = ''
   packsCount.value = 1
   piecesCount.value = null
+  sizeInput.value?.focus()
 }
 </script>
 
@@ -44,7 +46,14 @@ function addProduct() {
   <li>
     <div class="heading-item grid-title">
       <LabelIcon class="title-icon" highlight="title" />
-      <input class="add-title" placeholder="Tytuł" v-model="size" autocomplete="on" @keypress.enter="addProduct()" />
+      <input
+        class="add-title"
+        placeholder="Tytuł"
+        v-model="size"
+        autocomplete="on"
+        @keypress.enter="addProduct()"
+        ref="sizeInput"
+      />
     </div>
 
     <div class="heading-item grid-desc">
