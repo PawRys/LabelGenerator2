@@ -14,6 +14,17 @@ const packsCount = ref(1)
 const piecesCount = ref<number | null>(null)
 const sizeInput = ref<HTMLInputElement | null>(null)
 
+const weight = (size: string, count: number): number => {
+  return (
+    (size || '1x1x1')
+      .replace(/,/g, '.')
+      .split('x')
+      .reduce<number>((acc, item) => (acc * Number(item)) / 1000, 1) *
+    count *
+    700
+  )
+}
+
 let idCounter = 0
 
 function addProduct() {
@@ -23,7 +34,7 @@ function addProduct() {
     size: size.value,
     face: face.value,
     glue: glue.value,
-    invoiceNum: note.value,
+    invoiceNum: note.value || `${weight(size.value, piecesCount.value || 0).toFixed(0)} kg netto`,
     packsCount: packsCount.value,
     piecesCount: piecesCount.value || 0,
     arrivalPlace: 'Ręcznie dodany',
