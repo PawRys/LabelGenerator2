@@ -14,9 +14,10 @@ const packsCount = ref(1)
 const piecesCount = ref<number | null>(null)
 const sizeInput = ref<HTMLInputElement | null>(null)
 
-const weight = (size: string, count: number): number => {
+const weight = (text: string, count: number): number => {
+  const size = text.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{2,4}x[0-9]{2,4})/i)?.[0] || '1x1x1'
   return (
-    (size || '1x1x1')
+    size
       .replace(/,/g, '.')
       .split('x')
       .reduce<number>((acc, item) => (acc * Number(item)) / 1000, 1) *
@@ -33,7 +34,7 @@ function addProduct() {
     timestamp: Date.now(),
     size: size.value,
     face: face.value,
-    glue: glue.value || `${weight(size.value, piecesCount.value || 0).toFixed(0)} kg`,
+    glue: glue.value || `${weight(`${size.value} ${face.value}`, piecesCount.value || 0).toFixed(0)} kg`,
     invoiceNum: note.value,
     packsCount: packsCount.value,
     piecesCount: piecesCount.value || 0,
@@ -43,12 +44,12 @@ function addProduct() {
   })
 
   // wyczyszczenie formularza
-  size.value = ''
-  face.value = ''
-  glue.value = ''
-  note.value = ''
-  packsCount.value = 1
-  piecesCount.value = null
+  // size.value = ''
+  // face.value = ''
+  // glue.value = ''
+  // note.value = ''
+  // packsCount.value = 1
+  // piecesCount.value = null
   sizeInput.value?.focus()
 }
 </script>

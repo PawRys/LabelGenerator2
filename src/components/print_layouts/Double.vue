@@ -92,11 +92,12 @@ const productStore = useProductStore()
 
 .label_note {
   grid-area: note;
-  max-height: 1.1em;
+  max-height: 2.2em;
   font-size: var(--fs-smallest);
   font-weight: 400;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  white-space: pre-line;
+  text-wrap: balance;
+  /* text-overflow: ellipsis; */
 }
 
 .label_glue {
@@ -110,6 +111,7 @@ const productStore = useProductStore()
   max-height: 1.1em;
   font-size: var(--fs-normal);
   font-weight: 500;
+  line-height: 0.8;
 }
 
 .label_pieces:after {
