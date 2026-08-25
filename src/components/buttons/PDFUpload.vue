@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import type { Product } from '@/types/shared_types'
+import { useProductStore } from '@/stores/products_store'
+import { ref } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker.min.mjs'
-import { useProductStore } from '@/stores/products_store'
-import type { Product } from '@/types/shared_types'
 
 const productStore = useProductStore()
+const fileInput = ref<HTMLInputElement | null>(null)
+
+function openFile() {
+  fileInput.value?.click()
+}
 
 async function doit(event: Event): Promise<void> {
   const target = event.target as HTMLInputElement
@@ -175,9 +181,9 @@ function getCMRNum(text: string): string {
 </script>
 
 <template>
-  <button class="btn-primary">
-    <label for="PDFupload-button"><slot>Dodaj z faktury</slot></label>
-    <input type="file" name="PDFupload-button" id="PDFupload-button" multiple hidden @change="doit" />
+  <button class="btn-primary" type="button" @click="openFile">
+    <slot>Dodaj z faktury</slot>
+    <input ref="fileInput" type="file" multiple hidden @change="doit" />
   </button>
 </template>
 
