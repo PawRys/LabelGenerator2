@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: 'https://github.com/PawRys/LabelGenerator2/',
+  base: '/LabelGenerator2/',
   plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
