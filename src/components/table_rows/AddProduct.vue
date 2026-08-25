@@ -21,7 +21,7 @@ const weight = (size: string, count: number): number => {
       .split('x')
       .reduce<number>((acc, item) => (acc * Number(item)) / 1000, 1) *
     count *
-    700
+    720
   )
 }
 
@@ -33,8 +33,8 @@ function addProduct() {
     timestamp: Date.now(),
     size: size.value,
     face: face.value,
-    glue: glue.value,
-    invoiceNum: note.value || `${weight(size.value, piecesCount.value || 0).toFixed(0)} kg netto`,
+    glue: glue.value || `${weight(size.value, piecesCount.value || 0).toFixed(0)} kg`,
+    invoiceNum: note.value,
     packsCount: packsCount.value,
     piecesCount: piecesCount.value || 0,
     arrivalPlace: 'Ręcznie dodany',
