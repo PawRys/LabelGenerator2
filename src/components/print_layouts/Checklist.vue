@@ -102,7 +102,7 @@ td {
   display: inline-block;
   width: 1.5ch;
   aspect-ratio: 1;
-  border: solid 1px grey;
+  border: solid 1px black;
   border-radius: 0.2ch;
 }
 </style>
