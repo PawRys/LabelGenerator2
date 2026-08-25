@@ -13,6 +13,22 @@ function showTruckHeader(item: Product, index: number): boolean {
 
   return index === 0 || (item.truckNum || '') !== (productStore.filteredProducts[index - 1]?.truckNum || '')
 }
+
+function resetIndex(item: Product, index: number): number {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfPrintChecklist)) {
+    return 0
+  }
+
+  const products = productStore.filteredProducts
+
+  for (let i = index; i >= 0; i--) {
+    if ((products[i]?.truckNum || '') !== (item.truckNum || '')) {
+      return i + 1
+    }
+  }
+
+  return 0
+}
 </script>
 
 <template>
@@ -26,7 +42,7 @@ function showTruckHeader(item: Product, index: number): boolean {
           </th>
         </tr>
         <tr>
-          <td>{{ `${index + 1}.` }}</td>
+          <td>{{ `${index + 1 - resetIndex(item, index)}.` }}</td>
           <td class="item-size">{{ item.size }}</td>
           <td>{{ `${item.face} ${item.glue}` }}</td>
           <td>{{ `${item.packsCount}x${item.piecesCount}` }}</td>
@@ -61,6 +77,7 @@ table {
   text-align: left;
   margin-top: 1em;
   margin-bottom: 0.2em;
+  break-before: page;
 }
 
 td {
