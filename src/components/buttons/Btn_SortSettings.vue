@@ -5,10 +5,10 @@ import { ref, watch, useAttrs } from 'vue'
 import { useProductStore } from '@/stores/products_store'
 import { useSettingsStore } from '@/stores/settings_store'
 
-const attrs = useAttrs()
 const settingsStore = useSettingsStore()
 const productStore = useProductStore()
 const dialog = ref<HTMLDialogElement | null>(null)
+const attrs = useAttrs()
 
 const sortOptions: { value: SortFunction; label: string }[] = [
   { value: 'default', label: 'Domyślne' },

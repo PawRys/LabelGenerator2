@@ -66,8 +66,8 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
     </div>
 
     <div class="button-bar button-bar-two">
-      <Btn_SortSettings id="btn-settings"><SettingsIcon />Ustawienia</Btn_SortSettings>
-      <Btn_Save id="btn-save">
+      <Btn_SortSettings class="btn" id="btn-settings"><SettingsIcon />Ustawienia</Btn_SortSettings>
+      <Btn_Save class="btn" id="btn-save">
         <SaveIcon />
         {{ `Zapisz ${productStore.searchQuery || 'wszystkie'}` }}
       </Btn_Save>
@@ -101,6 +101,11 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
   font-style: normal;
   white-space: nowrap;
 
+  flex-grow: 1;
+  flex-basis: 20%;
+}
+
+.btn {
   flex-grow: 1;
   flex-basis: 20%;
 }
