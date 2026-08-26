@@ -104,11 +104,11 @@ function addProduct() {
     </div>
 
     <div class="heading-item grid-btn">
-      <BTN_Upload id="btn-pdf">Dodaj pdf*</BTN_Upload>
+      <BTN_Upload id="btn-pdf">Dodaj pliki*</BTN_Upload>
       <button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
     </div>
   </li>
-  <li class="appendix">* Faktury z LF (LFxx Mxxxxxx) i Stigi (DR_xxxx)</li>
+  <li class="appendix">* Dozwolone pliki: LF Invoice.pdf / Stiga Invoice (DR_xxxx).pdf / Etykiety_[numer auta].json</li>
 </template>
 
 <style scoped>
@@ -126,7 +126,7 @@ function addProduct() {
 
 .appendix {
   grid-template-columns: 1fr;
-  color: silver;
+  color: grey;
   font-size: 0.8rem;
   text-align: right;
 }

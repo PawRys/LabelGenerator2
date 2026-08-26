@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { SortFunction } from '@/types/shared_types'
 
-import { ref, watch } from 'vue'
+import { ref, watch, useAttrs } from 'vue'
 import { useProductStore } from '@/stores/products_store'
 import { useSettingsStore } from '@/stores/settings_store'
-import { useAttrs } from 'vue'
 
 const attrs = useAttrs()
 const settingsStore = useSettingsStore()

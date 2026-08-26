@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Product } from '@/types/shared_types'
+import { productsSchema } from '@/types/shared_types'
 import { useProductStore } from '@/stores/products_store'
 import { correctText, weight } from '@/exports/shared_script'
 import { ref } from 'vue'
@@ -19,13 +20,13 @@ function openFile() {
 async function doit(event: Event): Promise<void> {
   const target = event.target as HTMLInputElement
   const pdfFilesList = target.files as FileList
-  const validFilesList = validateFiles(pdfFilesList)
+  const validFilesList = await validateFiles(pdfFilesList)
   const products = await processFiles(validFilesList)
 
   products.forEach((item) => productStore.addProduct(item))
 }
 
-function validateFiles(fileList: FileList): File[] {
+async function validateFiles(fileList: FileList): Promise<File[]> {
   const skippedFiles: string[] = []
   const validFiles: File[] = []
 
@@ -34,12 +35,31 @@ function validateFiles(fileList: FileList): File[] {
 
     const validPatterns = [LFregex, STregex]
     const hasValidName = validPatterns.some((pattern) => pattern.test(file.name))
-    if (!isPdf || !hasValidName) {
-      skippedFiles.push(file.name)
-      continue
-    } else {
+
+    if (isPdf && hasValidName) {
       validFiles.push(file)
+      continue
     }
+
+    const isJson = file.type === 'application/json' || file.name.toLowerCase().endsWith('.json')
+
+    if (isJson) {
+      try {
+        const data: unknown = JSON.parse(await file.text())
+
+        if (productsSchema.safeParse(data).success) {
+          validFiles.push(file)
+        } else {
+          skippedFiles.push(file.name)
+        }
+      } catch {
+        skippedFiles.push(file.name)
+      }
+
+      continue
+    }
+
+    skippedFiles.push(file.name)
   }
 
   if (skippedFiles.length > 0) {
@@ -53,10 +73,24 @@ async function processFiles(fileList: File[]) {
   let result: Product[] = []
 
   for (const file of fileList) {
+    const isJson = file.type === 'application/json' || file.name.toLowerCase().endsWith('.json')
+
+    if (isJson) {
+      const products: Product[] = JSON.parse(await file.text())
+      result.push(...products)
+      continue
+    }
+
     const TEXTrows = await PDFtoTEXT(file)
 
-    if (LFregex.test(file.name)) result.push(...getLatvijasProducts(TEXTrows))
-    if (STregex.test(file.name)) result.push(...getStigaProducts(TEXTrows))
+    if (LFregex.test(file.name)) {
+      result.push(...getLatvijasProducts(TEXTrows))
+      continue
+    }
+
+    if (STregex.test(file.name)) {
+      result.push(...getStigaProducts(TEXTrows))
+    }
   }
 
   return result
@@ -130,7 +164,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
   let truckNum = ''
   let CMRNum = ''
 
-  console.log(TEXTrows.join('\n'))
+  // console.log(TEXTrows.join('\n'))
 
   TEXTrows.forEach((textrow) => {
     arrivalPlace = getArrivalPlace(textrow) || arrivalPlace

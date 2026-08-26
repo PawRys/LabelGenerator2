@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import SaveIcon from '@/components/icons/SaveIcon.vue'
 import PrinterIcon from '@/components/icons/PrinterIcon.vue'
 import SettingsIcon from '@/components/icons/SettingIcon.vue'
 import Btn_SortSettings from '@/components/buttons/Btn_SortSettings.vue'
+import Btn_Save from '@/components/buttons/Btn_Save.vue'
 
 import { nextTick } from 'vue'
 import { useProductStore } from '@/stores/products_store'
@@ -59,7 +61,11 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
     <button class="print-btn" @click="printMe('single')"><PrinterIcon /> Jedna duża</button>
     <button class="print-btn" @click="printMe('double')"><PrinterIcon /> Dwie małe</button>
     <button class="print-btn" @click="printMe('checklist')"><PrinterIcon /> Lista kontrolna</button>
-    <Btn_SortSettings id="btn-settings" class="btn"><SettingsIcon /></Btn_SortSettings>
+    <Btn_SortSettings id="btn-settings"><SettingsIcon /></Btn_SortSettings>
+    <Btn_Save id="btn-save">
+      <SaveIcon />
+      {{ `Zapisz ${productStore.searchQuery || 'wszystkie'}` }}
+    </Btn_Save>
     <button class="btn" id="btn-removeall" @click="removeSelectedItems()">
       {{ `Usuń ${productStore.searchQuery || 'wszystkie'}` }}
     </button>
