@@ -114,10 +114,11 @@ function addProduct() {
     </div>
 
     <div class="heading-item grid-btn">
-      <BTN_Upload id="btn-pdf">Dodaj pdf</BTN_Upload>
+      <BTN_Upload id="btn-pdf">Dodaj pdf*</BTN_Upload>
       <button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
     </div>
   </li>
+  <li class="appendix">* Faktury z LF (LFxx Mxxxxxx) i Stigi (DR_xxxx)</li>
 </template>
 
 <style scoped>
@@ -131,6 +132,13 @@ function addProduct() {
 
 .heading-item :where(input, textarea, button):not(#btn-pdf) {
   border-color: orange;
+}
+
+.appendix {
+  grid-template-columns: 1fr;
+  color: silver;
+  font-size: 0.8rem;
+  text-align: right;
 }
 
 @media (max-width: 768px) {

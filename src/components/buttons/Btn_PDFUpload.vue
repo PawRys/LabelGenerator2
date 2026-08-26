@@ -27,7 +27,7 @@ function validateFiles(fileList: FileList): File[] {
 
   for (const file of fileList) {
     const isPdf = file.type === 'application/pdf'
-    const validPatterns = [/Invoice No\./i, /Invoice DR_\d+_PO/i]
+    const validPatterns = [/Invoice No\. LF\d\d M\d{6}/i, /Invoice[ _]DR[ _]\d+[ _]PO/i]
     const hasValidName = validPatterns.some((pattern) => pattern.test(file.name))
     if (!isPdf || !hasValidName) {
       skippedFiles.push(file.name)
@@ -174,27 +174,39 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
   let truckNum = ''
   let CMRNum = ''
 
-  TEXTrows.forEach((textrow) => {
-    arrivalPlace = getInvoiceNum(textrow) || arrivalPlace
+  // console.log(TEXTrows.join('\n'))
+
+  TEXTrows.forEach((textrow, i) => {
+    arrivalPlace = getArrivalPlace(textrow) || arrivalPlace
     invoiceNum = getInvoiceNum(textrow) || invoiceNum
     truckNum = getInvoiceNum(textrow) || truckNum
     CMRNum = getInvoiceNum(textrow) || CMRNum
 
-    if (textrow.includes('Janki 05090')) {
-      console.log(textrow)
+    // if (textrow.includes('Janki 05090')) {
+    //   console.log(textrow)
+    // }
+
+    const sanded = textrow.match(/^C\/C$/i)
+    let fixedrow = ''
+
+    if (sanded) {
+      const words = TEXTrows[i + 1]!.split(' ')
+      words.splice(4, 0, `${TEXTrows[i]?.trim()} ${TEXTrows[i + 2]?.trim()}`)
+      fixedrow = words.join(' ')
     }
 
-    const product =
-      textrow.match(
-        /\d{1,2} (\d{3,4}) (\d{3,4}) (\d{1,2}(?:,\d)?) ((?:BB|B|CP|C|F|W) ?(?:1|2|II|I)?\/(?:BB|B|CP|C|F|W) ?(?:1|2|II|I)?) (\d{1,3}) (\d{1,2})/i,
+    const [id, sizeA, sizeB, sizeT, face, piecesCount, packsCount] =
+      (fixedrow || textrow).match(
+        /\d{1,2} (\d{3,4}) (\d{3,4}) (\d{1,2}(?:[,.]\d)?) ((?:BB|B|CP|C|F|W) ?(?:1|2|II|I)?\/(?:BB|B|CP|C|F|W) ?(?:1|2|II|I)?(?: Sanded)?) (\d{1,3}) (\d{1,2})/i,
       ) ?? []
-    if (product.length) {
+
+    if (id && sizeA && sizeB && sizeT && face && piecesCount && packsCount) {
       idNum = `${CMRNum || '_STG'}_${(++idCounter).toString().padStart(3, '0')}`
-      itemSize = `${product[3]}x${product[1]}x${product[2]}`
-      itemFace = product[4] ?? ''
+      itemSize = `${sizeT}x${sizeA}x${sizeB}`
+      itemFace = face ?? ''
       itemGlue = 'WD'
-      itemPacksCount = Number(product[6]) ?? 0
-      itemPiecesCount = Number(product[5]) ?? 0
+      itemPacksCount = Number(packsCount) ?? 0
+      itemPiecesCount = Number(piecesCount) ?? 0
 
       results.push({
         id: idNum,
@@ -212,7 +224,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
     }
   })
 
-  console.log(results)
+  // console.log(results)
   return results
 }
 
@@ -245,7 +257,12 @@ const correctText = (input: string): string => {
 }
 
 function getArrivalPlace(text: string): string {
-  return text.includes('Terms of delivery:') ? text.replace('Terms of delivery:', '').trim() : ''
+  const LF = text.includes('Terms of delivery:') ? text.replace('Terms of delivery:', '').trim() : ''
+  const ST = /100 ?% ?Prepayment ?DAP/i.test(text) ? text.replace(/100 ?% ?Prepayment/i, '').trim() : ''
+
+  if (LF) return LF
+  if (ST) return ST
+  return ''
 }
 
 function getInvoiceNum(text: string): string {

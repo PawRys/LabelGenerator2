@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PrinterIcon from '@/components/icons/PrinterIcon.vue'
 import SettingsIcon from '@/components/icons/SettingIcon.vue'
-import Btn_SortSettings from '@/components/buttons/BTN_SortSettings.vue'
+import Btn_SortSettings from '@/components/buttons/Btn_SortSettings.vue'
 
 import { nextTick } from 'vue'
 import { useProductStore } from '@/stores/products_store'
