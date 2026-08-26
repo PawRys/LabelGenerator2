@@ -108,7 +108,7 @@ function addProduct() {
       <button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
     </div>
   </li>
-  <li class="appendix">* Dozwolone pliki: LF Invoice.pdf / Stiga Invoice (DR_xxxx).pdf / Etykiety_[numer auta].json</li>
+  <li class="appendix">* Dozwolone pliki: LF Invoice.pdf / Stiga Invoice.pdf / Etykiety.json</li>
 </template>
 
 <style scoped>

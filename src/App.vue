@@ -189,6 +189,10 @@ const printLayout = computed(() => {
 }
 
 @media print {
+  @page {
+    margin: 0;
+    padding: 0;
+  }
   .noprint,
   body > :not(#app) {
     display: none !important;

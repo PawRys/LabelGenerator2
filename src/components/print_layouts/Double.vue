@@ -62,7 +62,7 @@ const productStore = useProductStore()
   font-size: var(--fs-normal); /* Master font size for all label childs */
   font-weight: 500;
   text-align: center;
-  line-height: 1.1;
+  line-height: 1;
 }
 
 .second_label {
@@ -72,6 +72,8 @@ const productStore = useProductStore()
 .label > div {
   overflow: hidden;
   overflow-wrap: break-word;
+  padding-bottom: 0.1em;
+  text-wrap: balance;
 }
 
 .label_title {
@@ -84,10 +86,9 @@ const productStore = useProductStore()
 .label_desc {
   grid-area: desc;
   min-height: calc(var(--fs-normal) * 0.5);
-  max-height: calc(var(--fs-normal) * 2);
+  max-height: calc(var(--fs-normal) * 2.5);
   font-size: var(--fs-small);
   white-space: pre-line;
-  text-wrap: balance;
 }
 
 .label_note {

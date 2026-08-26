@@ -69,11 +69,11 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
       <Btn_SortSettings class="other-btn" id="btn-settings"><SettingsIcon />Ustawienia</Btn_SortSettings>
       <Btn_Save class="other-btn" id="btn-save">
         <SaveIcon />
-        {{ `Zapisz ${productStore.searchQuery || 'wszystkie'}` }}
+        {{ productStore.searchQuery ? `Zapisz: ${productStore.searchQuery}` : `Zapisz wszystkie` }}
       </Btn_Save>
       <button class="other-btn" id="btn-removeall" @click="removeSelectedItems()">
         <DeleteIcon />
-        {{ `Usuń ${productStore.searchQuery || 'wszystkie'}` }}
+        {{ productStore.searchQuery ? `Usuń: ${productStore.searchQuery}` : `Usuń wszystkie` }}
       </button>
     </div>
   </li>
@@ -89,9 +89,8 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5em;
-
-  /* margin-bottom: 3ex; */
 }
 
 .print-btn {
@@ -103,18 +102,14 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 
   padding-block: 1em;
 
-  flex-grow: 1;
-  flex-basis: 20%;
+  /* flex-grow: 1; */
+  flex-basis: 25%;
 }
 
 :deep(.other-btn) {
   padding-block: 1em;
-  flex-grow: 1;
-  flex-basis: 20%;
-}
-
-.button-bar-two {
-  justify-content: flex-end;
+  /* flex-grow: 1; */
+  flex-basis: 25%;
 }
 
 #btn-removeall {

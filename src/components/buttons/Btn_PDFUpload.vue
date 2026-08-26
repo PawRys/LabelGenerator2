@@ -99,15 +99,14 @@ async function processFiles(fileList: File[]) {
 async function PDFtoTEXT(file: File): Promise<string[]> {
   let TEXTrows: string[] = []
 
-  // for (const file of fileList) {
   const pdf = await pdfjsLib.getDocument({
     data: await file.arrayBuffer(),
   }).promise
 
   for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const TOLERANCE = 3
     const page = await pdf.getPage(pageNum)
     const { items } = await page.getTextContent()
-
     const rows: {
       y: number
       items: { text: string; x: number }[]
@@ -118,7 +117,7 @@ async function PDFtoTEXT(file: File): Promise<string[]> {
 
       const [, , , , x, y] = item.transform
 
-      let row = rows.find((r) => Math.abs(r.y - y) <= 3)
+      let row = rows.find((r) => Math.abs(r.y - y) <= TOLERANCE)
 
       if (!row) {
         row = { y, items: [] }
@@ -131,13 +130,31 @@ async function PDFtoTEXT(file: File): Promise<string[]> {
     rows.sort((a, b) => b.y - a.y)
 
     for (const row of rows) {
-      row.items.sort((a, b) => a.x - b.x)
-      const textrow = row.items.map((item) => correctText(item.text)).join('')
+      // const textrow = row.items
+      //   .sort((a, b) => a.x - b.x)
+      //   .map((item) => correctText(item.text))
+      //   .join('')
+
+      const CHAR_WIDTH = 6
+      let currentColumn = 0
+      const textrow = row.items
+        .sort((a, b) => a.x - b.x)
+        .map((item) => {
+          const text = correctText(item.text)
+          const column = Math.round(item.x / CHAR_WIDTH)
+          const spaces = Math.max(0, column - currentColumn)
+
+          currentColumn = column + text.length
+          return ' '.repeat(spaces) + text
+        })
+        .join('')
+        .replace(/[ ]{2,4}/g, '\t')
+
       TEXTrows.push(textrow)
     } // END row
   } // END page
-  // } // END file
 
+  console.log(TEXTrows.join('\n'))
   return TEXTrows
 }
 
@@ -149,7 +166,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
   const sizeB_re = String.raw`(\d{3,4})` // Capture group
   const packsQty_re = String.raw`(\d{1,2})` // Capture group
   const pcsQty_re = String.raw`(\d{1,3})` // Capture group
-  const full_regexp = new RegExp(`${sizeT_re}x${sizeA_re}x${sizeB_re} mm ${packsQty_re}x${pcsQty_re}`, 'i')
+  const full_regexp = new RegExp(String.raw`${sizeT_re}x${sizeA_re}x${sizeB_re} mm\s+${packsQty_re}x${pcsQty_re}`, 'i')
 
   let idNum = ''
   let idCounter = 0
@@ -164,13 +181,13 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
   let truckNum = ''
   let CMRNum = ''
 
-  // console.log(TEXTrows.join('\n'))
-
   TEXTrows.forEach((textrow) => {
     arrivalPlace = getArrivalPlace(textrow) || arrivalPlace
     invoiceNum = getInvoiceNum(textrow) || invoiceNum
     truckNum = getTruckNum(textrow) || truckNum
     CMRNum = getCMRNum(textrow) || CMRNum
+
+    // console.log(textrow.match(full_regexp))
 
     if (/441233[0-9]{2}/.test(textrow)) {
       itemGlue = textrow.match(/MR|WD|INT|EXT/i)?.[0] ?? ''
@@ -178,6 +195,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
         .replace(/Birch plywood RIGA |PLY|TEX|FORM|MEL|/gi, '')
         .replace(/, edges sealed .*|,[^,]*441233[0-9]{2}.*/gi, '')
         .replace(/ \(without \*\)/gi, '')
+        .replace(/(\w) (I)/g, '$1 $2')
         .replace(/,/i, ' ')
         .trim()
     }
@@ -221,7 +239,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
   const pcsQty_re = String.raw`(\d{1,3})` // Capture group
   const packsQty_re = String.raw`(\d{1,2})` // Capture group
   const full_regexp = new RegExp(
-    `${id_re} ${sizeA_re} ${sizeB_re} ${sizeT_re} ${face_re} ${pcsQty_re} ${packsQty_re}`,
+    String.raw`${id_re}\s+${sizeA_re}\s+${sizeB_re}\s+${sizeT_re}\s+${face_re}\s+${pcsQty_re}\s+${packsQty_re}`,
     'i',
   )
 
@@ -237,8 +255,6 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
   let invoiceNum = ''
   let truckNum = ''
   let CMRNum = ''
-
-  // console.log(TEXTrows.join('\n'))
 
   TEXTrows.forEach((textrow, i) => {
     arrivalPlace = getArrivalPlace(textrow) || arrivalPlace
@@ -289,7 +305,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
 
 function getArrivalPlace(text: string): string {
   const LF = text.includes('Terms of delivery:') ? text.replace('Terms of delivery:', '').trim() : ''
-  const ST = /100 ?% ?Prepayment ?DAP/i.test(text) ? text.replace(/100 ?% ?Prepayment/i, '').trim() : ''
+  const ST = /100\s*%\s*Prepayment\s*DAP/i.test(text) ? text.replace(/100\s*%\s*Prepayment/i, '').trim() : ''
 
   if (LF) return LF
   if (ST) return ST
