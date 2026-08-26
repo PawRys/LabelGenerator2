@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SaveIcon from '@/components/icons/SaveIcon.vue'
+import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import PrinterIcon from '@/components/icons/PrinterIcon.vue'
 import SettingsIcon from '@/components/icons/SettingIcon.vue'
 import Btn_SortSettings from '@/components/buttons/Btn_SortSettings.vue'
@@ -57,28 +58,40 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 </script>
 
 <template>
-  <li v-if="pageCounter() > 0" class="print-buttons">
-    <button class="print-btn" @click="printMe('single')"><PrinterIcon /> Jedna duża</button>
-    <button class="print-btn" @click="printMe('double')"><PrinterIcon /> Dwie małe</button>
-    <button class="print-btn" @click="printMe('checklist')"><PrinterIcon /> Lista kontrolna</button>
-    <Btn_SortSettings id="btn-settings"><SettingsIcon /></Btn_SortSettings>
-    <Btn_Save id="btn-save">
-      <SaveIcon />
-      {{ `Zapisz ${productStore.searchQuery || 'wszystkie'}` }}
-    </Btn_Save>
-    <button class="btn" id="btn-removeall" @click="removeSelectedItems()">
-      {{ `Usuń ${productStore.searchQuery || 'wszystkie'}` }}
-    </button>
+  <li v-if="pageCounter() > 0" class="buttons">
+    <div class="button-bar button-bar-one">
+      <button class="print-btn" @click="printMe('single')"><PrinterIcon /> Jedna duża</button>
+      <button class="print-btn" @click="printMe('double')"><PrinterIcon /> Dwie małe</button>
+      <button class="print-btn" @click="printMe('checklist')"><PrinterIcon /> Lista kontrolna</button>
+    </div>
+
+    <div class="button-bar button-bar-two">
+      <Btn_SortSettings id="btn-settings"><SettingsIcon />Ustawienia</Btn_SortSettings>
+      <Btn_Save id="btn-save">
+        <SaveIcon />
+        {{ `Zapisz ${productStore.searchQuery || 'wszystkie'}` }}
+      </Btn_Save>
+      <button class="btn" id="btn-removeall" @click="removeSelectedItems()">
+        <DeleteIcon />
+        {{ `Usuń ${productStore.searchQuery || 'wszystkie'}` }}
+      </button>
+    </div>
   </li>
 </template>
 
 <style scoped>
-.print-buttons {
+.buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-bar {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  gap: 1ex;
+  gap: 0.5em;
 
-  margin-bottom: 3ex;
+  /* margin-bottom: 3ex; */
 }
 
 .print-btn {
@@ -92,8 +105,11 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
   flex-basis: 20%;
 }
 
+.button-bar-two {
+  justify-content: flex-end;
+}
+
 #btn-removeall {
-  margin-left: auto;
   white-space: pre-line;
 }
 </style>
