@@ -51,6 +51,7 @@ function addProduct() {
       <input
         class="add-title"
         placeholder="Tytuł"
+        name="title"
         v-model="size"
         autocomplete="on"
         @keypress.enter="addProduct()"
@@ -60,12 +61,19 @@ function addProduct() {
 
     <div class="heading-item grid-desc">
       <LabelIcon class="desc-icon" highlight="desc" />
-      <textarea class="add-desc" placeholder="Opis" v-model="face" autocomplete="on"></textarea>
+      <textarea class="add-desc" placeholder="Opis" name="description" v-model="face" autocomplete="on"></textarea>
     </div>
 
     <div class="heading-item grid-note">
       <LabelIcon class="note-icon" highlight="note" />
-      <input class="add-note" placeholder="Notatka" v-model="note" autocomplete="on" @keypress.enter="addProduct()" />
+      <input
+        class="add-note"
+        placeholder="Notatka"
+        name="note"
+        v-model="note"
+        autocomplete="on"
+        @keypress.enter="addProduct()"
+      />
     </div>
 
     <div class="heading-item grid-glue">
@@ -74,6 +82,7 @@ function addProduct() {
         class="add-glue"
         placeholder="Klej"
         v-model="glue"
+        name="glue"
         autocomplete="on"
         @keypress.enter="addProduct()"
         list="glue-datalist"

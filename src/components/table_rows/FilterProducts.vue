@@ -117,7 +117,7 @@ h4 {
   border-style: solid;
   border-width: 1px;
   border-radius: 3px;
-  box-shadow: 0 0em 0em 0.5em white;
+  box-shadow: 0 0em 0em 0.5em var(--bg-color);
 }
 
 #delivery-filters {
