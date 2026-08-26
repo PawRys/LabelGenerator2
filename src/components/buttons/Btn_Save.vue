@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Product } from '@/types/shared_types'
 
-import { ref, computed, useAttrs } from 'vue'
+import CollectiveIcon from '@/components/icons/CollectiveIcon.vue'
+import SeparateIcon from '@/components/icons/SeparateIcon.vue'
 
 import { useProductStore } from '@/stores/products_store'
+import { ref, computed, useAttrs } from 'vue'
 
 const productStore = useProductStore()
 const dialog = ref<HTMLDialogElement | null>(null)
@@ -46,7 +48,7 @@ const saveJson = (data: Product[]) => {
 
   const a = document.createElement('a')
   a.href = url
-  a.download = `Etykiety_${truckNumbers.value.size}_dostaw.json`
+  a.download = `Etykiety_${new Date().toISOString().split('T')[0]}_x${truckNumbers.value.size}.json`
   a.click()
 
   URL.revokeObjectURL(url)
@@ -91,9 +93,9 @@ const saveJsonByTruck = (products: Product[]) => {
     <p>Wybierz sposób zapisu ({{ truckNumbers.size }} dostaw):</p>
 
     <div class="button-bar">
-      <button @click="saveSingle">Wszystkie dostawy w jednym pliku</button>
+      <button @click="saveSingle"><CollectiveIcon />Wszystkie dostawy w jednym pliku</button>
 
-      <button @click="saveByTruck">Osobny plik dla każdej dostawy</button>
+      <button @click="saveByTruck"><SeparateIcon />Osobny plik dla każdej dostawy</button>
 
       <button @click="dialog?.close()">Anuluj</button>
     </div>

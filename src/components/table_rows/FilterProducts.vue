@@ -118,8 +118,8 @@ h4 {
   border-width: 1px;
   border-radius: 3px;
   box-shadow:
-    0 0 1rem 1rem white,
-    0 -1rem 0rem 1rem white;
+    0 -2rem 1rem 1rem white,
+    0 -1rem 1rem 1rem white;
 }
 
 #delivery-filters {
