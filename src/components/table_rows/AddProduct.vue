@@ -25,7 +25,7 @@ function addProduct() {
     desc: face.value,
     note: note.value,
     glue: glue.value || `${weight(`${size.value} ${face.value}`, piecesCount.value || 0).toFixed(0)} kg`,
-    weight: `${weight(`${size.value} ${face.value}`, piecesCount.value || 0).toFixed(0)} kg`,
+    weight: weight(`${size.value} ${face.value}`, piecesCount.value || 0),
     packsCount: packsCount.value,
     piecesCount: piecesCount.value || 0,
     arrivalPlace: 'Ręcznie dodany',

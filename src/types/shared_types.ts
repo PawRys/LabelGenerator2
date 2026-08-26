@@ -5,7 +5,7 @@ export interface Product {
   desc: string
   note: string
   glue: string
-  weight: string
+  weight: number
   packsCount: number
   piecesCount: number
   arrivalPlace: string

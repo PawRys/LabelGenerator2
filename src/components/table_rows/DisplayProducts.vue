@@ -27,12 +27,27 @@ function countPacks(item: Product): number {
     return acc + storedItem.packsCount
   }, 0)
 }
+
+function countWeight(item: Product): number {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfScreen)) {
+    return 0
+  }
+
+  const storedItems = productStore.filteredProducts
+
+  return storedItems.reduce((acc, storedItem) => {
+    if (storedItem.truckNum !== item.truckNum) return acc
+    return acc + storedItem.weight * storedItem.packsCount
+  }, 0)
+}
 </script>
 
 <template>
   <template v-for="(product, index) in productStore.filteredProducts" :key="product.id">
     <li v-if="showTruckHeader(product, index)" class="full-width">
-      <h4 class="truck-number">{{ `${product.truckNum} (ilość paczek: ${countPacks(product)})` }}</h4>
+      <h4 class="truck-number">
+        {{ `${product.truckNum}, ${countPacks(product)} paczek, ${countWeight(product).toFixed(0)} kg` }}
+      </h4>
     </li>
 
     <li :id="product.id">
