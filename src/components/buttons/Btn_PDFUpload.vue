@@ -8,6 +8,9 @@ import 'pdfjs-dist/build/pdf.worker.min.mjs'
 const productStore = useProductStore()
 const fileInput = ref<HTMLInputElement | null>(null)
 
+const LFregex = new RegExp(/Invoice No\. LF\d\d M\d{6}/i)
+const STregex = new RegExp(/Invoice[ _]DR[ _]\d+[ _]PO/i)
+
 function openFile() {
   fileInput.value?.click()
 }
@@ -27,7 +30,8 @@ function validateFiles(fileList: FileList): File[] {
 
   for (const file of fileList) {
     const isPdf = file.type === 'application/pdf'
-    const validPatterns = [/Invoice No\. LF\d\d M\d{6}/i, /Invoice[ _]DR[ _]\d+[ _]PO/i]
+
+    const validPatterns = [LFregex, STregex]
     const hasValidName = validPatterns.some((pattern) => pattern.test(file.name))
     if (!isPdf || !hasValidName) {
       skippedFiles.push(file.name)
@@ -50,8 +54,8 @@ async function processFiles(fileList: File[]) {
   for (const file of fileList) {
     const TEXTrows = await PDFtoTEXT(file)
 
-    if (/Invoice No\./i.test(file.name)) result.push(...getLatvijasProducts(TEXTrows))
-    if (/Invoice DR_\d+_PO/i.test(file.name)) result.push(...getStigaProducts(TEXTrows))
+    if (LFregex.test(file.name)) result.push(...getLatvijasProducts(TEXTrows))
+    if (STregex.test(file.name)) result.push(...getStigaProducts(TEXTrows))
   }
 
   return result

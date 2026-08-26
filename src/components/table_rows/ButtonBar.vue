@@ -86,10 +86,6 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
   flex-basis: 20%;
 }
 
-#btn-settings {
-  /* flex-basis: 20%; */
-}
-
 #btn-removeall {
   margin-left: auto;
   white-space: pre-line;
