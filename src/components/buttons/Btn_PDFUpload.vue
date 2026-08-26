@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Product } from '@/types/shared_types'
 import { useProductStore } from '@/stores/products_store'
+import { weight } from '@/exports/shared_script'
 import { ref } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker.min.mjs'
@@ -113,6 +114,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
   let itemSize = ''
   let itemFace = ''
   let itemGlue = ''
+  let itemWeight = ''
   let itemPiecesCount = 0
   let itemPacksCount = 1
   let arrivalPlace = ''
@@ -143,6 +145,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
       idNum = `${CMRNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
       const [, x, y, z] = product
       itemSize = x ?? ''
+      itemWeight = `${weight(`${itemSize} ${itemFace}`, itemPiecesCount || 0).toFixed(0)} kg`
       itemPacksCount = Number(y) ?? 0
       itemPiecesCount = Number(z) ?? 0
 
@@ -152,7 +155,8 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
         title: itemSize,
         desc: itemFace,
         note: invoiceNum,
-        glue: itemGlue,
+        glue: itemGlue || itemWeight,
+        weight: itemWeight,
         packsCount: itemPacksCount,
         piecesCount: itemPiecesCount,
         arrivalPlace: arrivalPlace,
@@ -171,6 +175,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
   let itemSize = ''
   let itemFace = ''
   let itemGlue = ''
+  let itemWeight = ''
   let itemPiecesCount = 0
   let itemPacksCount = 1
   let arrivalPlace = ''
@@ -185,10 +190,6 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
     invoiceNum = getInvoiceNum(textrow) || invoiceNum
     truckNum = getInvoiceNum(textrow) || truckNum
     CMRNum = getInvoiceNum(textrow) || CMRNum
-
-    // if (textrow.includes('Janki 05090')) {
-    //   console.log(textrow)
-    // }
 
     const sanded = textrow.match(/^C\/C$/i)
     let fixedrow = ''
@@ -209,6 +210,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
       itemSize = `${sizeT}x${sizeA}x${sizeB}`
       itemFace = face ?? ''
       itemGlue = 'WD'
+      itemWeight = `${weight(`${itemSize} ${itemFace}`, itemPiecesCount || 0).toFixed(0)} kg`
       itemPacksCount = Number(packsCount) ?? 0
       itemPiecesCount = Number(piecesCount) ?? 0
 
@@ -218,7 +220,8 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
         title: itemSize,
         desc: itemFace,
         note: invoiceNum,
-        glue: itemGlue,
+        glue: itemGlue || itemWeight,
+        weight: itemWeight,
         packsCount: itemPacksCount,
         piecesCount: itemPiecesCount,
         arrivalPlace: arrivalPlace,

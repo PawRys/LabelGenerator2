@@ -4,6 +4,7 @@ import LabelIcon from '@/components/icons/LabelIcon.vue'
 
 import { ref } from 'vue'
 import { useProductStore } from '@/stores/products_store'
+import { weight } from '@/exports/shared_script'
 
 const productStore = useProductStore()
 const size = ref('')
@@ -13,18 +14,6 @@ const note = ref('')
 const packsCount = ref(1)
 const piecesCount = ref<number | null>(null)
 const sizeInput = ref<HTMLInputElement | null>(null)
-
-const weight = (text: string, count: number): number => {
-  const size = text.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{2,4}x[0-9]{2,4})/i)?.[0] || '1x1x1'
-  return (
-    size
-      .replace(/,/g, '.')
-      .split('x')
-      .reduce<number>((acc, item) => (acc * Number(item)) / 1000, 1) *
-    count *
-    720
-  )
-}
 
 let idCounter = 0
 
@@ -36,6 +25,7 @@ function addProduct() {
     desc: face.value,
     note: note.value,
     glue: glue.value || `${weight(`${size.value} ${face.value}`, piecesCount.value || 0).toFixed(0)} kg`,
+    weight: `${weight(`${size.value} ${face.value}`, piecesCount.value || 0).toFixed(0)} kg`,
     packsCount: packsCount.value,
     piecesCount: piecesCount.value || 0,
     arrivalPlace: 'Ręcznie dodany',

@@ -71,7 +71,7 @@ const productStore = useProductStore()
 
 .label_desc {
   grid-area: desc;
-  min-height: calc(var(--fs-normal) * 1);
+  min-height: calc(var(--fs-normal) * 0.5);
   max-height: calc(var(--fs-normal) * 2);
   font-size: var(--fs-small);
   white-space: pre-line;
