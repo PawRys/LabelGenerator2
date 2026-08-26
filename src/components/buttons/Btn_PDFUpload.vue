@@ -154,7 +154,7 @@ async function PDFtoTEXT(file: File): Promise<string[]> {
     } // END row
   } // END page
 
-  console.log(TEXTrows.join('\n'))
+  // console.log(TEXTrows.join('\n'))
   return TEXTrows
 }
 

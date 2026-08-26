@@ -30,7 +30,7 @@ const printLayout = computed(() => {
   </header>
 
   <ul id="products-list" class="noprint">
-    <FilterProducts v-if="pageCounter() > 0" />
+    <FilterProducts />
     <AddProduct />
     <li>
       <h3 id="page-counter">Ilość stron do wydrukowania: {{ pageCounter() }}</h3>

@@ -47,7 +47,7 @@ const cmrNumList = computed(() => {
 </script>
 
 <template>
-  <li class="sticky full-width">
+  <li class="sticky">
     <input
       id="search-query"
       v-model="productStore.searchQuery"
@@ -98,6 +98,9 @@ const cmrNumList = computed(() => {
   position: sticky;
   z-index: 1;
   top: 1rem;
+
+  display: flex;
+  justify-content: center;
 }
 
 h4 {
@@ -107,7 +110,7 @@ h4 {
 #search-query {
   grid-column: 1 / -1;
   margin-bottom: 1rem;
-  width: 100%;
+  width: min(100%, 60ch);
   text-align: center;
   font-size: 1.2rem;
   padding: 0.5rem;
