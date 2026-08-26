@@ -72,7 +72,7 @@ const saveJsonByTruck = (products: Product[]) => {
 
     const link = document.createElement('a')
     link.href = url
-    link.download = `${truckNum}.json`
+    link.download = `Etykiety_${truckNum}.json`
     link.click()
 
     URL.revokeObjectURL(url)
