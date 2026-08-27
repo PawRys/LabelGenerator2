@@ -126,7 +126,12 @@ function addProduct() {
       <button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
     </div>
   </li>
-  <li class="appendix">* Dozwolone pliki: LF Invoice.pdf / Stiga Invoice.pdf / Etykiety.json</li>
+
+  <li class="appendix appx-one">
+    <a href="https://www.compart.com/en/unicode/block/U+2600" target="_blank" data-v-4c92c42b="">dodatkowe znaki</a>
+  </li>
+
+  <li class="appendix appx-two">* Dozwolone pliki: LF Invoice.pdf / Stiga Invoice.pdf / Etykiety.json</li>
 </template>
 
 <style scoped>
@@ -152,6 +157,13 @@ textarea {
   grid-template-columns: 1fr;
   color: grey;
   font-size: 0.8rem;
+}
+
+.appx-one {
+  text-align: center;
+}
+
+.appx-two {
   text-align: right;
 }
 
