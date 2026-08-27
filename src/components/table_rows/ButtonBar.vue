@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SaveIcon from '@/components/icons/SaveIcon.vue'
+import ResetIcon from '@/components/icons/ResetIkon.vue'
 import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import PrinterIcon from '@/components/icons/PrinterIcon.vue'
 import SettingsIcon from '@/components/icons/SettingIcon.vue'
@@ -67,13 +68,23 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 
     <div class="button-bar button-bar-two">
       <Btn_SortSettings class="other-btn" id="btn-settings"><SettingsIcon />Ustawienia</Btn_SortSettings>
+
       <Btn_Save class="other-btn" id="btn-save">
         <SaveIcon />
         {{ productStore.searchQuery ? `Zapisz: ${productStore.searchQuery}` : `Zapisz wszystkie` }}
       </Btn_Save>
+
       <button class="other-btn" id="btn-removeall" @click="removeSelectedItems()">
         <DeleteIcon />
         {{ productStore.searchQuery ? `Usuń: ${productStore.searchQuery}` : `Usuń wszystkie` }}
+      </button>
+
+      <button
+        v-if="productStore.searchQuery"
+        class="other-btn clear-search-query"
+        @click="productStore.searchQuery = ''"
+      >
+        <ResetIcon />
       </button>
     </div>
   </li>
@@ -109,7 +120,11 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 :deep(.other-btn) {
   padding-block: 0.5em;
   /* flex-grow: 1; */
-  flex-basis: 25%;
+  flex: 0 0 25%;
+}
+
+.clear-search-query {
+  flex: 0 0 auto;
 }
 
 #btn-removeall {

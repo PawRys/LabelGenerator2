@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ClearIcon from '@/components/icons/ClearIcon.vue'
 import { useProductStore } from '@/stores/products_store'
 
 const productStore = useProductStore()
@@ -14,9 +13,6 @@ const productStore = useProductStore()
       list="search-options"
       placeholder="Szukaj..."
     />
-    <button v-if="productStore.searchQuery" class="clear-search-query" @click="productStore.searchQuery = ''">
-      <ClearIcon />
-    </button>
   </li>
 </template>
 
