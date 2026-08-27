@@ -67,5 +67,9 @@ function countWeight(item: Product): number {
 </template>
 
 <style scoped>
-/** Style in App.vue */
+input,
+textarea {
+  font-family: 'Roboto Flex';
+  font-weight: 200;
+}
 </style>

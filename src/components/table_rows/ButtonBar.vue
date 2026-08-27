@@ -107,7 +107,7 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 }
 
 :deep(.other-btn) {
-  padding-block: 1em;
+  padding-block: 0.5em;
   /* flex-grow: 1; */
   flex-basis: 25%;
 }

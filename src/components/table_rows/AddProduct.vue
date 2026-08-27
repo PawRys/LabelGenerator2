@@ -121,6 +121,12 @@ function addProduct() {
 </template>
 
 <style scoped>
+input,
+textarea {
+  font-family: 'Roboto Flex';
+  font-weight: 200;
+}
+
 .heading-item {
   height: 100%;
   /* gap: 0.5em; */

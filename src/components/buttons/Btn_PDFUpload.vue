@@ -10,8 +10,8 @@ import 'pdfjs-dist/build/pdf.worker.min.mjs'
 const productStore = useProductStore()
 const fileInput = ref<HTMLInputElement | null>(null)
 
-const LFregex = new RegExp(/Invoice No\. LF\d\d M\d{6}/i)
-const STregex = new RegExp(/Invoice[ _]DR[ _]\d+[ _]PO/i)
+const LFregex = new RegExp(/LF\d\d M\d{6}/i)
+const STregex = new RegExp(/DR[ _]\d+[ _]PO/i)
 
 function openFile() {
   fileInput.value?.click()
@@ -148,7 +148,6 @@ async function PDFtoTEXT(file: File): Promise<string[]> {
           return ' '.repeat(spaces) + text
         })
         .join('')
-        .replace(/[ ]{2,4}/g, '\t')
 
       TEXTrows.push(textrow)
     } // END row
@@ -170,25 +169,19 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
 
   let idNum = ''
   let idCounter = 0
+  let unknownInvoiceCounter = 0
   let itemSize = ''
   let itemFace = ''
   let itemGlue = ''
   let itemWeight = 0
   let itemPiecesCount = 0
   let itemPacksCount = 1
-  let arrivalPlace = ''
-  let invoiceNum = ''
-  let truckNum = ''
-  let CMRNum = ''
+  const arrivalPlace = getArrivalPlace(TEXTrows)
+  const invoiceNum = getInvoiceNum(TEXTrows)
+  const truckNum = getTruckNum(TEXTrows)
+  const CMRNum = getCMRNum(TEXTrows)
 
   TEXTrows.forEach((textrow) => {
-    arrivalPlace = getArrivalPlace(textrow) || arrivalPlace
-    invoiceNum = getInvoiceNum(textrow) || invoiceNum
-    truckNum = getTruckNum(textrow) || truckNum
-    CMRNum = getCMRNum(textrow) || CMRNum
-
-    // console.log(textrow.match(full_regexp))
-
     if (/441233[0-9]{2}/.test(textrow)) {
       itemGlue = textrow.match(/MR|WD|INT|EXT/i)?.[0] ?? ''
       itemFace = textrow
@@ -203,7 +196,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
     const [, sizeT, sizeA, sizeB, packsQty, pcsQty] = textrow.match(full_regexp) ?? []
 
     if (sizeT && sizeA && sizeB && packsQty && pcsQty) {
-      idNum = `${CMRNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
+      idNum = `${invoiceNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
       itemSize = `${sizeT}x${sizeA}x${sizeB}`
       itemWeight = weight(`${itemSize} ${itemFace}`, +pcsQty || 0)
       itemPacksCount = Number(packsQty) ?? 0
@@ -251,17 +244,12 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
   let itemWeight = 0
   let itemPiecesCount = 0
   let itemPacksCount = 1
-  let arrivalPlace = ''
-  let invoiceNum = ''
-  let truckNum = ''
-  let CMRNum = ''
+  const arrivalPlace = getArrivalPlace(TEXTrows)
+  const invoiceNum = getInvoiceNum(TEXTrows)
+  const truckNum = invoiceNum
+  const CMRNum = invoiceNum
 
   TEXTrows.forEach((textrow, i) => {
-    arrivalPlace = getArrivalPlace(textrow) || arrivalPlace
-    invoiceNum = getInvoiceNum(textrow) || invoiceNum
-    truckNum = getInvoiceNum(textrow) || truckNum
-    CMRNum = getInvoiceNum(textrow) || CMRNum
-
     const sanded = textrow.match(/^C\/C$/i)
     let fixedrow = ''
 
@@ -274,7 +262,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
     const [id, sizeA, sizeB, sizeT, face, pcsQty, packsQty] = (fixedrow || textrow).match(full_regexp) ?? []
 
     if (id && sizeA && sizeB && sizeT && face && pcsQty && packsQty) {
-      idNum = `${CMRNum || '_STG'}_${(++idCounter).toString().padStart(3, '0')}`
+      idNum = `${invoiceNum || '_STG'}_${(++idCounter).toString().padStart(3, '0')}`
       itemSize = `${sizeT}x${sizeA}x${sizeB}`
       itemFace = face ?? ''
       itemGlue = 'WD'
@@ -303,30 +291,51 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
   return results
 }
 
-function getArrivalPlace(text: string): string {
-  const LF = text.includes('Terms of delivery:') ? text.replace('Terms of delivery:', '').trim() : ''
-  const ST = /100\s*%\s*Prepayment\s*DAP/i.test(text) ? text.replace(/100\s*%\s*Prepayment/i, '').trim() : ''
+function getArrivalPlace(text_rows: string[]): string {
+  let result = ''
+  text_rows.forEach((textrow, i) => {
+    const LF = textrow.includes('Terms of delivery:') ? textrow.replace('Terms of delivery:', '').trim() : ''
+    const ST = /100\s*%\s*Prepayment\s*DAP/i.test(textrow) ? textrow.replace(/100\s*%\s*Prepayment/i, '').trim() : ''
 
-  if (LF) return LF
-  if (ST) return ST
-  return ''
+    if (LF) result = LF
+    if (ST) result = ST
+  })
+  return result
 }
 
-function getInvoiceNum(text: string): string {
-  const LF = text.match(/(LF[0-9]{2} M[0-9]{6})/i)
-  const ST = text.match(/(DR[0-9]+)/i)
+function getInvoiceNum(text_rows: string[]): string {
+  let result = ''
+  text_rows.forEach((textrow, i) => {
+    const LF = textrow.match(/LF[0-9]{2} M[0-9]{6}/i)
+    const ST = textrow.match(/DR[0-9]+/i)
 
-  if (LF) return LF[1]!
-  if (ST) return ST[1]!
-  return ''
+    if (LF) result = LF[0]
+    if (ST) result = ST[0]
+  })
+  return result
 }
 
-function getTruckNum(text: string): string {
-  return text.includes('Carriage by:') ? text.replace('Carriage by:', '').trim() : ''
+function getTruckNum(text_rows: string[]): string {
+  let result = ''
+  text_rows.forEach((textrow, i) => {
+    if (textrow.includes('Carriage by:')) {
+      result = textrow.replace('Carriage by:', '').trim()
+      return
+    }
+  })
+  return result
 }
 
-function getCMRNum(text: string): string {
-  return text.match(/CMR_[A-Z]{1}[0-9]{6}/i)?.[0] ?? ''
+function getCMRNum(text_rows: string[]): string {
+  let result = ''
+  text_rows.forEach((textrow, i) => {
+    const match = textrow.match(/CMR_[A-Z]{1}[0-9]{6}/i)
+    if (match) {
+      result = match[0]
+      return
+    }
+  })
+  return result
 }
 </script>
 
