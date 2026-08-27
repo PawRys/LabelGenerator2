@@ -41,13 +41,6 @@ const printLayout = computed(() => {
     <DisplayProducts />
   </ul>
 
-  <datalist id="glue-datalist" class="noprint">
-    <option value="EXT" />
-    <option value="INT" />
-    <option value="WD" />
-    <option value="MR" />
-  </datalist>
-
   <component id="printme" :is="printLayout"></component>
 
   <footer class="noprint">
@@ -62,6 +55,13 @@ const printLayout = computed(() => {
     </p>
     <p></p>
   </footer>
+
+  <datalist id="glue-datalist" class="noprint">
+    <option value="EXT" />
+    <option value="INT" />
+    <option value="WD" />
+    <option value="MR" />
+  </datalist>
 </template>
 
 <style>
