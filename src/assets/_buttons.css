@@ -10,9 +10,9 @@ button {
   border-radius: 0.2em;
   padding: 0.5em 1em;
   background: var(--button-bg-color);
-  color: var(--font-color);
+  color: var(--button-font-color);
 }
 
 button:hover {
-  background: var(--button-hover-bg-color);
+  background: var(--button-bg-color-hover);
 }

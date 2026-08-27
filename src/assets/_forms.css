@@ -4,8 +4,8 @@ textarea {
   border: 1px solid var(--input-border-color);
   border-radius: 0.1em;
   padding: 0.5em;
-  background: var(--input-bg-color);
-  color: var(--font-color);
+  background-color: var(--input-bg-color);
+  color: var(--input-font-color);
 }
 
 input::placeholder,
@@ -16,19 +16,20 @@ textarea::placeholder {
 select {
   padding: 0em;
 }
+
 select > option {
   padding-block: 0.2em;
-  background: var(--option-bg-color);
-  color: var(--option-color);
+  background-color: var(--input-bg-color);
+  color: var(--input-font-color);
 }
 
 select option:checked {
-  background: var(--option-selected-bg-color);
-  color: var(--option-selected-color);
+  background-color: var(--input-bg-color-selected);
+  color: var(--input-font-color-selected);
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--input-focus-color);
+  border-color: var(--input-focus-color, red);
 }
