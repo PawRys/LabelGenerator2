@@ -2,7 +2,7 @@
 import type { Product } from '@/types/shared_types'
 import { productsSchema } from '@/types/shared_types'
 import { useProductStore } from '@/stores/products_store'
-import { correctText, weight } from '@/exports/shared_script'
+import { correctText, calcWeight } from '@/exports/shared_script'
 import { ref } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker.min.mjs'
@@ -23,6 +23,7 @@ async function doit(event: Event): Promise<void> {
   const validFilesList = await validateFiles(pdfFilesList)
   const products = await processFiles(validFilesList)
 
+  productStore.searchQuery = ''
   products.forEach((item) => productStore.addProduct(item))
 }
 
@@ -198,7 +199,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
     if (sizeT && sizeA && sizeB && packsQty && pcsQty) {
       idNum = `${invoiceNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
       itemSize = `${sizeT}x${sizeA}x${sizeB}`
-      itemWeight = weight(`${itemSize} ${itemFace}`, +pcsQty || 0)
+      itemWeight = calcWeight(`${itemSize} ${itemFace}`, +pcsQty || 0)
       itemPacksCount = Number(packsQty) ?? 0
       itemPiecesCount = Number(pcsQty) ?? 0
 
@@ -266,7 +267,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
       itemSize = `${sizeT}x${sizeA}x${sizeB}`
       itemFace = face ?? ''
       itemGlue = 'WD'
-      itemWeight = weight(`${itemSize} ${itemFace}`, +pcsQty || 0)
+      itemWeight = calcWeight(`${itemSize} ${itemFace}`, +pcsQty || 0)
       itemPacksCount = Number(packsQty) ?? 0
       itemPiecesCount = Number(pcsQty) ?? 0
 

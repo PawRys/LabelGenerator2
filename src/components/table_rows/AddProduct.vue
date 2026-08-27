@@ -2,18 +2,20 @@
 import BTN_Upload from '@/components/buttons/Btn_PDFUpload.vue'
 import LabelIcon from '@/components/icons/LabelIcon.vue'
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useProductStore } from '@/stores/products_store'
-import { weight } from '@/exports/shared_script'
+import { calcWeight } from '@/exports/shared_script'
 
 const productStore = useProductStore()
-const size = ref('')
-const face = ref('')
-const glue = ref('')
-const note = ref('')
+
+const title_input = ref('')
+const desc_input = ref('')
+const glue_input = ref('')
+const note_input = ref('')
 const packsCount = ref(1)
 const piecesCount = ref<number | null>(null)
 const sizeInput = ref<HTMLInputElement | null>(null)
+const weight = computed(() => calcWeight(`${title_input.value} ${desc_input.value}`, piecesCount.value || 0))
 
 let idCounter = 0
 
@@ -21,15 +23,15 @@ function addProduct() {
   productStore.addProduct({
     id: `_reczny_${(9999999999999 - Date.now()).toString().padStart(3, '0')}`,
     timestamp: Date.now(),
-    title: size.value,
-    desc: face.value,
-    note: note.value,
-    glue: glue.value || `${weight(`${size.value} ${face.value}`, piecesCount.value || 0).toFixed(0)} kg`,
-    weight: weight(`${size.value} ${face.value}`, piecesCount.value || 0),
+    title: title_input.value,
+    desc: desc_input.value,
+    note: note_input.value,
+    glue: glue_input.value || `${weight.value.toFixed(0)} kg`,
+    weight: weight.value,
     packsCount: packsCount.value,
     piecesCount: piecesCount.value || 0,
     arrivalPlace: 'Ręcznie dodany',
-    truckNum: 'Ręcznie dodany',
+    truckNum: note_input.value.replace(/\s/g, '_') || 'Ręcznie dodany',
     cmrNum: 'Ręcznie dodany',
   })
 
@@ -52,7 +54,7 @@ function addProduct() {
         class="add-title"
         placeholder="Tytuł"
         name="title"
-        v-model="size"
+        v-model="title_input"
         autocomplete="on"
         @keypress.enter="addProduct()"
         ref="sizeInput"
@@ -61,7 +63,13 @@ function addProduct() {
 
     <div class="heading-item grid-desc">
       <LabelIcon class="desc-icon" highlight="desc" />
-      <textarea class="add-desc" placeholder="Opis" name="description" v-model="face" autocomplete="on"></textarea>
+      <textarea
+        class="add-desc"
+        placeholder="Opis"
+        name="description"
+        v-model="desc_input"
+        autocomplete="on"
+      ></textarea>
     </div>
 
     <div class="heading-item grid-note">
@@ -70,7 +78,7 @@ function addProduct() {
         class="add-note"
         placeholder="Notatka"
         name="note"
-        v-model="note"
+        v-model="note_input"
         autocomplete="on"
         @keypress.enter="addProduct()"
       />
@@ -81,7 +89,7 @@ function addProduct() {
       <input
         class="add-glue"
         placeholder="Klej"
-        v-model="glue"
+        v-model="glue_input"
         name="glue"
         autocomplete="on"
         @keypress.enter="addProduct()"

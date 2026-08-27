@@ -25,9 +25,9 @@ export const useProductStore = defineStore('products', {
             product.id,
             product.title,
             product.desc,
+            product.note,
             product.glue,
             product.arrivalPlace,
-            product.note,
             product.truckNum,
             product.cmrNum,
           ]
