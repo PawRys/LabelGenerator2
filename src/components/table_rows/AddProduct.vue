@@ -54,8 +54,9 @@ function addProduct() {
         class="add-title"
         placeholder="Tytuł"
         name="title"
-        v-model="title_input"
+        type="text"
         autocomplete="on"
+        v-model="title_input"
         @keypress.enter="addProduct()"
         ref="sizeInput"
       />

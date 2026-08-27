@@ -47,16 +47,6 @@ const cmrNumList = computed(() => {
 </script>
 
 <template>
-  <li class="sticky">
-    <input
-      id="search-query"
-      v-model="productStore.searchQuery"
-      type="search"
-      list="search-options"
-      placeholder="Szukaj..."
-    />
-  </li>
-
   <li v-if="pageCounter() > 0" class="full-width">
     <h4>Wybór dostawy:</h4>
     <div id="delivery-filters">
@@ -94,35 +84,8 @@ const cmrNumList = computed(() => {
 </template>
 
 <style scoped>
-.sticky {
-  position: sticky;
-  z-index: 1;
-  top: 1rem;
-
-  display: flex;
-  justify-content: center;
-
-  pointer-events: none;
-}
-
 h4 {
   flex-basis: 100%;
-}
-
-#search-query {
-  pointer-events: all;
-
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  width: min(100%, 60ch);
-
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px;
-  box-shadow: 0 0em 0em 0.5em var(--bg-color);
-
-  text-align: center;
-  font-size: 1.2rem;
 }
 
 #delivery-filters {

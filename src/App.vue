@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import ButtonBar from '@/components/table_rows/ButtonBar.vue'
 import AddProduct from '@/components/table_rows/AddProduct.vue'
-import FilterProducts from '@/components/table_rows/FilterProducts.vue'
+import SearchQuery from '@/components/table_rows/SearchQuery.vue'
+import DeliverySelect from '@/components/table_rows/DeliverySelect.vue'
 import DisplayProducts from '@/components/table_rows/DisplayProducts.vue'
 import PrintLayoutSingle from '@/components/print_layouts/Single.vue'
 import PrintLayoutDouble from '@/components/print_layouts/Double.vue'
@@ -30,11 +31,12 @@ const printLayout = computed(() => {
   </header>
 
   <ul id="products-list" class="noprint">
-    <FilterProducts />
+    <DeliverySelect />
     <AddProduct />
     <li>
       <h3 id="page-counter">Ilość stron do wydrukowania: {{ pageCounter() }}</h3>
     </li>
+    <SearchQuery />
     <ButtonBar />
     <DisplayProducts />
   </ul>
