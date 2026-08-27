@@ -101,6 +101,8 @@ const cmrNumList = computed(() => {
 
   display: flex;
   justify-content: center;
+
+  pointer-events: none;
 }
 
 h4 {
@@ -108,16 +110,19 @@ h4 {
 }
 
 #search-query {
-  grid-column: 1 / -1;
+  pointer-events: all;
+
   margin-bottom: 1rem;
-  width: min(100%, 60ch);
-  text-align: center;
-  font-size: 1.2rem;
   padding: 0.5rem;
+  width: min(100%, 60ch);
+
   border-style: solid;
   border-width: 1px;
   border-radius: 3px;
   box-shadow: 0 0em 0em 0.5em var(--bg-color);
+
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 #delivery-filters {
