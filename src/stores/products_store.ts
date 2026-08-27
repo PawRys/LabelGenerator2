@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 import type { Product } from '@/types/shared_types'
+import { useSettingsStore } from '@/stores/settings_store'
 
 export const useProductStore = defineStore('products', {
   state: () => ({
     products: [] as Product[],
     searchQuery: '',
-    sortOrder: 'default' as keyof typeof sortFunctions,
+    sortOrder: useSettingsStore().sortOrderOfScreen || ('default' as keyof typeof sortFunctions),
     printMode: 'double' as 'single' | 'double' | 'checklist',
   }),
 
