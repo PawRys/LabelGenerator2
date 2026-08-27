@@ -48,7 +48,7 @@ const saveJson = (data: Product[]) => {
 
   const a = document.createElement('a')
   a.href = url
-  a.download = `Etykiety_x${truckNumbers.value.size}_${new Date().toISOString().split('T')[0]}.json`
+  a.download = `Etykiety x${truckNumbers.value.size} ${new Date().toISOString().split('T')[0]}.json`
   a.click()
 
   URL.revokeObjectURL(url)
@@ -74,7 +74,7 @@ const saveJsonByTruck = (products: Product[]) => {
 
     const link = document.createElement('a')
     link.href = url
-    link.download = `Etykiety_${truckNum}.json`
+    link.download = `Etykiety ${truckNum}.json`
     link.click()
 
     URL.revokeObjectURL(url)
