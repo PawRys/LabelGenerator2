@@ -189,6 +189,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
         .replace(/Birch plywood RIGA |PLY|TEX|FORM|MEL|/gi, '')
         .replace(/, edges sealed .*|,[^,]*441233[0-9]{2}.*/gi, '')
         .replace(/ \(without \*\)/gi, '')
+        .replace(/ Bouleau/gi, '')
         .replace(/(\w) (I)/g, '$1 $2')
         .replace(/,/i, ' ')
         .trim()
