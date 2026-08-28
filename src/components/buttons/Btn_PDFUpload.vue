@@ -188,8 +188,8 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
       itemFace = textrow
         .replace(/Birch plywood RIGA |PLY|TEX|FORM|MEL|/gi, '')
         .replace(/, edges sealed .*|,[^,]*441233[0-9]{2}.*/gi, '')
-        .replace(/ \(without \*\)/gi, '')
-        .replace(/ Bouleau/gi, '')
+        .replace(/ \(without \*\)/gi, '') // Peri without *
+        .replace(/ Bouleau/gi, '') // Ultibat Bouleau
         .replace(/(\w) (I)/g, '$1 $2')
         .replace(/,/i, ' ')
         .trim()
