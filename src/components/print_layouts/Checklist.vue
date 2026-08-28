@@ -45,28 +45,27 @@ function countPacks(item: Product): number {
 </script>
 
 <template>
-  <section>
-    <!-- <h5>{{ productStore.filteredProducts[0]?.truckNum }}</h5> -->
-    <table class="checklist">
-      <template v-for="(item, index) in productStore.filteredProducts" :key="`checklist-${index}`">
-        <tr v-if="showTruckHeader(item, index)">
-          <th colspan="5">
-            <h4 class="truck-number">{{ `${item.truckNum} (ilość paczek: ${countPacks(item)})` }}</h4>
-          </th>
-        </tr>
-        <tr>
-          <td>{{ `${index + 1 - resetIndex(item, index)}.` }}</td>
-          <td>{{ `${item.glue}` }}</td>
-          <td class="item-size">{{ item.title }}</td>
-          <td>{{ `${item.desc}` }}</td>
-          <td>{{ `${item.packsCount}x${item.piecesCount}` }}</td>
-          <td class="item-check">
-            <div class="grid"><i v-for="x in item.packsCount" :key="`checklist-${index}-${x}`" class="square"></i></div>
-          </td>
-        </tr>
-      </template>
-    </table>
-  </section>
+  <table class="checklist">
+    <template v-for="(item, index) in productStore.filteredProducts" :key="`checklist-${index}`">
+      <tr v-if="showTruckHeader(item, index)">
+        <th class="margin-top" colspan="4">
+          <h4 class="truck-number">{{ `${item.truckNum} (ilość paczek: ${countPacks(item)})` }}</h4>
+        </th>
+        <th class="margin-top"><div>suma:</div></th>
+        <th class="margin-top"><i class="sum-field"></i></th>
+      </tr>
+      <tr>
+        <td>{{ `${index + 1 - resetIndex(item, index)}.` }}</td>
+        <td>{{ `${item.glue}` }}</td>
+        <td class="item-size">{{ item.title }}</td>
+        <td>{{ `${item.desc}` }}</td>
+        <td>{{ `${item.packsCount}x${item.piecesCount}` }}</td>
+        <td class="item-check">
+          <div class="grid"><i v-for="x in item.packsCount" :key="`checklist-${index}-${x}`" class="square"></i></div>
+        </td>
+      </tr>
+    </template>
+  </table>
 </template>
 
 <style scoped>
@@ -82,14 +81,23 @@ function countPacks(item: Product): number {
 table {
   border-collapse: collapse;
   margin-inline: 15mm;
-
+  width: fit-content;
   font-family: 'Roboto Flex', serif;
   font-size: 12pt;
 }
 
+th {
+  text-align: left;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.margin-top > * {
+  margin-top: 1em;
+}
+
 .truck-number {
   text-align: left;
-  margin-top: 1em;
   margin-bottom: 0.2em;
   break-before: page;
 }
@@ -109,13 +117,22 @@ td {
 .grid {
   display: grid;
   grid-template-columns: repeat(5, auto);
+  justify-content: start;
   gap: 1ch;
 }
 
 .square {
   display: inline-block;
-  width: 1.5ch;
+  height: 1.1em;
   aspect-ratio: 1;
+  border: solid 1px black;
+  border-radius: 0.2ch;
+}
+
+.sum-field {
+  display: inline-block;
+  height: 2em;
+  aspect-ratio: 2 / 1;
   border: solid 1px black;
   border-radius: 0.2ch;
 }
