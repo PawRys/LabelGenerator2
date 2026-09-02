@@ -21,7 +21,7 @@ let idCounter = 0
 
 function addProduct() {
   productStore.addProduct({
-    id: `_reczny_${(9999999999999 - Date.now()).toString().padStart(3, '0')}`,
+    id: `_reczny_${Date.now().toString().padStart(3, '0')}`,
     timestamp: Date.now(),
     title: title_input.value,
     desc: desc_input.value,
