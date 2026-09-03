@@ -3,32 +3,30 @@ import type { Product } from '@/types/shared_types'
 
 import CollectiveIcon from '@/components/icons/CollectiveIcon.vue'
 import SeparateIcon from '@/components/icons/SeparateIcon.vue'
+import SaveIcon from '@/components/icons/SaveIcon.vue'
 
 import { useProductStore } from '@/stores/products_store'
 import { ref, computed, useAttrs } from 'vue'
 
-const productStore = useProductStore()
 const dialog = ref<HTMLDialogElement | null>(null)
-const attrs = useAttrs()
-const truckNumbers = computed(() => new Set(productStore.filteredProducts.map((item) => item.truckNum)))
-function openModal() {
-  console.log(truckNumbers.value.size)
+const truckNumbers = computed(() => new Set(useProductStore().filteredProducts.map((item) => item.truckNum)))
 
+function openModal() {
   if (truckNumbers.value.size > 1) {
     dialog.value?.showModal()
   } else {
-    saveJsonByTruck(productStore.filteredProducts)
+    saveJsonByTruck(useProductStore().filteredProducts)
   }
 }
 
 function saveSingle() {
   dialog.value?.close()
-  saveJson(productStore.filteredProducts)
+  saveJson(useProductStore().filteredProducts)
 }
 
 function saveByTruck() {
   dialog.value?.close()
-  saveJsonByTruck(productStore.filteredProducts)
+  saveJsonByTruck(useProductStore().filteredProducts)
 }
 
 function closeOnBackdrop(event: MouseEvent) {
@@ -83,23 +81,21 @@ const saveJsonByTruck = (products: Product[]) => {
 </script>
 
 <template>
-  <button v-bind="attrs" @click="openModal">
-    <slot>Zapisz</slot>
+  <button @click="openModal">
+    <SaveIcon /> {{ useProductStore().searchQuery ? `Zapisz: ${useProductStore().searchQuery}` : `Zapisz wszystkie` }}
+
+    <Teleport to="body">
+      <dialog ref="dialog" @click="closeOnBackdrop">
+        <h3>Zapisz dane</h3>
+        <p>Wybierz sposób zapisu ({{ truckNumbers.size }} dostaw):</p>
+        <div class="button-bar">
+          <button @click="saveSingle"><CollectiveIcon />Wszystkie dostawy w jednym pliku</button>
+          <button @click="saveByTruck"><SeparateIcon />Osobny plik dla każdej dostawy</button>
+          <button @click="dialog?.close()">Anuluj</button>
+        </div>
+      </dialog>
+    </Teleport>
   </button>
-
-  <dialog ref="dialog" @click="closeOnBackdrop">
-    <h3>Zapisz dane</h3>
-
-    <p>Wybierz sposób zapisu ({{ truckNumbers.size }} dostaw):</p>
-
-    <div class="button-bar">
-      <button @click="saveSingle"><CollectiveIcon />Wszystkie dostawy w jednym pliku</button>
-
-      <button @click="saveByTruck"><SeparateIcon />Osobny plik dla każdej dostawy</button>
-
-      <button @click="dialog?.close()">Anuluj</button>
-    </div>
-  </dialog>
 </template>
 
 <style scoped>

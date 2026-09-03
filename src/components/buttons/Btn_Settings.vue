@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import type { SortFunction } from '@/types/shared_types'
 
-import { ref, watch, useAttrs } from 'vue'
+import SettingsIcon from '@/components/icons/SettingIcon.vue'
+import { ref, watch } from 'vue'
 import { useProductStore } from '@/stores/products_store'
 import { useSettingsStore } from '@/stores/settings_store'
 
-const settingsStore = useSettingsStore()
-const productStore = useProductStore()
 const dialog = ref<HTMLDialogElement | null>(null)
-const attrs = useAttrs()
 
 const sortOptions: { value: SortFunction; label: string }[] = [
   { value: 'default', label: 'Domyślne' },
@@ -57,34 +55,37 @@ function closeOnBackdrop(event: MouseEvent) {
   }
 }
 
-watch([() => settingsStore.sortOrderOfScreen], () => {
-  productStore.sortOrder = settingsStore.sortOrderOfScreen
+watch([() => useSettingsStore().sortOrderOfScreen], () => {
+  useProductStore().sortOrder = useSettingsStore().sortOrderOfScreen
 })
 </script>
 
 <template>
-  <button v-bind="attrs" @click="openModal">
-    <slot>Ustawienia sortowania</slot>
+  <button @click="openModal">
+    <SettingsIcon /> <slot>Ustawienia</slot>
+
+    <Teleport to="body">
+      <dialog ref="dialog" @click="closeOnBackdrop">
+        <h3>Sortowanie dla:</h3>
+        <section>
+          <div class="group" v-for="group in sortGroups" :key="group.key">
+            <h5>{{ group.title }}</h5>
+            <label v-for="option in sortOptions" :key="`${group.key}-${option.value}`">
+              <input v-model="useSettingsStore()[group.key]" :value="option.value" :name="group.name" type="radio" />
+              {{ option.label }}
+            </label>
+          </div>
+          <button @click="closeModal">Zamknij</button>
+        </section>
+      </dialog>
+    </Teleport>
   </button>
-
-  <dialog ref="dialog" @click="closeOnBackdrop">
-    <h3>Sortowanie dla:</h3>
-    <section>
-      <div class="group" v-for="group in sortGroups" :key="group.key">
-        <h5>{{ group.title }}</h5>
-
-        <label v-for="option in sortOptions" :key="`${group.key}-${option.value}`">
-          <input v-model="settingsStore[group.key]" :value="option.value" :name="group.name" type="radio" />
-          {{ option.label }}
-        </label>
-      </div>
-
-      <button @click="closeModal">Zamknij</button>
-    </section>
-  </dialog>
 </template>
 
 <style scoped>
+.component-root {
+  display: contents;
+}
 dialog {
   position: fixed;
   inset: 0;

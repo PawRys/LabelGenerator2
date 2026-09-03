@@ -1,91 +1,38 @@
 <script setup lang="ts">
-import SaveIcon from '@/components/icons/SaveIcon.vue'
-import ResetIcon from '@/components/icons/ResetIkon.vue'
-import DeleteIcon from '@/components/icons/DeleteIcon.vue'
-import PrinterIcon from '@/components/icons/PrinterIcon.vue'
-import SettingsIcon from '@/components/icons/SettingIcon.vue'
-import Btn_SortSettings from '@/components/buttons/Btn_SortSettings.vue'
 import Btn_Save from '@/components/buttons/Btn_Save.vue'
+import Btn_Reset from '@/components/buttons/Btn_Reset.vue'
+import Btn_Remove from '@/components/buttons/Btn_Remove.vue'
+import Btn_Settings from '@/components/buttons/Btn_Settings.vue'
+import Btn_PrintSingle from '@/components/buttons/Btn_PrintSingle.vue'
+import Btn_PrintDouble from '@/components/buttons/Btn_PrintDouble.vue'
+import Btn_PrintChecklist from '@/components/buttons/Btn_PrintChecklist.vue'
 
-import { nextTick } from 'vue'
 import { useProductStore } from '@/stores/products_store'
-import { useSettingsStore } from '@/stores/settings_store'
-
-const settingsStore = useSettingsStore()
-const productStore = useProductStore()
 
 function pageCounter() {
-  return productStore.filteredProducts.reduce((acc, item) => acc + item.packsCount, 0)
-}
-
-function removeSelectedItems() {
-  productStore.removeSelected(productStore.filteredProducts)
-  productStore.searchQuery = ''
-}
-
-async function printMe(mode: 'single' | 'double' | 'checklist') {
-  const style = document.createElement('style')
-
-  if (mode === 'single') {
-    style.innerHTML += `@page {size: A4 landscape; margin: 5mm;}`
-    productStore.sortOrder = settingsStore.sortOrderOfPrintSingle
-  }
-
-  if (mode === 'double') {
-    style.innerHTML += `@page {size: A4 portrait; margin: 5mm;}`
-    productStore.sortOrder = settingsStore.sortOrderOfPrintDouble
-  }
-
-  if (mode === 'checklist') {
-    style.innerHTML += `@page {size: A4 portrait; margin: 15mm;}`
-    productStore.sortOrder = settingsStore.sortOrderOfPrintChecklist
-  }
-
-  document.head.appendChild(style)
-  productStore.printMode = mode
-
-  await nextTick()
-  window.print()
-
-  document.head.removeChild(style)
-  productStore.sortOrder = settingsStore.sortOrderOfScreen
+  return useProductStore().filteredProducts.reduce((acc, item) => acc + item.packsCount, 0)
 }
 </script>
 
 <template>
-  <li v-if="pageCounter() > 0" class="buttons">
+  <li v-if="pageCounter() > 0" class="buttons-section">
     <div class="button-bar button-bar-one">
-      <button class="print-btn" @click="printMe('single')"><PrinterIcon /> Jedna duża</button>
-      <button class="print-btn" @click="printMe('double')"><PrinterIcon /> Dwie małe</button>
-      <button class="print-btn" @click="printMe('checklist')"><PrinterIcon /> Lista kontrolna</button>
+      <Btn_PrintSingle class="print-btn" />
+      <Btn_PrintDouble class="print-btn" />
+      <Btn_PrintChecklist class="print-btn" />
     </div>
 
     <div class="button-bar button-bar-two">
-      <Btn_SortSettings class="other-btn" id="btn-settings"><SettingsIcon />Ustawienia</Btn_SortSettings>
-
-      <Btn_Save class="other-btn" id="btn-save">
-        <SaveIcon />
-        {{ productStore.searchQuery ? `Zapisz: ${productStore.searchQuery}` : `Zapisz wszystkie` }}
-      </Btn_Save>
-
-      <button class="other-btn" id="btn-removeall" @click="removeSelectedItems()">
-        <DeleteIcon />
-        {{ productStore.searchQuery ? `Usuń: ${productStore.searchQuery}` : `Usuń wszystkie` }}
-      </button>
-
-      <button
-        v-if="productStore.searchQuery"
-        class="other-btn clear-search-query"
-        @click="productStore.searchQuery = ''"
-      >
-        <ResetIcon />
-      </button>
+      <Btn_Settings class="other-btn" />
+      <Btn_Save class="other-btn" />
+      <Btn_Remove class="other-btn" />
+      <Btn_Reset class="other-btn reset-btn" />
     </div>
   </li>
 </template>
 
 <style scoped>
-.buttons {
+.buttons-section {
   display: flex;
   flex-direction: column;
 }
@@ -107,21 +54,15 @@ async function printMe(mode: 'single' | 'double' | 'checklist') {
 
   padding-block: 1em;
 
-  /* flex-grow: 1; */
-  flex-basis: 25%;
+  flex: 1 1 25%;
 }
 
-:deep(.other-btn) {
-  padding-block: 0.5em;
-  /* flex-grow: 1; */
+.other-btn {
   flex: 0 0 25%;
+  padding-block: 0.5em;
 }
 
-.clear-search-query {
-  flex: 0 0 auto;
-}
-
-#btn-removeall {
-  white-space: pre-line;
+.reset-btn {
+  flex: 0 0 min-content;
 }
 </style>
