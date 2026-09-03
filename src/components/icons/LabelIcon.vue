@@ -28,10 +28,10 @@ defineProps({
 
 .icon span {
   height: 100%;
-  background-color: silver;
+  background-color: var(--background-color-interactive-hover);
 }
 .icon span.highlight {
-  background-color: orange;
+  background-color: var(--action-color-normal);
 }
 .icon .title {
   grid-column: 1/4;

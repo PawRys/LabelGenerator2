@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ButtonBar from '@/components/table_rows/ButtonBar.vue'
 import AddProduct from '@/components/table_rows/AddProduct.vue'
-import SearchQuery from '@/components/table_rows/SearchQuery.vue'
+import SearchInput from '@/components/table_rows/SearchInput.vue'
 import DeliverySelect from '@/components/table_rows/DeliverySelect.vue'
 import DisplayProducts from '@/components/table_rows/DisplayProducts.vue'
 import PrintLayoutSingle from '@/components/print_layouts/Single.vue'
@@ -30,16 +30,19 @@ const printLayout = computed(() => {
     <h1>Etykieter</h1>
   </header>
 
-  <ul id="products-list" class="noprint">
-    <SearchQuery />
+  <main>
+    <SearchInput />
     <DeliverySelect />
     <AddProduct />
+  </main>
+
+  <!-- <ul id="products-list" class="noprint">
     <li>
       <h3 id="page-counter">Ilość stron do wydrukowania: {{ pageCounter() }}</h3>
     </li>
     <ButtonBar />
     <DisplayProducts />
-  </ul>
+  </ul> -->
 
   <component id="printme" :is="printLayout"></component>
 
@@ -64,17 +67,23 @@ const printLayout = computed(() => {
   </datalist>
 </template>
 
+<style scoped>
+main {
+  display: grid;
+}
+</style>
+
 <style>
 #app {
   min-height: 100svh;
   display: grid;
   grid-template-rows: auto 1fr auto;
 }
-
+/* 
 #products-list {
   padding: 0;
-}
-
+} */
+/* 
 :where(#products-list) > li {
   list-style: none;
 
@@ -85,9 +94,9 @@ const printLayout = computed(() => {
   gap: 0.5em;
   grid-template-columns: 3fr 3fr 2fr max-content max-content max-content;
   grid-template-areas: 'title desc note glue  pack btn';
-}
+} */
 
-.grid-title {
+/* .grid-title {
   grid-area: title;
   width: 100%;
 }
@@ -111,53 +120,53 @@ const printLayout = computed(() => {
 
 .full-width {
   grid-template-columns: 1fr;
-}
+} */
 
-.add-title {
+/* .add-title {
   font-family: 'Roboto Flex', var(--font-family, sans-serif);
   font-weight: 200;
-}
+} */
 
-.add-title,
-.edit-title {
+/* .add-title, */
+/* .edit-title {
   text-align: center;
   width: 100%;
-}
+} */
 
-.add-desc,
-.edit-desc {
+/* .add-desc, */
+/* .edit-desc {
   text-align: center;
   width: 100%;
-}
+} */
 
-.add-note,
-.edit-note {
+/* .add-note, */
+/* .edit-note {
   text-align: center;
   width: 100%;
-}
+} */
 
-.add-glue,
-.edit-glue {
+/* .add-glue, */
+/* .edit-glue {
   text-align: center;
   width: 5.5ch;
-}
+} */
 
-.add-glue {
+/* .add-glue {
   width: 8ch;
-}
+} */
 
-.add-packs,
-.edit-packs {
+/* .add-packs, */
+/* .edit-packs {
   text-align: center;
   width: 5.5ch;
-}
+} */
 
-.add-pieces,
-.edit-pieces {
+/* .add-pieces, */
+/* .edit-pieces {
   grid-area: packs;
   text-align: center;
   width: 5.5ch;
-}
+} */
 
 @media (max-width: 768px) {
   /* :where(#products-list) > li {
@@ -170,7 +179,7 @@ const printLayout = computed(() => {
       'btn   btn   btn';
   } */
 
-  :where(#products-list) > li {
+  /* :where(#products-list) > li {
     display: flex;
     flex-wrap: wrap;
   }
@@ -181,7 +190,7 @@ const printLayout = computed(() => {
 
   .grid-btn {
     margin-left: auto;
-  }
+  } */
 }
 
 /* @media screen {
@@ -208,5 +217,3 @@ const printLayout = computed(() => {
   }
 } */
 </style>
-
-<style scoped></style>

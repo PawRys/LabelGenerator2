@@ -47,10 +47,11 @@ const cmrNumList = computed(() => {
 </script>
 
 <template>
-  <li v-if="pageCounter() > 0" class="full-width">
+  <section id="delivery-select" v-if="pageCounter() >= 0" class="full-width">
     <h4>Wybór dostawy:</h4>
-    <div id="delivery-filters">
+    <div class="selector-wrapper">
       <select
+        class="selector"
         v-model="productStore.searchQuery"
         @focus="truckSelectFocused = true"
         @blur="truckSelectFocused = false"
@@ -61,6 +62,7 @@ const cmrNumList = computed(() => {
       </select>
 
       <select
+        class="selector"
         v-model="productStore.searchQuery"
         @focus="cmrSelectFocused = true"
         @blur="cmrSelectFocused = false"
@@ -71,6 +73,7 @@ const cmrNumList = computed(() => {
       </select>
 
       <select
+        class="selector"
         v-model="productStore.searchQuery"
         @focus="arrivalSelectFocused = true"
         @blur="arrivalSelectFocused = false"
@@ -80,24 +83,16 @@ const cmrNumList = computed(() => {
         <option v-for="arrival in arrivalPlaceList" :key="arrival" :value="arrival">{{ arrival }}</option>
       </select>
     </div>
-  </li>
+  </section>
 </template>
 
 <style scoped>
-h4 {
-  flex-basis: 100%;
-}
-
-#delivery-filters {
-  grid-column: 1 / -1;
+.selector-wrapper {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5em;
-  margin-bottom: 3rem;
+  gap: var(--spacing-large);
 }
 
-#delivery-filters > * {
-  flex-grow: 1;
+.selector {
+  flex: 1 1 50%;
 }
 </style>
