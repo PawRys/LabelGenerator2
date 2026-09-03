@@ -87,6 +87,10 @@ const cmrNumList = computed(() => {
 </template>
 
 <style scoped>
+#delivery-select {
+  margin-block: 2rem;
+}
+
 .selector-wrapper {
   display: flex;
   gap: var(--spacing-large);

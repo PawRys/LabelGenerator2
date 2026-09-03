@@ -115,16 +115,18 @@ function addProduct() {
     </div>
   </section>
 
-  <div class="additional-info">
-    <p class="appendix appx-one">
-      <a href="https://www.compart.com/en/unicode/block/U+2600" target="_blank" data-v-4c92c42b="">dodatkowe znaki</a>
-    </p>
-    <p class="appendix appx-two">* Dozwolone pliki: LF Invoice.pdf / Stiga Invoice.pdf / Etykiety.json</p>
-  </div>
+  <p class="appendix-wrapper">
+    <a href="https://www.compart.com/en/unicode/block/U+2600" target="_blank" class="appendix appx-one"
+      >dodatkowe znaki</a
+    >
+    <span class="appendix appx-two">* Dozwolone pliki: LF Invoice.pdf / Stiga Invoice.pdf / Etykiety.json</span>
+  </p>
 </template>
 
 <style scoped>
 #add-product {
+  margin-block: 2rem;
+
   display: grid;
   align-items: center;
   align-content: center;
@@ -141,7 +143,7 @@ function addProduct() {
     width: min(100%, 22em);
 
     justify-items: center;
-    grid-template-columns: auto 1fr 1fr;
+    grid-template-columns: auto 3fr 2fr;
     grid-template-areas:
       'icon-1 inpt-1 inpt-1'
       'icon-2 inpt-2 inpt-2'
@@ -170,6 +172,7 @@ input {
   display: flex;
   flex-wrap: nowrap;
   align-items: baseline;
+  gap: var(--spacing-small);
 }
 
 .short-input {
@@ -180,20 +183,18 @@ input {
   width: clamp(13em, 100%, 21em);
 }
 
-/* #btn-pdf {
-  grid-row: 1;
-  grid-column: 6;
-} */
-
 #btn-add {
-  /* grid-row: 2;
-  grid-column: 6; */
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--action-color-normal);
 }
 
 .additional-info {
   grid-column: 1 / -1;
+}
+
+.appendix {
+  color: var(--font-color-muted);
+  font-size: 0.9rem;
 }
 
 /*

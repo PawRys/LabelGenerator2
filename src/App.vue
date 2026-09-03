@@ -34,14 +34,14 @@ const printLayout = computed(() => {
     <SearchInput />
     <DeliverySelect />
     <AddProduct />
+    <h3 id="page-counter">Ilość stron do wydrukowania: {{ pageCounter() }}</h3>
+    <DisplayProducts />
   </main>
 
   <!-- <ul id="products-list" class="noprint">
     <li>
-      <h3 id="page-counter">Ilość stron do wydrukowania: {{ pageCounter() }}</h3>
     </li>
     <ButtonBar />
-    <DisplayProducts />
   </ul> -->
 
   <component id="printme" :is="printLayout"></component>
@@ -70,6 +70,7 @@ const printLayout = computed(() => {
 <style scoped>
 main {
   display: grid;
+  align-content: start;
 }
 </style>
 

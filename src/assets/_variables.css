@@ -34,8 +34,9 @@
 
   --font-color-link: var(--neutral-700);
   --font-color-hover: var(--neutral-400);
+  --font-color-muted: var(--neutral-500);
   --font-color-normal: var(--neutral-800);
-  --font-color-selected: var(--action-100);
+  --font-color-selected: var(--action-200);
 
   --background-color-main: var(--neutral-100);
   --background-color-formfield: var(--neutral-000);
