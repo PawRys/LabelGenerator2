@@ -184,7 +184,7 @@ const printLayout = computed(() => {
   }
 }
 
-@media screen {
+/* @media screen {
   #printme {
     display: none;
   }
@@ -206,7 +206,7 @@ const printLayout = computed(() => {
     margin: 0;
     color: black;
   }
-}
+} */
 </style>
 
 <style scoped></style>

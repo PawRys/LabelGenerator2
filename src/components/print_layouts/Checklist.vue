@@ -46,41 +46,33 @@ function countPacks(item: Product): number {
 
 <template>
   <table class="checklist">
-    <template v-for="(item, index) in productStore.filteredProducts" :key="`checklist-${index}`">
-      <tr v-if="showTruckHeader(item, index)">
-        <th class="margin-top" colspan="4">
-          <h4 class="truck-number">{{ `${item.truckNum} (ilość paczek: ${countPacks(item)})` }}</h4>
-        </th>
-        <th class="margin-top"><div>suma:</div></th>
-        <th class="margin-top"><i class="sum-field"></i></th>
-      </tr>
-      <tr>
-        <td>{{ `${index + 1 - resetIndex(item, index)}.` }}</td>
-        <td>{{ `${item.glue}` }}</td>
-        <td class="item-size">{{ item.title }}</td>
-        <td>{{ `${item.desc}` }}</td>
-        <td>{{ `${item.packsCount}x${item.piecesCount}` }}</td>
-        <td class="item-check">
-          <div class="grid"><i v-for="x in item.packsCount" :key="`checklist-${index}-${x}`" class="square"></i></div>
-        </td>
-      </tr>
-    </template>
+    <tbody>
+      <template v-for="(item, index) in productStore.filteredProducts" :key="`checklist-${index}`">
+        <tr v-if="showTruckHeader(item, index)">
+          <th class="page-break" colspan="4">
+            <h4 class="truck-number">{{ `${item.truckNum} (ilość paczek: ${countPacks(item)})` }}</h4>
+          </th>
+          <th class="margin-top"><div>suma:</div></th>
+          <th class="margin-top"><i class="sum-field"></i></th>
+        </tr>
+        <tr>
+          <td>{{ `${index + 1 - resetIndex(item, index)}.` }}</td>
+          <td>{{ `${item.glue}` }}</td>
+          <td class="item-size">{{ item.title }}</td>
+          <td>{{ `${item.desc}` }}</td>
+          <td>{{ `${item.packsCount}x${item.piecesCount}` }}</td>
+          <td class="item-check">
+            <div class="grid"><i v-for="x in item.packsCount" :key="`checklist-${index}-${x}`" class="square"></i></div>
+          </td>
+        </tr>
+      </template>
+    </tbody>
   </table>
 </template>
 
 <style scoped>
-.page {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100svh;
-  margin: 0;
-  padding: 0;
-  /* break-before: page; */
-}
-
 table {
   border-collapse: collapse;
-  margin-inline: 15mm;
   width: fit-content;
   font-family: 'Roboto Flex', serif;
   font-size: 12pt;
@@ -89,28 +81,15 @@ table {
 th {
   text-align: left;
   vertical-align: middle;
-  height: 100%;
-}
-
-.margin-top > * {
-  margin-top: 1em;
-}
-
-.truck-number {
-  text-align: left;
-  margin-bottom: 0.2em;
-  break-before: page;
 }
 
 td {
   border-top: solid 1px silver;
-  height: 100%;
   padding: 1ch 0.5ch;
   line-height: 1;
 }
 
 .item-size {
-  /* border-left: solid 1px silver; */
   font-weight: 600;
 }
 
@@ -135,5 +114,17 @@ td {
   aspect-ratio: 2 / 1;
   border: solid 1px black;
   border-radius: 0.2ch;
+}
+
+@media print {
+  table.checklist {
+    width: 100%;
+    height: auto;
+  }
+
+  table.checklist tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }
 </style>

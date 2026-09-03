@@ -24,3 +24,36 @@ body {
 ::selection {
   background-color: var(--font-color-selected);
 }
+
+@media screen {
+  #printme {
+    display: none;
+  }
+}
+
+@media print {
+  .noprint,
+  body > :not(#app) {
+    display: none !important;
+  }
+
+  html,
+  body,
+  #app {
+    display: block;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+}

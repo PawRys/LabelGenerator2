@@ -25,25 +25,19 @@ function removeSelectedItems() {
 
 async function printMe(mode: 'single' | 'double' | 'checklist') {
   const style = document.createElement('style')
-  style.innerHTML = `
-    @media screen {#printme {display: none;}}
-    @media print {
-      .noprint, body > :not(#app) {display: none !important;}
-      body {max-width: 100%; padding: 0; margin: 0;}
-    }`
 
   if (mode === 'single') {
-    style.innerHTML += `@page {size: A4 landscape;}`
+    style.innerHTML += `@page {size: A4 landscape; margin: 5mm;}`
     productStore.sortOrder = settingsStore.sortOrderOfPrintSingle
   }
 
   if (mode === 'double') {
-    style.innerHTML += `@page {size: A4 portrait;}`
+    style.innerHTML += `@page {size: A4 portrait; margin: 5mm;}`
     productStore.sortOrder = settingsStore.sortOrderOfPrintDouble
   }
 
   if (mode === 'checklist') {
-    style.innerHTML += `@page {size: A4 portrait;}`
+    style.innerHTML += `@page {size: A4 portrait; margin: 15mm;}`
     productStore.sortOrder = settingsStore.sortOrderOfPrintChecklist
   }
 

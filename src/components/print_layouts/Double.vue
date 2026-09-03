@@ -6,7 +6,7 @@ const productStore = useProductStore()
 <template>
   <section>
     <template v-for="(item, index) in productStore.filteredProducts" :key="`${index}-${item.id})}`">
-      <div class="page" v-for="i in item.packsCount" :key="`page-${index}-${i}`">
+      <div class="page page-break" v-for="i in item.packsCount" :key="`page-${index}-${i}`">
         <div :class="`label first_label`">
           <div class="label_title">{{ item.title }}</div>
           <div class="label_desc">{{ item.desc }}</div>
@@ -54,7 +54,7 @@ const productStore = useProductStore()
     'glue  note  pcs';
 
   gap: 0.2em;
-  padding: 0.2em;
+  /* padding: 0.2em; */
   width: 100%;
   height: 50%;
 
