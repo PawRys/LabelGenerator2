@@ -84,7 +84,7 @@ th {
 }
 
 td {
-  border-top: solid 1px silver;
+  border-top: solid 1px var(--border-color-normal);
   padding: 1ch 0.5ch;
   line-height: 1;
 }
@@ -97,15 +97,15 @@ td {
   display: grid;
   grid-template-columns: repeat(5, auto);
   justify-content: start;
-  gap: 1ch;
+  gap: 1em;
 }
 
 .square {
   display: inline-block;
-  height: 1.1em;
+  height: 1em;
   aspect-ratio: 1;
   border: solid 1px black;
-  border-radius: 0.2ch;
+  border-radius: 1em;
 }
 
 .sum-field {
