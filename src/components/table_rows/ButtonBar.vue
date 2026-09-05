@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Btn_Save from '@/components/buttons/Btn_Save.vue'
-import Btn_Reset from '@/components/buttons/Btn_Reset.vue'
-import Btn_Remove from '@/components/buttons/Btn_Remove.vue'
-import Btn_Settings from '@/components/buttons/Btn_Settings.vue'
+import Btn_Save from '@/components/buttons/Btn_SaveProducts.vue'
+import Btn_Reset from '@/components/buttons/Btn_ResetFilters.vue'
+import Btn_Remove from '@/components/buttons/Btn_RemoveProducts.vue'
+import Btn_Settings from '@/components/buttons/Btn_DisplaySettings.vue'
 import Btn_PrintSingle from '@/components/buttons/Btn_PrintSingle.vue'
 import Btn_PrintDouble from '@/components/buttons/Btn_PrintDouble.vue'
 import Btn_PrintChecklist from '@/components/buttons/Btn_PrintChecklist.vue'
@@ -15,7 +15,7 @@ function pageCounter() {
 </script>
 
 <template>
-  <li v-if="pageCounter() > 0" class="buttons-section">
+  <section v-if="pageCounter() > 0" id="buttons-section">
     <div class="button-bar button-bar-one">
       <Btn_PrintSingle class="print-btn" />
       <Btn_PrintDouble class="print-btn" />
@@ -28,13 +28,14 @@ function pageCounter() {
       <Btn_Remove class="other-btn" />
       <Btn_Reset class="other-btn reset-btn" />
     </div>
-  </li>
+  </section>
 </template>
 
 <style scoped>
-.buttons-section {
+#buttons-section {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-large);
 }
 
 .button-bar {
@@ -42,7 +43,7 @@ function pageCounter() {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5em;
+  gap: var(--spacing-medium);
 }
 
 .print-btn {

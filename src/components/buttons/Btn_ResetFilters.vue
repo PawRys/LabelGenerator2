@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ResetIcon from '@/components/icons/ResetIkon.vue'
 import { useProductStore } from '@/stores/products_store'
+import ResetIcon from '@/components/icons/ResetIcon.vue'
 </script>
 
 <template>

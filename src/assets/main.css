@@ -25,6 +25,12 @@ body {
   background-color: var(--font-color-selected);
 }
 
+.inline-flex {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-medium);
+}
+
 @media screen {
   #printme {
     display: none;
