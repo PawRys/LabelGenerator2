@@ -74,7 +74,7 @@ function countWeight(item: Product): number {
   display: grid;
   align-items: center;
   grid-template-columns: 4fr 5fr 4fr auto auto auto;
-  gap: var(--spacing-medium);
+  gap: var(--s-3);
 }
 
 @media (max-width: 1024px) {
@@ -112,7 +112,7 @@ input {
   display: flex;
   flex-wrap: nowrap;
   align-items: baseline;
-  gap: var(--spacing-small);
+  gap: var(--s-2);
 }
 
 .short-input {

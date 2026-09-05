@@ -53,10 +53,10 @@ const productStore = useProductStore()
     'desc  desc  desc'
     'glue  note  pcs';
 
-  gap: 0.2em;
-  /* padding: 0.2em; */
+  /* gap: 0.2em; */
   width: 100%;
   height: 50%;
+  padding: 0.2em;
 
   font-family: 'Roboto Flex', serif;
   font-size: var(--fs-normal); /* Master font size for all label childs */

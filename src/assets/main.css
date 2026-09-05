@@ -28,7 +28,7 @@ body {
 .inline-flex {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-medium);
+  gap: var(--s-3);
 }
 
 @media screen {

@@ -122,13 +122,13 @@ function clearForm(): void {
           @keypress.enter="addProduct()"
         />
 
-        <button @click="clearForm()" v-if="hasValues()"><ResetIcon /></button>
+        <button @click="clearForm()" v-if="hasValues()" class="ghost"><ResetIcon /></button>
       </div>
     </div>
 
     <div class="input-wrapper button-wrapper inline-flex">
       <BTN_Upload id="btn-pdf">Dodaj pliki*</BTN_Upload>
-      <button id="btn-add" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
+      <button id="btn-add" class="action" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
     </div>
 
     <div class="appendix-wrapper">
@@ -152,7 +152,7 @@ function clearForm(): void {
   display: grid;
   justify-self: center;
   grid-template-columns: 4fr 5fr 4fr auto auto auto;
-  gap: var(--spacing-medium);
+  gap: var(--s-3);
 }
 
 .input-wrapper {
@@ -160,7 +160,7 @@ function clearForm(): void {
 
   display: grid;
   grid-template-rows: 2fr 3fr;
-  gap: var(--spacing-medium);
+  gap: var(--s-3);
 }
 
 .button-wrapper {
@@ -180,7 +180,7 @@ function clearForm(): void {
 }
 
 .appx-one {
-  gap: var(--spacing-large);
+  gap: var(--s-8);
 }
 
 .appx-two {
@@ -197,7 +197,7 @@ function clearForm(): void {
     align-items: center;
     grid-column: 1 / -1;
     display: flex;
-    gap: var(--spacing-medium);
+    gap: var(--s-3);
   }
 
   .glue-wrapper,
@@ -206,7 +206,7 @@ function clearForm(): void {
   }
 
   .button-wrapper {
-    margin-top: var(--spacing-large);
+    margin-top: var(--s-8);
     justify-content: end;
   }
 }
@@ -214,7 +214,7 @@ function clearForm(): void {
 textarea,
 input {
   width: max(8em, 100%);
-  border-width: 1px;
+  border-width: 0.1em;
   border-color: var(--action-color-normal);
 
   font-family: 'Roboto Flex';
@@ -228,10 +228,5 @@ input {
 
 .wide-input {
   width: max(13em, 100%);
-}
-
-#btn-add {
-  border-width: 1px;
-  border-color: var(--action-color-normal);
 }
 </style>

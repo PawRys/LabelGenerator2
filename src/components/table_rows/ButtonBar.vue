@@ -17,16 +17,16 @@ function pageCounter() {
 <template>
   <section v-if="pageCounter() > 0" id="buttons-section">
     <div class="button-bar button-bar-one">
-      <Btn_PrintSingle class="print-btn" />
-      <Btn_PrintDouble class="print-btn" />
-      <Btn_PrintChecklist class="print-btn" />
+      <Btn_PrintSingle class="print-btn large" />
+      <Btn_PrintDouble class="print-btn large" />
+      <Btn_PrintChecklist class="print-btn large" />
     </div>
 
     <div class="button-bar button-bar-two">
-      <Btn_Settings class="other-btn" />
-      <Btn_Save class="other-btn" />
-      <Btn_Remove class="other-btn" />
-      <Btn_Reset class="other-btn reset-btn" />
+      <Btn_Settings class="other-btn ghost" />
+      <Btn_Save class="other-btn ghost" />
+      <Btn_Remove class="other-btn ghost" />
+      <Btn_Reset class="other-btn ghost reset-btn" />
     </div>
   </section>
 </template>
@@ -35,7 +35,7 @@ function pageCounter() {
 #buttons-section {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-large);
+  gap: var(--s-8);
 }
 
 .button-bar {
@@ -43,7 +43,7 @@ function pageCounter() {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--spacing-medium);
+  gap: var(--s-3);
 }
 
 .print-btn {
@@ -53,14 +53,7 @@ function pageCounter() {
   font-style: normal;
   white-space: nowrap;
 
-  padding-block: 1em;
-
   flex: 1 1 25%;
-}
-
-.other-btn {
-  flex: 0 0 25%;
-  padding-block: 0.5em;
 }
 
 .reset-btn {

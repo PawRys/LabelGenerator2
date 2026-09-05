@@ -93,7 +93,7 @@ const cmrNumList = computed(() => {
 
 .selector-wrapper {
   display: flex;
-  gap: var(--spacing-large);
+  gap: var(--s-8);
 }
 
 .selector {

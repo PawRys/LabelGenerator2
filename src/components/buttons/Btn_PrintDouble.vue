@@ -8,7 +8,7 @@ import { useSettingsStore } from '@/stores/settings_store'
 async function printMe() {
   const style = document.createElement('style')
 
-  style.innerHTML += `@page {size: A4 portrait; margin: 5mm;}`
+  style.innerHTML += `@page {size: A4 portrait; margin: 0mm;}`
   useProductStore().sortOrder = useSettingsStore().sortOrderOfPrintSingle
 
   document.head.appendChild(style)

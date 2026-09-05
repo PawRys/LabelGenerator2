@@ -13,7 +13,7 @@ import ResetIcon from '@/components/icons/ResetIcon.vue'
       placeholder="Szukaj..."
     />
 
-    <button v-if="useProductStore().searchQuery" @click="useProductStore().searchQuery = ''">
+    <button v-if="useProductStore().searchQuery" @click="useProductStore().searchQuery = ''" class="ghost">
       <ResetIcon />
     </button>
   </section>
@@ -33,8 +33,8 @@ import ResetIcon from '@/components/icons/ResetIcon.vue'
   width: 100%;
   padding: 0.5rem;
   border: solid 1px var(--border-color-subtle);
-  border-radius: var(--spacing-medium);
-  box-shadow: 0 0 var(--spacing-large) var(--background-color-interactive);
+  border-radius: var(--s-3);
+  box-shadow: 0 0 var(--s-8) var(--background-color-interactive);
 
   text-align: center;
   font-size: 1.2rem;
