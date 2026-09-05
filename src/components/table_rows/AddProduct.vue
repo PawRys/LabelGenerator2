@@ -113,7 +113,7 @@ function clearForm(): void {
           @keypress.enter="addProduct()"
           min="1"
         />
-        <span> x </span>
+        <span>x</span>
         <input
           class="add-pieces short-input"
           placeholder="szt."
