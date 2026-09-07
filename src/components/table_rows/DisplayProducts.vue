@@ -67,9 +67,15 @@ function countWeight(item: Product): number {
 </template>
 
 <style scoped>
+ul {
+  padding: 0;
+}
+
 .list-item {
   justify-self: center;
   margin-block: 2rem;
+  width: 100%;
+  list-style: none;
 
   display: grid;
   align-items: center;

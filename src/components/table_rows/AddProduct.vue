@@ -148,6 +148,7 @@ function clearForm(): void {
 <style scoped>
 #add-product-section {
   margin-block: 2rem;
+  width: 100%;
 
   display: grid;
   justify-self: center;
