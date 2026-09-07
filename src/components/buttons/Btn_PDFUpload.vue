@@ -154,7 +154,7 @@ async function PDFtoTEXT(file: File): Promise<string[]> {
     } // END row
   } // END page
 
-  // console.log(TEXTrows.join('\n'))
+  console.log(TEXTrows.join('\n'))
   return TEXTrows
 }
 
@@ -196,13 +196,35 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
     }
 
     const [, sizeT, sizeA, sizeB, packsQty, pcsQty] = textrow.match(full_regexp) ?? []
-
     if (sizeT && sizeA && sizeB && packsQty && pcsQty) {
       idNum = `${invoiceNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
       itemSize = `${sizeT}x${sizeA}x${sizeB}`
-      itemWeight = calcWeight(`${itemSize} ${itemFace}`, +pcsQty || 0)
+      itemWeight = calcWeight(`${itemSize} ${itemFace}`, Number(pcsQty || 0))
       itemPacksCount = Number(packsQty) ?? 0
       itemPiecesCount = Number(pcsQty) ?? 0
+
+      results.push({
+        id: idNum,
+        timestamp: Date.now(),
+        title: itemSize,
+        desc: itemFace,
+        note: invoiceNum,
+        glue: itemGlue || `${itemWeight.toFixed(0)} kg`,
+        weight: itemWeight,
+        packsCount: itemPacksCount,
+        piecesCount: itemPiecesCount,
+        arrivalPlace: arrivalPlace,
+        truckNum: truckNum,
+        cmrNum: CMRNum,
+      })
+    }
+
+    const [, secondaryPacksQty, secondaryPcsQty] = textrow.match(/^\s+(\d{1,2})x(\d{1,3})$/i) ?? []
+    if (secondaryPacksQty && secondaryPcsQty) {
+      idNum = `${invoiceNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
+      itemWeight = calcWeight(`${itemSize} ${itemFace}`, Number(secondaryPcsQty || 0))
+      itemPacksCount = Number(secondaryPacksQty) ?? 0
+      itemPiecesCount = Number(secondaryPcsQty) ?? 0
 
       results.push({
         id: idNum,
