@@ -15,7 +15,23 @@ const note_input = ref('')
 const packs_input = ref(1)
 const pieces_input = ref<number | null>(null)
 const sizeInput = ref<HTMLInputElement | null>(null)
-const weight = computed(() => calcWeight(`${title_input.value} ${desc_input.value}`, pieces_input.value || 0))
+
+const isNumberString = computed(() => {
+  const value = glue_input.value.trim()
+
+  return value !== '' && Number.isFinite(Number(value))
+})
+
+const weight = computed(() => {
+  const value = glue_input.value.trim()
+  const density = Number(value)
+
+  if (value !== '' && Number.isFinite(density)) {
+    return calcWeight(`${title_input.value} ${desc_input.value}`, pieces_input.value || 0, density)
+  }
+
+  return 0
+})
 
 let idCounter = 0
 
@@ -26,7 +42,7 @@ function addProduct() {
     title: title_input.value,
     desc: desc_input.value,
     note: note_input.value,
-    glue: glue_input.value || `${weight.value.toFixed(0)} kg`,
+    glue: !isNumberString.value ? glue_input.value : `${weight.value.toFixed(0)} kg`,
     weight: weight.value,
     packsCount: packs_input.value,
     piecesCount: pieces_input.value || 0,

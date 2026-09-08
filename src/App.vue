@@ -59,6 +59,8 @@ const printLayout = computed(() => {
     <option value="INT" />
     <option value="WD" />
     <option value="MR" />
+    <option value="700">700kg/m3</option>
+    <option value="600">600kg/m3</option>
   </datalist>
 </template>
 

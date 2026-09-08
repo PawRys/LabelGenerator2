@@ -26,9 +26,8 @@ export const correctText = (input: string): string => {
     .join('')
 }
 
-export const calcWeight = (text: string, packsCount: number): number => {
+export const calcWeight = (text: string, packsCount: number, density: number): number => {
   const size = text.match(/([0-9]{1,2}(?:,[0-9])?x[0-9]{2,4}x[0-9]{2,4})/i)
-  const density = 700
 
   if (size) {
     return (
