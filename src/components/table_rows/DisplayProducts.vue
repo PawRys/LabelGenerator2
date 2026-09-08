@@ -71,11 +71,14 @@ ul {
   padding: 0;
 }
 
+li {
+  list-style: none;
+  width: 100%;
+}
+
 .list-item {
   justify-self: center;
   margin-block: 2rem;
-  width: 100%;
-  list-style: none;
 
   display: grid;
   align-items: center;
