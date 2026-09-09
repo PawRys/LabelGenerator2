@@ -57,3 +57,10 @@ p {
 
   /* font-family: 'Karma', serif; */
 }
+
+b,
+strong {
+  font-weight: 500;
+  font-family: var(--font-family-heading);
+  font-size: 1.1em;
+}
