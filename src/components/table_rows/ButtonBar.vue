@@ -53,7 +53,7 @@ function pageCounter() {
   font-style: normal;
   white-space: nowrap;
 
-  flex: 0 1 25%;
+  flex: 0 1 11em;
 }
 
 .reset-btn {
