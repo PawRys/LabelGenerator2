@@ -33,6 +33,11 @@ function saveSingle() {
   saveJson(useProductStore().filteredProducts)
 }
 
+function saveByCMR() {
+  dialog.value?.close()
+  saveJsonByCMR(useProductStore().filteredProducts)
+}
+
 function saveByTruck() {
   dialog.value?.close()
   saveJsonByTruck(useProductStore().filteredProducts)
@@ -123,10 +128,11 @@ const saveJsonByTruck = (products: Product[]) => {
     <Teleport to="body">
       <dialog ref="dialog" @click="closeOnBackdrop">
         <h3>Zapisz dane</h3>
-        <p>Wybierz sposób zapisu ({{ truckNumSet.size }} dostaw):</p>
+        <p>Wybierz sposób zapisu ({{ cmrNumSet.size }} dostaw):</p>
         <div class="button-bar">
           <button @click="saveSingle"><CollectiveIcon />Wszystkie dostawy w jednym pliku</button>
-          <button @click="saveByTruck"><SeparateIcon />Osobny plik dla każdej dostawy</button>
+          <!-- <button @click="saveByTruck"><SeparateIcon />Osobny plik dla każdej dostawy</button> -->
+          <button @click="saveByCMR"><SeparateIcon />Osobny plik dla każdej dostawy</button>
           <button @click="dialog?.close()">Anuluj</button>
         </div>
       </dialog>
