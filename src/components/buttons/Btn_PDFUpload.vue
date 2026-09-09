@@ -199,7 +199,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
     if (sizeT && sizeA && sizeB && packsQty && pcsQty) {
       idNum = `${invoiceNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
       itemSize = `${sizeT}x${sizeA}x${sizeB}`
-      itemWeight = calcWeight(`${itemSize} ${itemFace}`, Number(pcsQty || 0))
+      itemWeight = calcWeight(`${itemSize} ${itemFace}`, Number(pcsQty || 0), 700)
       itemPacksCount = Number(packsQty) ?? 0
       itemPiecesCount = Number(pcsQty) ?? 0
 
@@ -222,7 +222,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
     const [, secondaryPacksQty, secondaryPcsQty] = textrow.match(/^\s+(\d{1,2})x(\d{1,3})$/i) ?? []
     if (secondaryPacksQty && secondaryPcsQty) {
       idNum = `${invoiceNum || '_id'}_${(++idCounter).toString().padStart(3, '0')}`
-      itemWeight = calcWeight(`${itemSize} ${itemFace}`, Number(secondaryPcsQty || 0))
+      itemWeight = calcWeight(`${itemSize} ${itemFace}`, Number(secondaryPcsQty || 0), 700)
       itemPacksCount = Number(secondaryPacksQty) ?? 0
       itemPiecesCount = Number(secondaryPcsQty) ?? 0
 
@@ -290,7 +290,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
       itemSize = `${sizeT}x${sizeA}x${sizeB}`
       itemFace = face ?? ''
       itemGlue = 'WD'
-      itemWeight = calcWeight(`${itemSize} ${itemFace}`, +pcsQty || 0)
+      itemWeight = calcWeight(`${itemSize} ${itemFace}`, +pcsQty || 0, 700)
       itemPacksCount = Number(packsQty) ?? 0
       itemPiecesCount = Number(pcsQty) ?? 0
 
