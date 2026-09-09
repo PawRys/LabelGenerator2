@@ -9,15 +9,24 @@ import { useProductStore } from '@/stores/products_store'
 import { ref, computed, useAttrs } from 'vue'
 
 const dialog = ref<HTMLDialogElement | null>(null)
-const truckNumbers = computed(() => new Set(useProductStore().filteredProducts.map((item) => item.truckNum)))
+const truckNumSet = computed(() => new Set(useProductStore().filteredProducts.map((item) => item.truckNum)))
+const cmrNumSet = computed(() => new Set(useProductStore().filteredProducts.map((item) => item.cmrNum)))
 
 function openModal() {
-  if (truckNumbers.value.size > 1) {
+  if (cmrNumSet.value.size > 1) {
     dialog.value?.showModal()
   } else {
-    saveJsonByTruck(useProductStore().filteredProducts)
+    saveJsonByCMR(useProductStore().filteredProducts)
   }
 }
+
+// function openModal() {
+//   if (truckNumSet.value.size > 1) {
+//     dialog.value?.showModal()
+//   } else {
+//     saveJsonByTruck(useProductStore().filteredProducts)
+//   }
+// }
 
 function saveSingle() {
   dialog.value?.close()
@@ -46,10 +55,37 @@ const saveJson = (data: Product[]) => {
 
   const a = document.createElement('a')
   a.href = url
-  a.download = `Etykiety x${truckNumbers.value.size} ${new Date().toISOString().split('T')[0]}.json`
+  a.download = `Etykiety x${truckNumSet.value.size} ${new Date().toISOString().split('T')[0]}.json`
   a.click()
 
   URL.revokeObjectURL(url)
+}
+
+const saveJsonByCMR = (products: Product[]) => {
+  const groups = new Map<string, Product[]>()
+
+  for (const product of products) {
+    const items = groups.get(product.cmrNum) ?? []
+    items.push(product)
+    groups.set(product.cmrNum, items)
+  }
+
+  for (const [cmrNum, items] of groups) {
+    const json = JSON.stringify(items, null, 2)
+
+    const blob = new Blob([json], {
+      type: 'application/json',
+    })
+
+    const url = URL.createObjectURL(blob)
+
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `Etykiety ${cmrNum}.json`
+    link.click()
+
+    URL.revokeObjectURL(url)
+  }
 }
 
 const saveJsonByTruck = (products: Product[]) => {
@@ -87,7 +123,7 @@ const saveJsonByTruck = (products: Product[]) => {
     <Teleport to="body">
       <dialog ref="dialog" @click="closeOnBackdrop">
         <h3>Zapisz dane</h3>
-        <p>Wybierz sposób zapisu ({{ truckNumbers.size }} dostaw):</p>
+        <p>Wybierz sposób zapisu ({{ truckNumSet.size }} dostaw):</p>
         <div class="button-bar">
           <button @click="saveSingle"><CollectiveIcon />Wszystkie dostawy w jednym pliku</button>
           <button @click="saveByTruck"><SeparateIcon />Osobny plik dla każdej dostawy</button>
