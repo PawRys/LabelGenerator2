@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 
 const productStore = useProductStore()
 const arrivalSelectFocused = ref(false)
+const invoiceSelectFocused = ref(false)
 const truckSelectFocused = ref(false)
 const cmrSelectFocused = ref(false)
 const pageCounter = () => productStore.filteredProducts.reduce((acc, item) => acc + item.packsCount, 0)
@@ -44,6 +45,18 @@ const cmrNumList = computed(() => {
       }),
   )
 })
+
+const invoiceNumList = computed(() => {
+  const dataSet = invoiceSelectFocused.value ? productStore.products : productStore.filteredProducts
+  return [
+    ...new Set(dataSet.map((product) => product.invoiceNum).filter((inv): inv is string => inv !== undefined)),
+  ].sort((a, b) =>
+    a.localeCompare(b, undefined, {
+      numeric: true,
+      sensitivity: 'base',
+    }),
+  )
+})
 </script>
 
 <template>
@@ -75,6 +88,17 @@ const cmrNumList = computed(() => {
       <select
         class="selector"
         v-model="productStore.searchQuery"
+        @focus="invoiceSelectFocused = true"
+        @blur="invoiceSelectFocused = false"
+        :size="5"
+      >
+        <option value="">Numer invoice</option>
+        <option v-for="invoice in invoiceNumList" :key="invoice" :value="invoice">{{ invoice }}</option>
+      </select>
+
+      <select
+        class="selector"
+        v-model="productStore.searchQuery"
         @focus="arrivalSelectFocused = true"
         @blur="arrivalSelectFocused = false"
         :size="5"
@@ -94,9 +118,10 @@ const cmrNumList = computed(() => {
 .selector-wrapper {
   display: flex;
   gap: var(--s-8);
+  flex-wrap: wrap;
 }
 
 .selector {
-  flex: 1 1 50%;
+  flex: 1 1 min(14em, 100%);
 }
 </style>

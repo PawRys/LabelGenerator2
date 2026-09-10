@@ -214,6 +214,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
         packsCount: itemPacksCount,
         piecesCount: itemPiecesCount,
         arrivalPlace: arrivalPlace,
+        invoiceNum: invoiceNum,
         truckNum: truckNum,
         cmrNum: CMRNum,
       })
@@ -237,6 +238,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
         packsCount: itemPacksCount,
         piecesCount: itemPiecesCount,
         arrivalPlace: arrivalPlace,
+        invoiceNum: invoiceNum,
         truckNum: truckNum,
         cmrNum: CMRNum,
       })
@@ -305,6 +307,7 @@ function getStigaProducts(TEXTrows: string[]): Product[] {
         packsCount: itemPacksCount,
         piecesCount: itemPiecesCount,
         arrivalPlace: arrivalPlace,
+        invoiceNum: invoiceNum,
         truckNum: truckNum,
         cmrNum: CMRNum,
       })

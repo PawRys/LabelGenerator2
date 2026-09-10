@@ -11,6 +11,7 @@ const productSchema = z.object({
   packsCount: z.number(),
   piecesCount: z.number(),
   arrivalPlace: z.string(),
+  invoiceNum: z.string(),
   truckNum: z.string(),
   cmrNum: z.string(),
 })
