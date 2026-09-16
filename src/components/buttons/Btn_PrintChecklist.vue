@@ -9,7 +9,7 @@ async function printMe() {
   const style = document.createElement('style')
 
   style.innerHTML += `@page {size: A4 portrait; margin: 15mm;}`
-  useProductStore().sortOrder = useSettingsStore().sortOrderOfPrintSingle
+  useProductStore().sortOrder = useSettingsStore().sortOrderOfPrintChecklist
 
   document.head.appendChild(style)
   useProductStore().printMode = 'checklist'
