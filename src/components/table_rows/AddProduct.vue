@@ -47,6 +47,7 @@ function addProduct() {
     packsCount: packs_input.value,
     piecesCount: pieces_input.value || 0,
     arrivalPlace: 'Ręcznie dodany',
+    invoiceNum: 'Ręcznie dodany',
     truckNum: note_input.value.replace(/\s/g, '_') || 'Ręcznie dodany',
     cmrNum: 'Ręcznie dodany',
   })
@@ -76,14 +77,15 @@ function clearForm(): void {
 </script>
 
 <template>
-  <section id="add-product-section">
+  <form id="add-product-section" autocomplete="on">
     <div class="input-wrapper">
       <LabelIcon class="title-icon" highlight="title" />
       <input
+        type="text"
         class="add-title"
         placeholder="Tytuł"
-        type="text"
         autocomplete="on"
+        name="title_input"
         v-model="title_input"
         @keypress.enter="addProduct()"
         ref="sizeInput"
@@ -92,16 +94,24 @@ function clearForm(): void {
 
     <div class="input-wrapper">
       <LabelIcon class="desc-icon" highlight="desc" />
-      <textarea class="add-desc wide-input" placeholder="Opis" v-model="desc_input" autocomplete="on" />
+      <textarea
+        class="add-desc wide-input"
+        placeholder="Opis"
+        autocomplete="on"
+        name="desc_input"
+        v-model="desc_input"
+      />
     </div>
 
     <div class="input-wrapper">
       <LabelIcon class="note-icon" highlight="note" />
       <input
+        type="text"
         class="add-note"
         placeholder="Notatka"
-        v-model="note_input"
         autocomplete="on"
+        name="note_input"
+        v-model="note_input"
         @keypress.enter="addProduct()"
       />
     </div>
@@ -109,10 +119,12 @@ function clearForm(): void {
     <div class="input-wrapper glue-wrapper">
       <LabelIcon class="glue-icon" highlight="glue" />
       <input
+        type="text"
         class="add-glue short-input"
         placeholder="Klej"
-        v-model="glue_input"
         autocomplete="on"
+        name="glue_input"
+        v-model="glue_input"
         @keypress.enter="addProduct()"
         list="glue-datalist"
       />
@@ -122,19 +134,21 @@ function clearForm(): void {
       <LabelIcon class="pcs-icon" highlight="pcs" />
       <div class="inline-flex">
         <input
+          type="number"
+          min="1"
           class="add-packs short-input"
           placeholder="Paczki"
+          name="packs_input"
           v-model="packs_input"
-          type="number"
           @keypress.enter="addProduct()"
-          min="1"
         />
         <span>x</span>
         <input
+          type="number"
           class="add-pieces short-input"
           placeholder="szt."
+          name="pieces_input"
           v-model="pieces_input"
-          type="number"
           @keypress.enter="addProduct()"
         />
 
@@ -158,7 +172,7 @@ function clearForm(): void {
       </div>
       <div class="appendix appx-two">* Dozwolone pliki: LF Invoice.pdf / Stiga Invoice.pdf / Etykiety.json</div>
     </div>
-  </section>
+  </form>
 </template>
 
 <style scoped>
