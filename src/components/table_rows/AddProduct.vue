@@ -77,7 +77,7 @@ function clearForm(): void {
 </script>
 
 <template>
-  <form id="add-product-section" autocomplete="on">
+  <form id="add-product-section" autocomplete="on" @submit.prevent>
     <div class="input-wrapper">
       <LabelIcon class="title-icon" highlight="title" />
       <input
