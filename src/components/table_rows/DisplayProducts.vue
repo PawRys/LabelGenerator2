@@ -4,23 +4,20 @@ import type { Product } from '@/types/shared_types'
 import { useProductStore } from '@/stores/products_store'
 import { useSettingsStore } from '@/stores/settings_store'
 
-const productStore = useProductStore()
-const settingsStore = useSettingsStore()
-
 function showTruckHeader(item: Product, index: number): boolean {
-  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfScreen)) {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(useSettingsStore().sortOrderOfScreen)) {
     return false
   }
 
-  return index === 0 || (item.truckNum || '') !== (productStore.filteredProducts[index - 1]?.truckNum || '')
+  return index === 0 || (item.truckNum || '') !== (useProductStore().filteredProducts[index - 1]?.truckNum || '')
 }
 
 function countPacks(item: Product): number {
-  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfScreen)) {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(useSettingsStore().sortOrderOfScreen)) {
     return 0
   }
 
-  const storedItems = productStore.filteredProducts
+  const storedItems = useProductStore().filteredProducts
 
   return storedItems.reduce((acc, storedItem) => {
     if (storedItem.truckNum !== item.truckNum) return acc
@@ -29,11 +26,11 @@ function countPacks(item: Product): number {
 }
 
 function countWeight(item: Product): number {
-  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfScreen)) {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(useSettingsStore().sortOrderOfScreen)) {
     return 0
   }
 
-  const storedItems = productStore.filteredProducts
+  const storedItems = useProductStore().filteredProducts
 
   return storedItems.reduce((acc, storedItem) => {
     if (storedItem.truckNum !== item.truckNum) return acc
@@ -44,7 +41,7 @@ function countWeight(item: Product): number {
 
 <template>
   <ul>
-    <template v-for="(product, index) in productStore.filteredProducts" :key="product.id">
+    <template v-for="(product, index) in useProductStore().filteredProducts" :key="product.id">
       <li v-if="showTruckHeader(product, index)" class="full-width">
         <h4 class="truck-number">
           {{ `${product.truckNum}, ${countPacks(product)} paczek, ${countWeight(product).toFixed(0)} kg` }}
@@ -60,7 +57,7 @@ function countWeight(item: Product): number {
           <span>x</span>
           <input v-model="product.piecesCount" class="short-input" type="number" />
         </span>
-        <button @click="productStore.removeProduct(product.id)" class="remove-btn">Usuń</button>
+        <button @click="useProductStore().removeProduct(product.id)" class="remove-btn">Usuń</button>
       </li>
     </template>
   </ul>
