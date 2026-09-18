@@ -12,7 +12,7 @@ const productStore = useProductStore()
           <div class="label_desc">{{ item.desc }}</div>
           <div class="label_glue">{{ item.glue }}</div>
           <div class="label_note">{{ item.note }}</div>
-          <div class="label_pieces">{{ item.piecesCount }}</div>
+          <div :class="{ label_pieces: 1, invisible: item.piecesCount === 0 }">{{ item.piecesCount }}</div>
         </div>
       </div>
     </template>
@@ -106,5 +106,9 @@ const productStore = useProductStore()
   content: 'szt.';
   font-size: var(--fs-smallest);
   font-weight: 400;
+}
+
+.invisible {
+  visibility: hidden;
 }
 </style>
