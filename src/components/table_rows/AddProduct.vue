@@ -77,7 +77,7 @@ function clearForm(): void {
 </script>
 
 <template>
-  <form id="add-product-section" autocomplete="on" @submit.prevent>
+  <form id="add-product-section" autocomplete="on" @submit.prevent @keypress.enter.prevent>
     <div class="input-wrapper">
       <LabelIcon class="title-icon" highlight="title" />
       <input
@@ -152,13 +152,15 @@ function clearForm(): void {
           @keypress.enter="addProduct()"
         />
 
-        <button @click="clearForm()" v-if="hasValues()" class="ghost"><ResetIcon /></button>
+        <button @click.prevent="clearForm()" v-if="hasValues()" class="ghost"><ResetIcon /></button>
       </div>
     </div>
 
     <div class="input-wrapper button-wrapper inline-flex">
       <BTN_Upload id="btn-pdf">Dodaj pliki*</BTN_Upload>
-      <button id="btn-add" class="action" @click="addProduct()" @keypress.enter="addProduct()">Dodaj</button>
+      <button id="btn-add" class="action" @click="addProduct()" @keypress.enter="addProduct()" @click.prevent>
+        Dodaj
+      </button>
     </div>
 
     <div class="appendix-wrapper">
