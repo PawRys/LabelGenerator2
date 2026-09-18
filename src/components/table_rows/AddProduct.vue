@@ -77,14 +77,14 @@ function clearForm(): void {
 </script>
 
 <template>
-  <form id="add-product-section" autocomplete="on" @submit.prevent @keypress.enter.prevent>
+  <form id="add-product-section" @submit.prevent>
     <div class="input-wrapper">
       <LabelIcon class="title-icon" highlight="title" />
       <input
         type="text"
         class="add-title"
         placeholder="Tytuł"
-        autocomplete="on"
+        autocomplete="title_input"
         name="title_input"
         v-model="title_input"
         @keypress.enter="addProduct()"
@@ -97,7 +97,7 @@ function clearForm(): void {
       <textarea
         class="add-desc wide-input"
         placeholder="Opis"
-        autocomplete="on"
+        autocomplete="desc_input"
         name="desc_input"
         v-model="desc_input"
       />
@@ -109,7 +109,7 @@ function clearForm(): void {
         type="text"
         class="add-note"
         placeholder="Notatka"
-        autocomplete="on"
+        autocomplete="note_input"
         name="note_input"
         v-model="note_input"
         @keypress.enter="addProduct()"
@@ -122,7 +122,7 @@ function clearForm(): void {
         type="text"
         class="add-glue short-input"
         placeholder="Klej"
-        autocomplete="on"
+        autocomplete="glue_input"
         name="glue_input"
         v-model="glue_input"
         @keypress.enter="addProduct()"
@@ -152,13 +152,15 @@ function clearForm(): void {
           @keypress.enter="addProduct()"
         />
 
-        <button @click.prevent="clearForm()" v-if="hasValues()" class="ghost"><ResetIcon /></button>
+        <button type="button" @click.prevent="clearForm()" v-if="hasValues()" class="ghost">
+          <ResetIcon />
+        </button>
       </div>
     </div>
 
     <div class="input-wrapper button-wrapper inline-flex">
-      <BTN_Upload id="btn-pdf">Dodaj pliki*</BTN_Upload>
-      <button id="btn-add" class="action" @click="addProduct()" @keypress.enter="addProduct()" @click.prevent>
+      <BTN_Upload type="button" id="btn-pdf">Dodaj pliki*</BTN_Upload>
+      <button type="button" id="btn-add" class="action" @click="addProduct()" @keypress.enter="addProduct()">
         Dodaj
       </button>
     </div>

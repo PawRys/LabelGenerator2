@@ -13,8 +13,8 @@ const sortOptions: { value: SortFunction; label: string }[] = [
   // { value: 'bysize', label: 'W/g rozmiaru' },
   // { value: 'byformat', label: 'W/g grupy formatu' },
   // { value: 'bytime', label: 'W/g czasu' },
-  { value: 'bytruckandsize', label: 'W/g rozmiaru' },
-  { value: 'bytruckandformat', label: 'W/g formatu' },
+  { value: 'bytruckandsize', label: 'Sortuj numerycznie' },
+  { value: 'bytruckandformat', label: 'Sortuj po formacie' },
 ]
 
 const sortGroups = [

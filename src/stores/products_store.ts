@@ -103,7 +103,7 @@ const compare = (a: unknown, b: unknown): number => {
   })
 }
 
-const parseSize = (size: string) => {
+const parseSize = (size: string): [number, number, number] => {
   return size
     .replace(',', '.')
     .split('x')
@@ -129,8 +129,15 @@ const sortFunctions = {
 
   bysize(products: Product[]) {
     return [...products].sort((a, b) => {
-      const aSize = parseSize(a.title)
-      const bSize = parseSize(b.title)
+      const sizeT_re = String.raw`(\d{1,2}(?:[,.]\d)?)` // Capture group
+      const sizeA_re = String.raw`(\d{3,4})` // Capture group
+      const sizeB_re = String.raw`(\d{3,4})` // Capture group
+      const size_regexp = new RegExp(String.raw`${sizeT_re}x${sizeA_re}x${sizeB_re}`, 'ig')
+
+      const [aSizeString, , ,] = `${a.title} ${a.desc}`.match(size_regexp) ?? []
+      const [bSizeString, , ,] = `${b.title} ${b.desc}`.match(size_regexp) ?? []
+      const aSize = parseSize(aSizeString || '')
+      const bSize = parseSize(bSizeString || '')
 
       return (
         compare(aSize[0], bSize[0]) || // Thickness
@@ -143,8 +150,15 @@ const sortFunctions = {
 
   byformat(products: Product[]) {
     return [...products].sort((a, b) => {
-      const aSize = parseSize(a.title)
-      const bSize = parseSize(b.title)
+      const sizeT_re = String.raw`(\d{1,2}(?:[,.]\d)?)` // Capture group
+      const sizeA_re = String.raw`(\d{3,4})` // Capture group
+      const sizeB_re = String.raw`(\d{3,4})` // Capture group
+      const size_regexp = new RegExp(String.raw`${sizeT_re}x${sizeA_re}x${sizeB_re}`, 'ig')
+
+      const [aSizeString, , ,] = `${a.title} ${a.desc}`.match(size_regexp) ?? []
+      const [bSizeString, , ,] = `${b.title} ${b.desc}`.match(size_regexp) ?? []
+      const aSize = parseSize(aSizeString || '')
+      const bSize = parseSize(bSizeString || '')
 
       const aFormat = parseFormat(aSize)
       const bFormat = parseFormat(bSize)
@@ -168,8 +182,19 @@ const sortFunctions = {
 
   bytruckandsize(products: Product[]) {
     return [...products].sort((a, b) => {
-      const aSize = parseSize(a.title)
-      const bSize = parseSize(b.title)
+      const sizeT_re = String.raw`(\d{1,2}(?:[,.]\d)?)` // Capture group
+      const sizeA_re = String.raw`(\d{3,4})` // Capture group
+      const sizeB_re = String.raw`(\d{3,4})` // Capture group
+      const size_regexp = new RegExp(String.raw`${sizeT_re}x${sizeA_re}x${sizeB_re}`, 'ig')
+
+      const [aSizeString, , ,] = `${a.title} ${a.desc}`.match(size_regexp) ?? []
+      const [bSizeString, , ,] = `${b.title} ${b.desc}`.match(size_regexp) ?? []
+
+      console.log(aSizeString)
+      console.log(bSizeString)
+
+      const aSize = parseSize(aSizeString || '')
+      const bSize = parseSize(bSizeString || '')
 
       return (
         compare(a.truckNum, b.truckNum) || // Truck number
@@ -183,8 +208,15 @@ const sortFunctions = {
 
   bytruckandformat(products: Product[]) {
     return [...products].sort((a, b) => {
-      const aSize = parseSize(a.title)
-      const bSize = parseSize(b.title)
+      const sizeT_re = String.raw`(\d{1,2}(?:[,.]\d)?)` // Capture group
+      const sizeA_re = String.raw`(\d{3,4})` // Capture group
+      const sizeB_re = String.raw`(\d{3,4})` // Capture group
+      const size_regexp = new RegExp(String.raw`${sizeT_re}x${sizeA_re}x${sizeB_re}`, 'ig')
+
+      const [aSizeString, , ,] = `${a.title} ${a.desc}`.match(size_regexp) ?? []
+      const [bSizeString, , ,] = `${b.title} ${b.desc}`.match(size_regexp) ?? []
+      const aSize = parseSize(aSizeString || '')
+      const bSize = parseSize(bSizeString || '')
 
       const aFormat = parseFormat(aSize)
       const bFormat = parseFormat(bSize)
