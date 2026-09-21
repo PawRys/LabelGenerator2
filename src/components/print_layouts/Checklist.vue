@@ -3,23 +3,21 @@ import type { Product } from '@/types/shared_types'
 
 import { useProductStore } from '@/stores/products_store'
 import { useSettingsStore } from '@/stores/settings_store'
-const productStore = useProductStore()
-const settingsStore = useSettingsStore()
 
 function showTruckHeader(item: Product, index: number): boolean {
-  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfPrintChecklist)) {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(useSettingsStore().sortOrderOfPrintChecklist)) {
     return false
   }
 
-  return index === 0 || (item.truckNum || '') !== (productStore.filteredProducts[index - 1]?.truckNum || '')
+  return index === 0 || (item.truckNum || '') !== (useProductStore().filteredProducts[index - 1]?.truckNum || '')
 }
 
 function resetIndex(item: Product, index: number): number {
-  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfPrintChecklist)) {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(useSettingsStore().sortOrderOfPrintChecklist)) {
     return 0
   }
 
-  const storedItems = productStore.filteredProducts
+  const storedItems = useProductStore().filteredProducts
 
   for (let i = index; i >= 0; i--) {
     if ((storedItems[i]?.truckNum || '') !== (item.truckNum || '')) {
@@ -31,23 +29,30 @@ function resetIndex(item: Product, index: number): number {
 }
 
 function countPacks(item: Product): number {
-  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(settingsStore.sortOrderOfPrintChecklist)) {
+  if (!['default', 'bytruckandsize', 'bytruckandformat'].includes(useSettingsStore().sortOrderOfPrintChecklist)) {
     return 0
   }
 
-  const storedItems = productStore.filteredProducts
+  const storedItems = useProductStore().filteredProducts
 
   return storedItems.reduce((acc, storedItem) => {
     if (storedItem.truckNum !== item.truckNum) return acc
     return acc + storedItem.packsCount
   }, 0)
 }
+
+function getSizeGroup(size: string): string {
+  const [t, a, b] = size.replace(',', '.').split('x').map(Number) as [number, number, number]
+  const min = Math.round(Math.min(a, b) / 305)
+  const max = Math.round(Math.max(a, b) / 305)
+  return `${min}x${max}'`
+}
 </script>
 
 <template>
   <table class="checklist">
     <tbody>
-      <template v-for="(item, index) in productStore.filteredProducts" :key="`checklist-${index}`">
+      <template v-for="(item, index) in useProductStore().filteredProducts" :key="`checklist-${index}`">
         <tr v-if="showTruckHeader(item, index)">
           <th class="page-break" colspan="4">
             <h4 class="truck-number">{{ `${item.truckNum} (ilość paczek: ${countPacks(item)})` }}</h4>
@@ -58,7 +63,8 @@ function countPacks(item: Product): number {
         <tr>
           <td>{{ `${index + 1 - resetIndex(item, index)}.` }}</td>
           <td>{{ `${item.glue}` }}</td>
-          <td class="item-size">{{ item.title }}</td>
+          <td>{{ `${getSizeGroup(item.title)}` }}</td>
+          <td class="item-size">{{ `${item.title}` }}</td>
           <td>{{ `${item.desc}` }}</td>
           <td>{{ `${item.packsCount}x${item.piecesCount}` }}</td>
           <td class="item-check">
@@ -85,7 +91,7 @@ th {
 
 td {
   border-top: solid 1px var(--border-color-normal);
-  padding: 1ch 0.5ch;
+  padding: 1ch 0.2ch;
   line-height: 1;
 }
 
