@@ -54,7 +54,7 @@ function getSizeGroup(size: string): string {
     <tbody>
       <template v-for="(item, index) in useProductStore().filteredProducts" :key="`checklist-${index}`">
         <tr v-if="showTruckHeader(item, index)">
-          <th class="page-break" colspan="4">
+          <th class="page-break" colspan="5">
             <h4 class="truck-number">{{ `${item.truckNum} (ilość paczek: ${countPacks(item)})` }}</h4>
           </th>
           <th class="margin-top"><div>suma:</div></th>
