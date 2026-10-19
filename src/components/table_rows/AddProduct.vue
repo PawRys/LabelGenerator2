@@ -82,9 +82,10 @@ function clearForm(): void {
       <LabelIcon class="title-icon" highlight="title" />
       <input
         type="text"
+        id="add-title"
         class="add-title"
         placeholder="Tytuł"
-        autocomplete="title_input"
+        autocomplete="on"
         name="title_input"
         v-model="title_input"
         @keypress.enter="addProduct()"
@@ -95,9 +96,10 @@ function clearForm(): void {
     <div class="input-wrapper">
       <LabelIcon class="desc-icon" highlight="desc" />
       <textarea
+        id="add-desc"
         class="add-desc wide-input"
         placeholder="Opis"
-        autocomplete="desc_input"
+        autocomplete="on"
         name="desc_input"
         v-model="desc_input"
       />
@@ -107,9 +109,10 @@ function clearForm(): void {
       <LabelIcon class="note-icon" highlight="note" />
       <input
         type="text"
+        id="add-note"
         class="add-note"
         placeholder="Notatka"
-        autocomplete="note_input"
+        autocomplete="on"
         name="note_input"
         v-model="note_input"
         @keypress.enter="addProduct()"
@@ -120,9 +123,9 @@ function clearForm(): void {
       <LabelIcon class="glue-icon" highlight="glue" />
       <input
         type="text"
+        id="add-glue"
         class="add-glue short-input"
         placeholder="Klej"
-        autocomplete="glue_input"
         name="glue_input"
         v-model="glue_input"
         @keypress.enter="addProduct()"
@@ -136,6 +139,7 @@ function clearForm(): void {
         <input
           type="number"
           min="1"
+          id="add-packs"
           class="add-packs short-input"
           placeholder="Paczki"
           name="packs_input"
@@ -145,6 +149,7 @@ function clearForm(): void {
         <span>x</span>
         <input
           type="number"
+          id="add-pieces"
           class="add-pieces short-input"
           placeholder="szt."
           name="pieces_input"
