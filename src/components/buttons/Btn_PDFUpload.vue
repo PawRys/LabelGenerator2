@@ -193,6 +193,10 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
         .replace(/(\w) (I)/g, '$1 $2')
         .replace(/,/i, ' ')
         .trim()
+
+      if (/FSC/i.test(textrow)) {
+        itemFace += '\nFSC'
+      }
     }
 
     const [, sizeT, sizeA, sizeB, packsQty, pcsQty] = textrow.match(full_regexp) ?? []
