@@ -77,7 +77,7 @@ function clearForm(): void {
 </script>
 
 <template>
-  <form id="add-product-section" @submit.prevent>
+  <form id="add-product-section" @submit.prevent="addProduct()">
     <div class="input-wrapper">
       <LabelIcon class="title-icon" highlight="title" />
       <input
@@ -88,7 +88,6 @@ function clearForm(): void {
         autocomplete="add-title"
         name="title_input"
         v-model="title_input"
-        @keypress.enter="addProduct()"
         ref="sizeInput"
       />
     </div>
@@ -99,10 +98,10 @@ function clearForm(): void {
         id="add-desc"
         class="add-desc wide-input"
         placeholder="Opis"
-        autocomplete="add-desc"
+        autocomplete="on"
         name="desc_input"
         v-model="desc_input"
-      />
+      ></textarea>
     </div>
 
     <div class="input-wrapper">
@@ -115,7 +114,6 @@ function clearForm(): void {
         autocomplete="add-note"
         name="note_input"
         v-model="note_input"
-        @keypress.enter="addProduct()"
       />
     </div>
 
@@ -128,7 +126,6 @@ function clearForm(): void {
         placeholder="Klej"
         name="glue_input"
         v-model="glue_input"
-        @keypress.enter="addProduct()"
         list="glue-datalist"
       />
     </div>
@@ -144,7 +141,6 @@ function clearForm(): void {
           placeholder="Paczki"
           name="packs_input"
           v-model="packs_input"
-          @keypress.enter="addProduct()"
         />
         <span>x</span>
         <input
@@ -154,7 +150,6 @@ function clearForm(): void {
           placeholder="szt."
           name="pieces_input"
           v-model="pieces_input"
-          @keypress.enter="addProduct()"
         />
 
         <button type="button" @click.prevent="clearForm()" v-if="hasValues()" class="ghost">
@@ -165,9 +160,7 @@ function clearForm(): void {
 
     <div class="input-wrapper button-wrapper inline-flex">
       <BTN_Upload type="button" id="btn-pdf">Dodaj pliki*</BTN_Upload>
-      <button type="button" id="btn-add" class="action" @click="addProduct()" @keypress.enter="addProduct()">
-        Dodaj
-      </button>
+      <button type="submit" id="btn-add" class="action">Dodaj</button>
     </div>
 
     <div class="appendix-wrapper">
