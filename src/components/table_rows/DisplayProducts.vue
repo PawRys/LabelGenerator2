@@ -48,14 +48,14 @@ function countWeight(item: Product): number {
         </h4>
       </li>
       <li class="list-item" :id="product.id">
-        <input v-model="product.title" />
-        <textarea v-model="product.desc" class="wide-input" />
-        <input v-model="product.note" />
-        <input v-model="product.glue" class="glue-input short-input" />
+        <input v-model="product.title" placeholder="Tytuł" />
+        <textarea v-model="product.desc" class="wide-input" placeholder="Opis" />
+        <input v-model="product.note" placeholder="Notatka" />
+        <input v-model="product.glue" class="glue-input short-input" placeholder="Klej" />
         <span class="quantity-inputs inline-flex">
-          <input v-model="product.packsCount" class="short-input" type="number" min="1" />
+          <input v-model="product.packsCount" class="short-input" type="number" min="1" placeholder="Paczki" />
           <span>x</span>
-          <input v-model="product.piecesCount" class="short-input" type="number" />
+          <input v-model="product.piecesCount" class="short-input" type="number" placeholder="szt." />
         </span>
         <button @click="useProductStore().removeProduct(product.id)" class="remove-btn">Usuń</button>
       </li>
