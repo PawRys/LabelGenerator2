@@ -195,7 +195,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
         .trim()
 
       if (/FSC/i.test(textrow)) {
-        itemFace += '\nFSC'
+        itemFace = 'FSC\n' + itemFace 
       }
     }
 
