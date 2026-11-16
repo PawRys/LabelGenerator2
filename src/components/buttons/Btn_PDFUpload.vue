@@ -9,6 +9,7 @@ import 'pdfjs-dist/build/pdf.worker.min.mjs'
 
 const productStore = useProductStore()
 const fileInput = ref<HTMLInputElement | null>(null)
+const isWorking = ref(false)
 
 const LFregex = new RegExp(/LF\d\d M\d{6}/i)
 const STregex = new RegExp(/DR[ _]\d+[ _]PO/i)
@@ -18,6 +19,7 @@ function openFile() {
 }
 
 async function doit(event: Event): Promise<void> {
+  isWorking.value = true
   const target = event.target as HTMLInputElement
   const pdfFilesList = target.files as FileList
   const validFilesList = await validateFiles(pdfFilesList)
@@ -25,6 +27,7 @@ async function doit(event: Event): Promise<void> {
 
   productStore.searchQuery = ''
   products.forEach((item) => productStore.addProduct(item))
+  isWorking.value = false
 }
 
 async function validateFiles(fileList: FileList): Promise<File[]> {
@@ -154,7 +157,7 @@ async function PDFtoTEXT(file: File): Promise<string[]> {
     } // END row
   } // END page
 
-  console.log(TEXTrows.join('\n'))
+  // console.log(TEXTrows.join('\n'))
   return TEXTrows
 }
 
@@ -195,7 +198,7 @@ function getLatvijasProducts(TEXTrows: string[]): Product[] {
         .trim()
 
       if (/FSC/i.test(textrow)) {
-        itemFace = 'FSC\n' + itemFace 
+        itemFace = '~ FSC ~\n' + itemFace
       }
     }
 
@@ -373,6 +376,7 @@ function getCMRNum(text_rows: string[]): string {
 <template>
   <button class="btn-primary" type="button" @click="openFile">
     <slot>Dodaj z faktury</slot>
+    <span v-if="isWorking" class="spinner"></span>
     <input ref="fileInput" type="file" multiple hidden @change="doit" />
   </button>
 </template>
@@ -381,7 +385,23 @@ function getCMRNum(text_rows: string[]): string {
 input[type='file'] {
   display: none;
 }
+
 label[for='PDFupload-button'] {
   cursor: pointer;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #ddd;
+  border-top-color: var(--action-color-normal, #3498db);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
