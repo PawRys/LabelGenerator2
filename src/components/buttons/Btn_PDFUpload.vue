@@ -89,7 +89,9 @@ async function processFiles(fileList: File[]) {
 
       if (LFregex.test(file.name)) {
         result.push(...getLatvijasProducts(TEXTrows))
-      } else if (STregex.test(file.name)) {
+      }
+
+      if (STregex.test(file.name)) {
         result.push(...getStigaProducts(TEXTrows))
       }
     }
