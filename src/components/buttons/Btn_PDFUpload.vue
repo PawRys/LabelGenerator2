@@ -10,6 +10,7 @@ import 'pdfjs-dist/build/pdf.worker.min.mjs'
 const productStore = useProductStore()
 const fileInput = ref<HTMLInputElement | null>(null)
 const isWorking = ref(false)
+const progress = ref(0)
 
 const LFregex = new RegExp(/LF\d\d M\d{6}/i)
 const STregex = new RegExp(/DR[ _]\d+[ _]PO/i)
@@ -74,7 +75,8 @@ async function validateFiles(fileList: FileList): Promise<File[]> {
 }
 
 async function processFiles(fileList: File[]) {
-  let result: Product[] = []
+  const result: Product[] = []
+  let progressCounter = 0
 
   for (const file of fileList) {
     const isJson = file.type === 'application/json' || file.name.toLowerCase().endsWith('.json')
@@ -82,19 +84,18 @@ async function processFiles(fileList: File[]) {
     if (isJson) {
       const products: Product[] = JSON.parse(await file.text())
       result.push(...products)
-      continue
+    } else {
+      const TEXTrows = await PDFtoTEXT(file)
+
+      if (LFregex.test(file.name)) {
+        result.push(...getLatvijasProducts(TEXTrows))
+      } else if (STregex.test(file.name)) {
+        result.push(...getStigaProducts(TEXTrows))
+      }
     }
 
-    const TEXTrows = await PDFtoTEXT(file)
-
-    if (LFregex.test(file.name)) {
-      result.push(...getLatvijasProducts(TEXTrows))
-      continue
-    }
-
-    if (STregex.test(file.name)) {
-      result.push(...getStigaProducts(TEXTrows))
-    }
+    progressCounter++
+    progress.value = Math.round((progressCounter / fileList.length) * 100)
   }
 
   return result
@@ -377,6 +378,7 @@ function getCMRNum(text_rows: string[]): string {
   <button class="btn-primary" type="button" @click="openFile">
     <slot>Dodaj z faktury</slot>
     <span v-if="isWorking" class="spinner"></span>
+    <span v-if="isWorking">{{ progress }}%</span>
     <input ref="fileInput" type="file" multiple hidden @change="doit" />
   </button>
 </template>
